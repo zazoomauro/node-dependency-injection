@@ -5,7 +5,7 @@ The NodeDependencyInjection component allows you to standardize and centralize t
 The idea is based on the Symfony Dependency Injection Component
 
 
-Travis Status
+CI Status
 -------------
 
 [![Build Status](https://travis-ci.org/zazoomauro/node-dependency-injection.svg?branch=master)](https://travis-ci.org/zazoomauro/node-dependency-injection)
