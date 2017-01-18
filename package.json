@@ -1,0 +1,52 @@
+{
+  "name": "node-dependency-injection",
+  "version": "1.0.3",
+  "description": "The NodeDependencyInjection component allows you to standardize and centralize the way objects are constructed in your application.",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npm run eslint && mocha --compilers js:babel-register --recursive",
+    "eslint": "eslint lib",
+    "build": "babel lib -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zazoomauro/node-dependency-injection.git"
+  },
+  "keywords": [
+    "node",
+    "dependency",
+    "injection",
+    "service",
+    "container"
+  ],
+  "author": "Mauro Gadaleta <mggadaleta@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zazoomauro/node-dependency-injection/issues"
+  },
+  "homepage": "https://github.com/zazoomauro/node-dependency-injection#readme",
+  "dependencies": {
+    "collections": "^5.0.6",
+    "fs-extra": "^2.0.0",
+    "js-yaml": "^3.7.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "babel-register": "^6.18.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.13.1",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.9.2"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-2"
+    ]
+  }
+}
