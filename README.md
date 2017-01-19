@@ -26,8 +26,7 @@ Basic usage
 You might have a simple class like the following `Mailer` that you want to make available as a service:
 
 ```js
-class Mailer
-{
+class Mailer {
     constructor() {
         this._transport = 'sendmail';
     }
@@ -48,8 +47,7 @@ container.register('mailer', 'Mailer');
 An improvement to the class to make it more flexible would be to allow the container to set the transport used. If you change the class so this is passed into the constructor:
 
 ```js
-class Mailer
-{
+class Mailer {
     constructor(transport) {
         this._transport = tansport;
     }
@@ -64,7 +62,9 @@ Then you can set the choice of transport in the container:
 import {ContainerBuilder} from 'node-dependency-injection';
 
 container = new ContainerBuilder();
-container.register('mailer', 'Mailer').addArgument('sendmail');
+container
+  .register('mailer', 'Mailer')
+  .addArgument('sendmail');
 ```
 
 This class is now much more flexible as you have separated the choice of transport out of the implementation and into the container.
@@ -73,8 +73,7 @@ Now that the mailer service is in the container you can inject it as a dependenc
 If you have a NewsletterManager class like this:
 
 ```js
-class NewsletterManager
-{
+class NewsletterManager {
     construct(mailer, fs) {
         this._mailer = mailer;
         this._fs = fs;
@@ -93,9 +92,11 @@ import Mailer from './Mailer';
 import NewsletterManager from './NewsletterManager';
 
 container = new ContainerBuilder();
+
 container
   .register('mailer', Mailer)
   .addArgument('sendmail');
+
 container
   .register('newsletter_manager', NewsletterManager)
   .addArgument(new Reference('mailer'))
@@ -122,7 +123,7 @@ Setting up the Container with Configuration Files
 import {ContainerBuilder, YamlFileLoader} from 'node-dependency-injection';
 
 container = new ContainerBuilder();
-loader = new YamlFileLoader(container, '/path/to/services.yml');
+loader = new YamlFileLoader(container, filePath);
 loader.load();
 ```
 
@@ -131,7 +132,7 @@ loader.load();
 import {ContainerBuilder, JsonFileLoader} from 'node-dependency-injection';
 
 container = new ContainerBuilder();
-loader = new JsonFileLoader(container, '/path/to/services.json');
+loader = new JsonFileLoader(container, filePath);
 loader.load();
 ```
 
@@ -140,20 +141,47 @@ loader.load();
 import {ContainerBuilder, JsFileLoader} from 'node-dependency-injection';
 
 container = new ContainerBuilder();
-loader = new JsFileLoader(container, '/path/to/services.js');
+loader = new JsFileLoader(container, filePath);
 loader.load();
 ```
 
 You can now set up the newsletter_manager and mailer services using config files:
 
+######YAML
 ```yaml
 services:
     mailer:
-        class:     Mailer
+        class:     ./Mailer
         arguments: ['sendmail']
     newsletter_manager:
-        class:     NewsletterManager
+        class:     ./NewsletterManager
         arguments: ['@mailer', '%fs-extra']
+```
+
+######JSON
+```json
+{
+  "services": {
+    "mailer": {
+      "class": "./Mailer",
+      "arguments": ["sendmail"]
+    },
+    "newsletter_manager": {
+      "class": "./NewsletterManager",
+      "arguments": ["@mailer", "%fs-extra"] 
+    }
+  }
+}
+```
+
+######JS
+```js
+module.exports = {
+    services: {
+        mailer: {class: "./Mailer", arguments: ["sendmail"]},
+        newsletter_manager: {class: "./NewsletterManager", arguments: ["@mailer", "%fs-extra"]}
+    }
+};
 ```
 
 Contributing
