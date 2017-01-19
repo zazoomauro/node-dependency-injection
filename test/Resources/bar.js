@@ -1,3 +1,3 @@
 class Bar {}
 
-export default Bar;
+export default Bar
