@@ -163,6 +163,46 @@ describe('ContainerBuilder', () => {
       // Assert.
       assert.strictEqual(foo.parameter, parameter)
     })
+
+    it('should get the service instance and instantiate ones multiple service dependency', () => {
+      let fooId = 'service.foo'
+      let barId = 'service.bar'
+      let fooBarId = 'service.foo_bar'
+      let constructorCalls = 0
+      class FooBar {
+        constructor () {
+          constructorCalls++
+        }
+      }
+      class Bar {
+        constructor (fooBar) {
+          this._fooBar = fooBar
+        }
+
+        get fooBar () {
+          return this._fooBar
+        }
+      }
+      class Foo {
+        constructor (fooBar) {
+          this._fooBar = fooBar
+        }
+
+        get fooBar () {
+          return this._fooBar
+        }
+      }
+      container.register(fooBarId, FooBar)
+      container.register(barId, Bar).addArgument(new Reference(fooBarId))
+      container.register(fooId, Foo).addArgument(new Reference(fooBarId))
+
+      // Act.
+      container.get(fooId)
+      container.get(barId)
+
+      // Assert.
+      assert.strictEqual(constructorCalls, 1)
+    })
   })
 
   describe('compile', () => {
