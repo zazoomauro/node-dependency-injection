@@ -16,7 +16,7 @@ describe('YamlFileLoader', () => {
 
   beforeEach(() => {
     container = new ContainerBuilder()
-    loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/fake-services.yml'))
+    loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.yml'))
   })
 
   describe('load', () => {
@@ -29,7 +29,7 @@ describe('YamlFileLoader', () => {
       let actual = () => loader.load()
 
       // Assert.
-      assert.throws(actual, Error, 'The file not exists')
+      assert.throws(actual, Error, 'The file ' + path + ' not exists')
     })
 
     it('should load a simple container', () => {

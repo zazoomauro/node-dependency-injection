@@ -16,7 +16,7 @@ describe('JsFileLoader', () => {
 
   beforeEach(() => {
     container = new ContainerBuilder()
-    loader = new JsFileLoader(container, path.join(__dirname, '/../../Resources/fake-services.js'))
+    loader = new JsFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.js'))
   })
 
   describe('load', () => {
@@ -29,7 +29,7 @@ describe('JsFileLoader', () => {
       let actual = () => loader.load()
 
       // Assert.
-      assert.throws(actual, Error, 'The file not exists')
+      assert.throws(actual, Error, 'The file ' + path + ' not exists')
     })
 
     it('should load a simple container', () => {

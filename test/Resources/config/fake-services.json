@@ -1,7 +1,7 @@
 {
   "services": {
     "foo": {
-      "class": "./foo",
+      "class": "./../foo",
       "arguments": [
         "@bar",
         "%fs-extra",
@@ -9,7 +9,7 @@
       ]
     },
     "bar": {
-      "class": "./bar",
+      "class": "./../bar",
       "calls": [
         {
           "method": "setFooBar",
@@ -18,7 +18,7 @@
       ]
     },
     "foobar": {
-      "class": "./foobar"
+      "class": "./../foobar"
     }
   }
 }

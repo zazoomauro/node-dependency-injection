@@ -16,7 +16,7 @@ describe('JsonFileLoader', () => {
 
   beforeEach(() => {
     container = new ContainerBuilder()
-    loader = new JsonFileLoader(container, path.join(__dirname, '/../../Resources/fake-services.json'))
+    loader = new JsonFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.json'))
   })
 
   describe('load', () => {
@@ -29,7 +29,7 @@ describe('JsonFileLoader', () => {
       let actual = () => loader.load()
 
       // Assert.
-      assert.throws(actual, Error, 'The file not exists')
+      assert.throws(actual, Error, 'The file ' + path + ' not exists')
     })
 
     it('should load a simple container', () => {

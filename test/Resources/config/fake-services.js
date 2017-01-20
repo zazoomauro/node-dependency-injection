@@ -1,12 +1,12 @@
 module.exports = {
   services: {
-    foo: {class: './foo', arguments: ['@bar', '%fs-extra', 'foo-bar']},
+    foo: {class: './../foo', arguments: ['@bar', '%fs-extra', 'foo-bar']},
     bar: {
-      class: './bar',
+      class: './../bar',
       calls: [
         { method: 'setFooBar', arguments: ['@foobar'] }
       ]
     },
-    foobar: {class: './foobar'}
+    foobar: {class: './../foobar'}
   }
 }
