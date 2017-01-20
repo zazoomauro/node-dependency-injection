@@ -8,10 +8,10 @@ import Reference from '../../lib/Reference'
 let assert = chai.assert
 
 describe('ContainerBuilder', () => {
-  let containerBuilder
+  let container
 
   beforeEach(() => {
-    containerBuilder = new ContainerBuilder()
+    container = new ContainerBuilder()
   })
 
   describe('register', () => {
@@ -21,7 +21,7 @@ describe('ContainerBuilder', () => {
       let className = 'bar'
 
       // Act.
-      let actual = containerBuilder.register(id, className)
+      let actual = container.register(id, className)
 
       // Assert.
       assert.instanceOf(actual, Definition)
@@ -34,7 +34,7 @@ describe('ContainerBuilder', () => {
       let id = 'service._foo_bar'
 
       // Act.
-      let actual = () => containerBuilder.get(id)
+      let actual = () => container.get(id)
 
       // Assert.
       assert.throws(actual, Error, 'The service ' + id + ' is not registered')
@@ -45,10 +45,10 @@ describe('ContainerBuilder', () => {
       let id = 'service.foo'
       class Foo {
       }
-      containerBuilder.register(id, Foo)
+      container.register(id, Foo)
 
       // Act.
-      let actual = containerBuilder.get(id)
+      let actual = container.get(id)
 
       // Assert.
       assert.instanceOf(actual, Foo)
@@ -67,10 +67,10 @@ describe('ContainerBuilder', () => {
           return this._param
         }
       }
-      containerBuilder.register(id, Foo).addArgument(param)
+      container.register(id, Foo).addArgument(param)
 
       // Act.
-      let actual = containerBuilder.get(id)
+      let actual = container.get(id)
 
       // Assert.
       assert.strictEqual(actual.param, param)
@@ -91,11 +91,11 @@ describe('ContainerBuilder', () => {
           return this._bar
         }
       }
-      containerBuilder.register(referenceId, Bar)
-      containerBuilder.register(id, Foo).addArgument(new Reference(referenceId))
+      container.register(referenceId, Bar)
+      container.register(id, Foo).addArgument(new Reference(referenceId))
 
       // Act.
-      let actual = containerBuilder.get(id)
+      let actual = container.get(id)
 
       // Assert.
       assert.instanceOf(actual.bar, Bar)
@@ -126,12 +126,12 @@ describe('ContainerBuilder', () => {
           return this._bar
         }
       }
-      containerBuilder.register(reference2Id, FooBar)
-      containerBuilder.register(reference1Id, Bar).addArgument(new Reference(reference2Id))
-      containerBuilder.register(id, Foo).addArgument(new Reference(reference1Id))
+      container.register(reference2Id, FooBar)
+      container.register(reference1Id, Bar).addArgument(new Reference(reference2Id))
+      container.register(id, Foo).addArgument(new Reference(reference1Id))
 
       // Act.
-      let actual = containerBuilder.get(id)
+      let actual = container.get(id)
 
       // Assert.
       assert.instanceOf(actual.bar, Bar)
@@ -151,17 +151,63 @@ describe('ContainerBuilder', () => {
           return this._parameter
         }
       }
-      containerBuilder
+      container
         .register(id, Foo)
         .addMethodCall('bar', [parameter])
         .addMethodCall('fake')
 
-      let foo = containerBuilder.get(id)
+      let foo = container.get(id)
 
       // Act.
 
       // Assert.
       assert.strictEqual(foo.parameter, parameter)
+    })
+  })
+
+  describe('compile', () => {
+    it('should compile the container and froze the same container', () => {
+      // Arrange not needed.
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      assert.isTrue(container.frozen)
+    })
+
+    it('should compile the container and return a service', () => {
+      // Arrange.
+      let id = 'service.foo'
+      let parameter = 'foobar'
+      class Foo {
+        constructor (parameter) {
+          this._parameter = parameter
+        }
+
+        get parameter () {
+          return this._parameter
+        }
+      }
+      container.register(id, Foo).addArgument(parameter)
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      assert.strictEqual(container.get(id).parameter, parameter)
+    })
+
+    it('should not register more services when the container is already frozen', () => {
+      // Arrange.
+      container.register('foo', class Foo {})
+
+      // Act.
+      container.compile()
+      let actual = () => container.register('bar', class Bar {})
+
+      // Assert.
+      assert.throws(actual, Error, 'You cannot register more services when the container is frozen')
     })
   })
 })

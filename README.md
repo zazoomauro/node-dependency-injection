@@ -42,7 +42,8 @@ let container = new ContainerBuilder()
 container.register('mailer', 'Mailer')
 ```
 
-An improvement to the class to make it more flexible would be to allow the container to set the transport used. If you change the class so this is passed into the constructor:
+An improvement to the class to make it more flexible would be to allow the container to set the transport used. 
+If you change the class so this is passed into the constructor:
 
 ```js
 class Mailer {
@@ -113,7 +114,8 @@ class NewsletterManager {
 }
 ```
 
-You can now choose not to inject a Mailer into the NewsletterManager. If you do want to though then the container can call the setter method:
+You can now choose not to inject a Mailer into the NewsletterManager. 
+If you do want to though then the container can call the setter method:
 
 ```js
 import {ContainerBuilder, Reference, PackageReference} from 'node-dependency-injection'
@@ -221,6 +223,26 @@ module.exports = {
     }
 };
 ```
+
+Compiling the Container
+------------------------
+
+The service container can be compiled for various reasons. 
+These reasons include checking for any potential issues such as circular references and making the container more efficient.
+
+It is compiled by running:
+
+```js
+import {ContainerBuilder, JsFileLoader} from 'node-dependency-injection'
+
+container = new ContainerBuilder()
+
+// ...
+
+container.compile()
+```
+
+After compiling the container the same container will be frozen and you cannot register more services.
 
 Contributing
 ------------
