@@ -5,6 +5,7 @@ import JsonFileLoader from '../../../lib/Loader/JsonFileLoader'
 import ContainerBuilder from '../../../lib/ContainerBuilder'
 import Foo from '../../Resources/foo'
 import Bar from '../../Resources/bar'
+import FooBar from '../../Resources/foobar'
 import path from 'path'
 
 let assert = chai.assert
@@ -42,6 +43,7 @@ describe('JsonFileLoader', () => {
       // Assert.
       assert.instanceOf(service, Foo)
       assert.instanceOf(service.bar, Bar)
+      assert.instanceOf(service.bar.barMethod, FooBar)
       assert.isFunction(service.fs.copy)
       assert.strictEqual(service.param, 'foo-bar')
     })

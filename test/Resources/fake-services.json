@@ -9,7 +9,16 @@
       ]
     },
     "bar": {
-      "class": "./bar"
+      "class": "./bar",
+      "calls": [
+        {
+          "method": "setFooBar",
+          "arguments": ["@foobar"]
+        }
+      ]
+    },
+    "foobar": {
+      "class": "./foobar"
     }
   }
 }

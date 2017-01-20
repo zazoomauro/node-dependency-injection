@@ -137,5 +137,31 @@ describe('ContainerBuilder', () => {
       assert.instanceOf(actual.bar, Bar)
       assert.instanceOf(actual.bar.fooBar, FooBar)
     })
+
+    it('should call the method without any argument', () => {
+      // Arrange.
+      let id = 'service.foo'
+      let parameter = 'foobar'
+      class Foo {
+        bar (parameter) {
+          this._parameter = parameter
+        }
+
+        get parameter () {
+          return this._parameter
+        }
+      }
+      containerBuilder
+        .register(id, Foo)
+        .addMethodCall('bar', [parameter])
+        .addMethodCall('fake')
+
+      let foo = containerBuilder.get(id)
+
+      // Act.
+
+      // Assert.
+      assert.strictEqual(foo.parameter, parameter)
+    })
   })
 })
