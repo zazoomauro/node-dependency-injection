@@ -4,7 +4,7 @@ Node Dependency Injection
 The Node Dependency Injection component allows you to standardize and centralize the way objects are constructed in your application.
 *The idea is based on the Symfony Dependency Injection Component*
 
-
+[![npm version](https://badge.fury.io/js/node-dependency-injection.svg)](https://badge.fury.io/js/node-dependency-injection)
 [![Build Status](https://travis-ci.org/zazoomauro/node-dependency-injection.svg?branch=master)](https://travis-ci.org/zazoomauro/node-dependency-injection)
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
