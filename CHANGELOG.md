@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.2] - 2016-01-23
+### Changed
+- Fix prevent instantiate class again if we get a service and then compile
+
 ## [1.2.1] - 2016-01-20
 ### Changed
 - Preventing instantiating service twice 
