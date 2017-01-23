@@ -249,5 +249,25 @@ describe('ContainerBuilder', () => {
       // Assert.
       assert.throws(actual, Error, 'You cannot register more services when the container is frozen')
     })
+
+    it('should prevent instantiate class again if we get a service and then compile', () => {
+      let fooId = 'service.foo'
+      let constructorCalls = 0
+      class Foo {
+        constructor () {
+          constructorCalls++
+        }
+      }
+      container.register(fooId, Foo)
+      container.get(fooId)
+
+      // Act.
+      container.compile()
+      let foo = container.get(fooId)
+
+      // Assert.
+      assert.strictEqual(constructorCalls, 1)
+      assert.instanceOf(foo, Foo)
+    })
   })
 })
