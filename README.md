@@ -136,7 +136,7 @@ You could then get your newsletter_manager service from the container like this:
 ```js
 import {ContainerBuilder} from 'node-dependency-injection'
 
-container = new ContainerBuilder()
+let container = new ContainerBuilder()
 // ...
 
 newsletterManager = container.get('newsletter_manager')
@@ -150,7 +150,7 @@ Setting up the Container with Configuration Files
 ```js
 import {ContainerBuilder, YamlFileLoader} from 'node-dependency-injection'
 
-container = new ContainerBuilder()
+let container = new ContainerBuilder()
 loader = new YamlFileLoader(container, 'services.yaml')
 loader.load()
 ```
@@ -159,7 +159,7 @@ loader.load()
 ```js
 import {ContainerBuilder, JsonFileLoader} from 'node-dependency-injection'
 
-container = new ContainerBuilder()
+let container = new ContainerBuilder()
 loader = new JsonFileLoader(container, 'services.json')
 loader.load()
 ```
@@ -168,7 +168,7 @@ loader.load()
 ```js
 import {ContainerBuilder, JsFileLoader} from 'node-dependency-injection'
 
-container = new ContainerBuilder()
+let container = new ContainerBuilder()
 loader = new JsFileLoader(container, 'services.js')
 loader.load()
 ```
@@ -235,7 +235,7 @@ It is compiled by running:
 ```js
 import {ContainerBuilder, JsFileLoader} from 'node-dependency-injection'
 
-container = new ContainerBuilder()
+let container = new ContainerBuilder()
 
 // ...
 
