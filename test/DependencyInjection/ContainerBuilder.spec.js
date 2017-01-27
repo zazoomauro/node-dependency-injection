@@ -269,5 +269,51 @@ describe('ContainerBuilder', () => {
       assert.strictEqual(constructorCalls, 1)
       assert.instanceOf(foo, Foo)
     })
+
+    it('should process the registered pass process method', () => {
+      // Arrange.
+      let processedPass = false
+      let expectedDefinitions
+      class FooPass {
+        process (definitions) {
+          processedPass = true
+          expectedDefinitions = definitions
+        }
+      }
+      container.addCompilerPass(new FooPass())
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      assert.isTrue(processedPass)
+      assert.strictEqual(container._definitions, expectedDefinitions)
+    })
+  })
+
+  describe('addCompilerPass', () => {
+    it('should throw an error if the registered compiler pass do not have process method', () => {
+      // Arrange.
+      class FooPass {}
+
+      // Act.
+      let actual = () => container.addCompilerPass(new FooPass())
+
+      // Assert.
+      assert.throws(actual, Error, 'Your compiler pass does not have the process method')
+    })
+
+    it('should register properly a compiler pass if has the process method', () => {
+      // Arrange.
+      class FooPass {
+        process () {}
+      }
+
+      // Act.
+      container.addCompilerPass(new FooPass())
+
+      // Assert.
+      assert.strictEqual(container._compilerPass.length, 1)
+    })
   })
 })
