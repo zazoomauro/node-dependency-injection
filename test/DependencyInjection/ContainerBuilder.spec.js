@@ -269,5 +269,147 @@ describe('ContainerBuilder', () => {
       assert.strictEqual(constructorCalls, 1)
       assert.instanceOf(foo, Foo)
     })
+
+    it('should process the registered pass process method', () => {
+      // Arrange.
+      let processedPass = false
+      let expectedContainer
+      class FooPass {
+        process (container) {
+          processedPass = true
+          expectedContainer = container
+        }
+      }
+      container.addCompilerPass(new FooPass())
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      assert.isTrue(processedPass)
+      assert.strictEqual(container, expectedContainer)
+    })
+  })
+
+  describe('addCompilerPass', () => {
+    it('should throw an error if the registered compiler pass do not have process method', () => {
+      // Arrange.
+      class FooPass {}
+
+      // Act.
+      let actual = () => container.addCompilerPass(new FooPass())
+
+      // Assert.
+      assert.throws(actual, Error, 'Your compiler pass does not have the process method')
+    })
+
+    it('should register properly a compiler pass if has the process method', () => {
+      // Arrange.
+      class FooPass {
+        process () {}
+      }
+
+      // Act.
+      container.addCompilerPass(new FooPass())
+
+      // Assert.
+      assert.strictEqual(container._compilerPass.length, 1)
+    })
+  })
+
+  describe('setAlias', () => {
+    it('should return the same service type using aliasing', () => {
+      // Arrange.
+      let fooId = 'service.foo'
+      let aliasId = 'foo'
+      class Foo {}
+      container.register(fooId, Foo)
+      container.setAlias(aliasId, fooId)
+
+      // Act.
+      let actual = container.get(aliasId)
+
+      // Assert.
+      assert.instanceOf(actual, Foo)
+    })
+
+    it('should return the same service instance using aliasing', () => {
+      // Arrange.
+      let fooId = 'service.foo'
+      let aliasId = 'foo'
+      class Foo {}
+      container.register(fooId, Foo)
+      container.setAlias(aliasId, fooId)
+      let expected = container.get(fooId)
+
+      // Act.
+      let actual = container.get(aliasId)
+
+      // Assert.
+      assert.strictEqual(actual, expected)
+    })
+  })
+
+  describe('setDefinition', () => {
+    it('should throw an exception if the sent definition argument is not a Definition', () => {
+      // Arrange.
+      let definition = 'foo'
+
+      // Act.
+      let actual = () => container.setDefinition('bar', definition)
+
+      // Assert.
+      assert.throws(actual, Error, 'You cannot register not valid definition')
+    })
+
+    it('should register the definition properly and return the definition', () => {
+      // Arrange.
+      class Foo {}
+      let definition = new Definition(Foo)
+      let id = 'foo'
+
+      // Act.
+      container.setDefinition(id, definition)
+
+      // Assert.
+      assert.instanceOf(container.get(id), Foo)
+    })
+  })
+
+  describe('findTaggedServiceIds', () => {
+    it('should return an array with tagged services', () => {
+      // Arrange.
+      class Foo {}
+      let id = 'foo'
+      let tag = 'fooTag'
+      let definition = new Definition(Foo)
+      definition.addTag(tag)
+      container.setDefinition(id, definition)
+
+      // Act.
+      let actual = container.findTaggedServiceIds(tag)
+
+      // Assert.
+      assert.lengthOf(actual.toArray(), 1)
+    })
+
+    it('should return an array with mutiple tagged services', () => {
+      // Arrange.
+      class Foo {}
+      let id = 'foo'
+      let fooTag = 'fooTag'
+      let barTag = 'barTag'
+      let definition = new Definition(Foo)
+      definition
+        .addTag(fooTag)
+        .addTag(barTag)
+      container.setDefinition(id, definition)
+
+      // Act.
+      let actual = container.findTaggedServiceIds(barTag)
+
+      // Assert.
+      assert.lengthOf(actual.toArray(), 1)
+    })
   })
 })

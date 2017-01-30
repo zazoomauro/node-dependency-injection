@@ -37,9 +37,10 @@ You can register this in the container as a service:
 
 ```js
 import {ContainerBuilder} from 'node-dependency-injection'
+import Mailer from './Mailer'
 
 let container = new ContainerBuilder()
-container.register('mailer', 'Mailer')
+container.register('mailer', Mailer)
 ```
 
 An improvement to the class to make it more flexible would be to allow the container to set the transport used. 
@@ -59,10 +60,11 @@ Then you can set the choice of transport in the container:
 
 ```js
 import {ContainerBuilder} from 'node-dependency-injection'
+import Mailer from './Mailer'
 
 let container = new ContainerBuilder()
 container
-  .register('mailer', 'Mailer')
+  .register('mailer', Mailer)
   .addArgument('sendmail')
 ```
 
@@ -119,15 +121,17 @@ If you do want to though then the container can call the setter method:
 
 ```js
 import {ContainerBuilder, Reference, PackageReference} from 'node-dependency-injection'
+import Mailer from './Mailer'
+import NewsletterManager from './NewsletterManager'
 
 let container = new ContainerBuilder()
 
 container
-    .register('mailer', 'Mailer')
+    .register('mailer', Mailer)
     .addArgument('sendmail')
 
 container
-    .register('newsletter_manager', 'NewsletterManager')
+    .register('newsletter_manager', NewsletterManager)
     .addMethodCall('setMailer', [new Reference('mailer')])
 ```
 
@@ -139,7 +143,7 @@ import {ContainerBuilder} from 'node-dependency-injection'
 let container = new ContainerBuilder()
 // ...
 
-newsletterManager = container.get('newsletter_manager')
+let newsletterManager = container.get('newsletter_manager')
 ```
 
 
@@ -151,7 +155,7 @@ Setting up the Container with Configuration Files
 import {ContainerBuilder, YamlFileLoader} from 'node-dependency-injection'
 
 let container = new ContainerBuilder()
-loader = new YamlFileLoader(container, 'services.yaml')
+let loader = new YamlFileLoader(container, 'services.yaml')
 loader.load()
 ```
 
@@ -160,7 +164,7 @@ loader.load()
 import {ContainerBuilder, JsonFileLoader} from 'node-dependency-injection'
 
 let container = new ContainerBuilder()
-loader = new JsonFileLoader(container, 'services.json')
+let loader = new JsonFileLoader(container, 'services.json')
 loader.load()
 ```
 
@@ -169,7 +173,7 @@ loader.load()
 import {ContainerBuilder, JsFileLoader} from 'node-dependency-injection'
 
 let container = new ContainerBuilder()
-loader = new JsFileLoader(container, 'services.js')
+let loader = new JsFileLoader(container, 'services.js')
 loader.load()
 ```
 
@@ -221,7 +225,7 @@ module.exports = {
           calls: [{ method: 'setMailer', arguments: ['@mailer'] }]
         }
     }
-};
+}
 ```
 
 Compiling the Container
@@ -243,6 +247,164 @@ container.compile()
 ```
 
 After compiling the container the same container will be frozen and you cannot register more services.
+
+Compiler Pass
+---------------
+
+Sometimes, you need to do more than one thing during compilation, want to use compiler passes without an extension 
+or you need to execute some code at another step in the compilation process. In these cases, you can create a new class 
+with a process method
+
+```js
+class CustomPass {
+    /**
+     * @param {ContainerBuilder} container
+     */
+    process (container) {
+       // ... do something during the compilation
+    }
+}
+```
+
+You then need to register your custom pass with the container:
+
+```js
+import {ContainerBuilder, JsFileLoader} from 'node-dependency-injection'
+
+let container = new ContainerBuilder()
+container.addCompilerPass(new CustomPass())
+```
+
+Aliasing
+--------
+
+You may sometimes want to use shortcuts to access some services. 
+
+```js
+import Mailer from './Mailer'
+import {ContainerBuilder} from 'node-dependency-injection'
+
+let container = new ContainerBuilder()
+container.register('service.mailer', Mailer)
+
+container.setAlias('mailer', 'service.mailer')
+```
+
+This means that when using the container directly, you can access the _service.mailer_ service 
+by asking for the _mailer_ service like this:
+
+```js
+container.get('mailer')
+```
+
+In YAML, you can also use a shortcut to alias a service:
+
+```yaml
+services:
+    # ...
+    mailer: '@service.mailer'
+```
+
+or JSON
+```json
+{
+  "services": {
+    // ...
+    "mailer": "@service.mailer"
+  }
+}
+```
+
+or JS
+```js
+module.exports = {
+    services: {
+        // ...
+        mailer: "@service.mailer"
+    }
+}
+```
+
+Tagging
+-------
+
+Services configured in your container can also be tagged. 
+In the service container, a tag implies that the service is meant to be used for a specific purpose.
+
+```js
+import UserRepository from './Entity/UserRepository'
+import {ContainerBuilder, Definition} from 'node-dependency-injection'
+
+let container = new ContainerBuilder()
+let definition = new Definition(UserRepository)
+definition.addTag('repository')
+container.setDefinition('app.entity.user_repository', definition)
+```
+
+Tags, then, are a way to tell to your app that your service should be registered or used in some special way by the app.
+
+Tags on their own don't actually alter the functionality of your services in any way. 
+But if you choose to, you can ask a container builder for a list of all services that were tagged with some specific tag. 
+This is useful in compiler passes where you can find these services and use or modify them in some specific way.
+
+For example:
+
+```js
+// ./Entity/UserRepository
+class UserRepository {
+  constructor (someManager) {
+    this._someManager = someManager
+  }
+  
+  // ...
+}
+
+// ./Entity/AccountRepository
+class AccountRepository {
+  constructor (someManager) {
+    this._someManager = someManager
+  }
+  
+  // ...
+}
+```
+
+So instead of injecting _someManager_ for every repository we can use tags for this purpose.
+
+```yaml
+services:
+    app.service.some_service:
+        class: ./Service/SomeService
+
+    app.entity.user_repository:
+        class: ./Entity/UserRepository
+        tags:
+            - { name: repository }
+
+    app.entity.account_repository:
+        class: ./Entity/AccountRepository
+        tags:
+            - { name: repository }
+```
+
+You can now use a compiler pass to ask the container for any services with the _repository_ tag:
+
+```js
+import {Reference} from 'node-dependency-injection'
+
+class RepositoryPass {
+    /**
+     * @param {ContainerBuilder} container
+     */
+    process (container) {
+       let taggedServices = container.findTaggedServiceIds('repository')
+       
+       for (let [id, definition] of taggedServices) {
+         definition.addArgument(new Reference('app.service.some_service'))
+       }
+    }
+}
+```
 
 Contributing
 ------------

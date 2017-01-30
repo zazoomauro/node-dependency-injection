@@ -35,10 +35,13 @@ describe('YamlFileLoader', () => {
     it('should load a simple container', () => {
       // Arrange.
       let serviceName = 'foo'
+      let aliasName = 'f'
 
       // Act.
       loader.load()
       let service = container.get(serviceName)
+      let aliasService = container.get(aliasName)
+      let taggedServices = container.findTaggedServiceIds('fooTag')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -46,6 +49,8 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(service.bar.barMethod, FooBar)
       assert.isFunction(service.fs.copy)
       assert.strictEqual(service.param, 'foo-bar')
+      assert.strictEqual(aliasService, service)
+      assert.lengthOf(taggedServices.toArray(), 2)
     })
   })
 })

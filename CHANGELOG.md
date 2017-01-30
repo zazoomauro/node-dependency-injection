@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.0] - 2016-01-30
+### Added
+- Register compiler pass from the ContainerBuilder
+- Aliasing: You may sometimes want to use shortcuts to access some services.
+- Tagging: Services configured in your container can also be tagged.
+
 ## [1.2.2] - 2016-01-23
 ### Changed
 - Fix prevent instantiate class again if we get a service and then compile
