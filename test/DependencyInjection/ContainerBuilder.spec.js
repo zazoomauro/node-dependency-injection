@@ -316,4 +316,37 @@ describe('ContainerBuilder', () => {
       assert.strictEqual(container._compilerPass.length, 1)
     })
   })
+
+  describe('setAlias', () => {
+    it('should return the same service type using aliasing', () => {
+      // Arrange.
+      let fooId = 'service.foo'
+      let aliasId = 'foo'
+      class Foo {}
+      container.register(fooId, Foo)
+      container.setAlias(aliasId, fooId)
+
+      // Act.
+      let actual = container.get(aliasId)
+
+      // Assert.
+      assert.instanceOf(actual, Foo)
+    })
+
+    it('should return the same service instance using aliasing', () => {
+      // Arrange.
+      let fooId = 'service.foo'
+      let aliasId = 'foo'
+      class Foo {}
+      container.register(fooId, Foo)
+      container.setAlias(aliasId, fooId)
+      let expected = container.get(fooId)
+
+      // Act.
+      let actual = container.get(aliasId)
+
+      // Assert.
+      assert.strictEqual(actual, expected)
+    })
+  })
 })

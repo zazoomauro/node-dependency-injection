@@ -7,6 +7,7 @@ module.exports = {
         { method: 'setFooBar', arguments: ['@foobar'] }
       ]
     },
-    foobar: {class: './../foobar'}
+    foobar: {class: './../foobar'},
+    f: '@foo'
   }
 }

@@ -10,3 +10,5 @@ services:
 
     foobar:
         class: ./../foobar
+
+    f:  '@foo'

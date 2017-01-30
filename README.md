@@ -119,15 +119,17 @@ If you do want to though then the container can call the setter method:
 
 ```js
 import {ContainerBuilder, Reference, PackageReference} from 'node-dependency-injection'
+import Mailer from './Mailer'
+import NewsletterManager from './NewsletterManager'
 
 let container = new ContainerBuilder()
 
 container
-    .register('mailer', 'Mailer')
+    .register('mailer', Mailer)
     .addArgument('sendmail')
 
 container
-    .register('newsletter_manager', 'NewsletterManager')
+    .register('newsletter_manager', NewsletterManager)
     .addMethodCall('setMailer', [new Reference('mailer')])
 ```
 
@@ -221,7 +223,7 @@ module.exports = {
           calls: [{ method: 'setMailer', arguments: ['@mailer'] }]
         }
     }
-};
+}
 ```
 
 Compiling the Container
@@ -270,6 +272,57 @@ import {ContainerBuilder, JsFileLoader} from 'node-dependency-injection'
 let container = new ContainerBuilder()
 container.addCompilerPass(new CustomPass())
 ```
+
+Aliasing
+--------
+
+You may sometimes want to use shortcuts to access some services. 
+
+```js
+import Mailer from './Mailer'
+import {ContainerBuilder} from 'node-dependency-injection'
+
+let container = new ContainerBuilder()
+container.register('service.mailer', Mailer)
+
+container.setAlias('mailer', 'service.mailer')
+```
+
+This means that when using the container directly, you can access the _service.mailer_ service 
+by asking for the _mailer_ service like this:
+
+```js
+container.get('mailer')
+```
+
+In YAML, you can also use a shortcut to alias a service:
+
+```yaml
+services:
+    # ...
+    mailer: '@service.mailer'
+```
+
+or JSON
+```json
+{
+  "services": {
+    // ...
+    "mailer": "@service.mailer"
+  }
+}
+```
+
+or JS
+```js
+module.exports = {
+    services: {
+        // ...
+        mailer: "@service.mailer"
+    }
+}
+```
+
 
 Contributing
 ------------

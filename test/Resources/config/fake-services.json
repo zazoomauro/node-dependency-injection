@@ -19,6 +19,7 @@
     },
     "foobar": {
       "class": "./../foobar"
-    }
+    },
+    "f": "@foo"
   }
 }
