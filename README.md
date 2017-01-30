@@ -37,9 +37,10 @@ You can register this in the container as a service:
 
 ```js
 import {ContainerBuilder} from 'node-dependency-injection'
+import Mailer from './Mailer'
 
 let container = new ContainerBuilder()
-container.register('mailer', 'Mailer')
+container.register('mailer', Mailer)
 ```
 
 An improvement to the class to make it more flexible would be to allow the container to set the transport used. 
@@ -59,10 +60,11 @@ Then you can set the choice of transport in the container:
 
 ```js
 import {ContainerBuilder} from 'node-dependency-injection'
+import Mailer from './Mailer'
 
 let container = new ContainerBuilder()
 container
-  .register('mailer', 'Mailer')
+  .register('mailer', Mailer)
   .addArgument('sendmail')
 ```
 
@@ -141,7 +143,7 @@ import {ContainerBuilder} from 'node-dependency-injection'
 let container = new ContainerBuilder()
 // ...
 
-newsletterManager = container.get('newsletter_manager')
+let newsletterManager = container.get('newsletter_manager')
 ```
 
 
@@ -153,7 +155,7 @@ Setting up the Container with Configuration Files
 import {ContainerBuilder, YamlFileLoader} from 'node-dependency-injection'
 
 let container = new ContainerBuilder()
-loader = new YamlFileLoader(container, 'services.yaml')
+let loader = new YamlFileLoader(container, 'services.yaml')
 loader.load()
 ```
 
@@ -162,7 +164,7 @@ loader.load()
 import {ContainerBuilder, JsonFileLoader} from 'node-dependency-injection'
 
 let container = new ContainerBuilder()
-loader = new JsonFileLoader(container, 'services.json')
+let loader = new JsonFileLoader(container, 'services.json')
 loader.load()
 ```
 
@@ -171,7 +173,7 @@ loader.load()
 import {ContainerBuilder, JsFileLoader} from 'node-dependency-injection'
 
 let container = new ContainerBuilder()
-loader = new JsFileLoader(container, 'services.js')
+let loader = new JsFileLoader(container, 'services.js')
 loader.load()
 ```
 
