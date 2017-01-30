@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Register compiler pass from the ContainerBuilder
 - Aliasing: You may sometimes want to use shortcuts to access some services.
+- Tagging: Services configured in your container can also be tagged.
 
 ## [1.2.2] - 2016-01-23
 ### Changed

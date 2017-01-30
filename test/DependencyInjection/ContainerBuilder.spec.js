@@ -273,11 +273,11 @@ describe('ContainerBuilder', () => {
     it('should process the registered pass process method', () => {
       // Arrange.
       let processedPass = false
-      let expectedDefinitions
+      let expectedContainer
       class FooPass {
-        process (definitions) {
+        process (container) {
           processedPass = true
-          expectedDefinitions = definitions
+          expectedContainer = container
         }
       }
       container.addCompilerPass(new FooPass())
@@ -287,7 +287,7 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       assert.isTrue(processedPass)
-      assert.strictEqual(container._definitions, expectedDefinitions)
+      assert.strictEqual(container, expectedContainer)
     })
   })
 
@@ -347,6 +347,69 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       assert.strictEqual(actual, expected)
+    })
+  })
+
+  describe('setDefinition', () => {
+    it('should throw an exception if the sent definition argument is not a Definition', () => {
+      // Arrange.
+      let definition = 'foo'
+
+      // Act.
+      let actual = () => container.setDefinition('bar', definition)
+
+      // Assert.
+      assert.throws(actual, Error, 'You cannot register not valid definition')
+    })
+
+    it('should register the definition properly and return the definition', () => {
+      // Arrange.
+      class Foo {}
+      let definition = new Definition(Foo)
+      let id = 'foo'
+
+      // Act.
+      container.setDefinition(id, definition)
+
+      // Assert.
+      assert.instanceOf(container.get(id), Foo)
+    })
+  })
+
+  describe('findTaggedServiceIds', () => {
+    it('should return an array with tagged services', () => {
+      // Arrange.
+      class Foo {}
+      let id = 'foo'
+      let tag = 'fooTag'
+      let definition = new Definition(Foo)
+      definition.addTag(tag)
+      container.setDefinition(id, definition)
+
+      // Act.
+      let actual = container.findTaggedServiceIds(tag)
+
+      // Assert.
+      assert.lengthOf(actual.toArray(), 1)
+    })
+
+    it('should return an array with mutiple tagged services', () => {
+      // Arrange.
+      class Foo {}
+      let id = 'foo'
+      let fooTag = 'fooTag'
+      let barTag = 'barTag'
+      let definition = new Definition(Foo)
+      definition
+        .addTag(fooTag)
+        .addTag(barTag)
+      container.setDefinition(id, definition)
+
+      // Act.
+      let actual = container.findTaggedServiceIds(barTag)
+
+      // Assert.
+      assert.lengthOf(actual.toArray(), 1)
     })
   })
 })

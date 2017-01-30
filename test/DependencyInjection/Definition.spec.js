@@ -88,4 +88,17 @@ describe('Definition', () => {
       assert.lengthOf(definition.arguments, args.length)
     })
   })
+
+  describe('addTag', () => {
+    it('should add a new tag', () => {
+      // Arrange.
+      let tagName = 'foo'
+
+      // Act.
+      definition.addTag(tagName)
+
+      // Assert.
+      assert.lengthOf(definition.tags, 1)
+    })
+  })
 })

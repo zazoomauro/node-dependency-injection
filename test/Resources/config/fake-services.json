@@ -6,6 +6,11 @@
         "@bar",
         "%fs-extra",
         "foo-bar"
+      ],
+      "tags": [
+        {
+          "name": "fooTag"
+        }
       ]
     },
     "bar": {
@@ -13,7 +18,14 @@
       "calls": [
         {
           "method": "setFooBar",
-          "arguments": ["@foobar"]
+          "arguments": [
+            "@foobar"
+          ]
+        }
+      ],
+      "tags": [
+        {
+          "name": "fooTag"
         }
       ]
     },
