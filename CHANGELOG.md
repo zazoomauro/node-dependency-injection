@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.1] - 2016-01-30
+### Changed
+- Fix findTaggedServiceIds returns the tag name instead of definition
+
 ## [1.3.0] - 2016-01-30
 ### Added
 - Register compiler pass from the ContainerBuilder
