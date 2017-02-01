@@ -1,11 +1,16 @@
 The Node Dependency Injection component allows you to standardize and centralize the way objects are constructed in your application.
 
-[Installation](getting-started/)
-[Configuration files](configuration-files/)
-[Compiling container](compiling-container/)
-[Compiler Pass](compiler-pass/)
-[Aliasing](aliasing/)
-[Tagging](tagging/)
+[Installation](getting-started)
+
+[Configuration files](configuration-files)
+
+[Compiling container](compiling-container)
+
+[Compiler Pass](compiler-pass)
+
+[Aliasing](aliasing)
+
+[Tagging](tagging)
 
 ## Basic usage
 
