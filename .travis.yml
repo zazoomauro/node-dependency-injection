@@ -3,8 +3,8 @@ node_js:
   - '6'
   - '5'
   - '4'
-scripts:
-  - npm run standard
+script:
+  - npm run test:standard
   - npm run test:coverage
 after_success:
   - npm run report:coverage
