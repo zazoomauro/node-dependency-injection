@@ -24,7 +24,7 @@ However, there are a couple of things you can do to make life easier for the mai
 * Make sure that all existing tests pass
 * Make sure you followed [standard coding guidelines](http://standardjs.com)
 * Add some tests for your new functionality or a test exhibiting the bug you are solving. Ideally all new tests should not pass _without_ your changes.
-* If you are adding to / changing the public API, remember to add the docs.
+* If you are adding or changing the public API, remember to add this changes in to the docs/wiki.
 * Add an entry to the [changelog](CHANGELOG.md), following the [changelog rules](http://keepachangelog.com/)
 
 ### 1. Prepare your environment
@@ -61,7 +61,15 @@ and if you want to fix automatically some of your source code
 $ npm run test:standard:fix
 ```
 
-### 5. Done ###
+### 5. Documentation/Wiki ###
+
+```console
+$ git clone https://github.com/zazoomauro/node-dependency-injection.wiki.git
+```
+
+And then make and commit your changes
+
+### 6. Done ###
 
 Just commit and send your pull request. 
 Thank you for contributing.
