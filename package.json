@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",
-    "test:coverage": "cross-env NODE_ENV=test nyc npm test",
+    "test:coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text mocha",
     "test:standard": "standard",
     "test:standard:fix": "standard --fix",
     "build": "babel lib -d dist",
@@ -59,7 +59,14 @@
       "es2015",
       "es2016",
       "es2017"
-    ]
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
   },
   "nyc": {
     "sourceMap": false,

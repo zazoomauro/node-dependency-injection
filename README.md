@@ -419,4 +419,6 @@ To contribute:
 - Run `npm install`
 - Run `npm test` to run unit testing
 - Run `npm run test:coverage` to check the unit testing coverage
+- Run `npm run test:standard` to check if your are following the coding standard
+- Run `npm run test:standard:fix` to fix your coding standards issues
 - Update README.md and, if necessary
