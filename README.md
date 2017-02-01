@@ -6,8 +6,8 @@ The Node Dependency Injection component allows you to standardize and centralize
 
 [![npm version](https://badge.fury.io/js/node-dependency-injection.svg)](https://badge.fury.io/js/node-dependency-injection)
 [![Build Status](https://travis-ci.org/zazoomauro/node-dependency-injection.svg?branch=master)](https://travis-ci.org/zazoomauro/node-dependency-injection)
+[![codecov](https://codecov.io/gh/zazoomauro/node-dependency-injection/branch/master/graph/badge.svg)](https://codecov.io/gh/zazoomauro/node-dependency-injection)
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-
 
 Installation
 ------------
@@ -415,7 +415,6 @@ To contribute:
 
 - Fork the repo
 - Run `npm install`
-- Write your unit tests for your change
 - Run `npm test` to run unit testing
-- Run `npm run build` to update the distribution files
+- Run `npm run test:coverage` to check the unit testing coverage
 - Update README.md and, if necessary

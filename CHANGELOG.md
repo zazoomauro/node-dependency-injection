@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.3.1] - 2016-01-30
 ### Changed
 - Fix findTaggedServiceIds returns the tag name instead of definition
+### Added
+- Adding unit testing code coverage tools
+- Adding codecov integration
 
 ## [1.3.0] - 2016-01-30
 ### Added
