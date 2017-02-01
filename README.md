@@ -8,6 +8,8 @@ The Node Dependency Injection component allows you to standardize and centralize
 [![Build Status](https://travis-ci.org/zazoomauro/node-dependency-injection.svg?branch=master)](https://travis-ci.org/zazoomauro/node-dependency-injection)
 [![codecov](https://codecov.io/gh/zazoomauro/node-dependency-injection/branch/master/graph/badge.svg)](https://codecov.io/gh/zazoomauro/node-dependency-injection)
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![npm](https://img.shields.io/npm/dm/node-dependency-injection.svg?maxAge=2592000)](https://www.npmjs.com/package/node-dependency-injection)
+[![License](https://img.shields.io/npm/l/node-dependency-injection.svg?maxAge=2592000?style=plastic)](https://github.com/zazoomauro/node-dependency-injection/blob/master/LICENSE)
 
 Installation
 ------------

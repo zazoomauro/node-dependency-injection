@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Adding unit testing code coverage tools
 - Adding codecov integration
+- Adding npm downloads badges
+- Adding LICENCE
 
 ## [1.3.0] - 2016-01-30
 ### Added
