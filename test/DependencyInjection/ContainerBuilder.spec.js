@@ -273,7 +273,7 @@ describe('ContainerBuilder', () => {
     it('should process the registered pass process method', () => {
       // Arrange.
       let processedPass = false
-      let expectedContainer
+      let expectedContainer = null
       class FooPass {
         process (container) {
           processedPass = true
@@ -288,6 +288,25 @@ describe('ContainerBuilder', () => {
       // Assert.
       assert.isTrue(processedPass)
       assert.strictEqual(container, expectedContainer)
+    })
+
+    it('should not instantiate twice even if there is a compiler pass during compilation', () => {
+      // Arrange.
+      let actualCompilations = 0
+
+      class FooPass {
+        process (container) {
+          actualCompilations++
+        }
+      }
+      container.addCompilerPass(new FooPass())
+
+      // Act.
+      container.compile()
+      container.compile()
+
+      // Assert.
+      assert.strictEqual(actualCompilations, 1)
     })
   })
 
