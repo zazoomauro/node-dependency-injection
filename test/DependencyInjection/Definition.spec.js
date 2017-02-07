@@ -21,7 +21,7 @@ describe('Definition', () => {
       definition.addArgument(argument)
 
       // Assert.
-      assert.lengthOf(definition.arguments, 1)
+      assert.lengthOf(definition.args, 1)
     })
 
     it('should add more than one argument to arguments', () => {
@@ -35,7 +35,7 @@ describe('Definition', () => {
         .addArgument(argument2)
 
       // Assert.
-      assert.lengthOf(definition.arguments, 2)
+      assert.lengthOf(definition.args, 2)
     })
   })
 
@@ -76,16 +76,16 @@ describe('Definition', () => {
     })
   })
 
-  describe('setArguments', () => {
+  describe('set args', () => {
     it('should override the entire arguments collection', () => {
       // Arrange.
       let args = ['foo', 'bar', 'foobar']
 
       // Act.
-      definition.setArguments(args)
+      definition.args = args
 
       // Assert.
-      assert.lengthOf(definition.arguments, args.length)
+      assert.lengthOf(definition.args, args.length)
     })
   })
 

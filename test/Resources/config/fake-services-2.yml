@@ -1,0 +1,7 @@
+services:
+  foo_manager:
+    class: ./../fooManager
+
+  bar_manager:
+    class: ./../barManager
+    arguments: ['@foo_manager']

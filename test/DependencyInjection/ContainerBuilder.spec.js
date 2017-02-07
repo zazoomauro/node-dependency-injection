@@ -4,6 +4,10 @@ import chai from 'chai'
 import ContainerBuilder from '../../lib/ContainerBuilder'
 import Definition from '../../lib/Definition'
 import Reference from '../../lib/Reference'
+import YamlFileLoader from '../../lib/Loader/YamlFileLoader'
+import path from 'path'
+import FooManager from './../Resources/fooManager'
+import BarManager from './../Resources/barManager'
 
 let assert = chai.assert
 
@@ -24,7 +28,7 @@ describe('ContainerBuilder', () => {
       let actual = container.register(id, className)
 
       // Assert.
-      assert.instanceOf(actual, Definition)
+      return assert.instanceOf(actual, Definition)
     })
   })
 
@@ -37,7 +41,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.get(id)
 
       // Assert.
-      assert.throws(actual, Error, 'The service ' + id + ' is not registered')
+      return assert.throws(actual, Error, 'The service ' + id + ' is not registered')
     })
 
     it('should return the right service', () => {
@@ -51,7 +55,7 @@ describe('ContainerBuilder', () => {
       let actual = container.get(id)
 
       // Assert.
-      assert.instanceOf(actual, Foo)
+      return assert.instanceOf(actual, Foo)
     })
 
     it('should return the right service with argument in the constructor', () => {
@@ -73,7 +77,7 @@ describe('ContainerBuilder', () => {
       let actual = container.get(id)
 
       // Assert.
-      assert.strictEqual(actual.param, param)
+      return assert.strictEqual(actual.param, param)
     })
 
     it('should return the right service with reference argument', () => {
@@ -98,7 +102,7 @@ describe('ContainerBuilder', () => {
       let actual = container.get(id)
 
       // Assert.
-      assert.instanceOf(actual.bar, Bar)
+      return assert.instanceOf(actual.bar, Bar)
     })
 
     it('should return the right service with reference argument', () => {
@@ -135,7 +139,7 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       assert.instanceOf(actual.bar, Bar)
-      assert.instanceOf(actual.bar.fooBar, FooBar)
+      return assert.instanceOf(actual.bar.fooBar, FooBar)
     })
 
     it('should call the method without any argument', () => {
@@ -156,12 +160,11 @@ describe('ContainerBuilder', () => {
         .addMethodCall('bar', [parameter])
         .addMethodCall('fake')
 
+      // Act.
       let foo = container.get(id)
 
-      // Act.
-
       // Assert.
-      assert.strictEqual(foo.parameter, parameter)
+      return assert.strictEqual(foo.parameter, parameter)
     })
 
     it('should get the service instance and instantiate ones multiple service dependency', () => {
@@ -201,7 +204,7 @@ describe('ContainerBuilder', () => {
       container.get(barId)
 
       // Assert.
-      assert.strictEqual(constructorCalls, 1)
+      return assert.strictEqual(constructorCalls, 1)
     })
   })
 
@@ -213,7 +216,7 @@ describe('ContainerBuilder', () => {
       container.compile()
 
       // Assert.
-      assert.isTrue(container.frozen)
+      return assert.isTrue(container.frozen)
     })
 
     it('should compile the container and return a service', () => {
@@ -235,7 +238,7 @@ describe('ContainerBuilder', () => {
       container.compile()
 
       // Assert.
-      assert.strictEqual(container.get(id).parameter, parameter)
+      return assert.strictEqual(container.get(id).parameter, parameter)
     })
 
     it('should not register more services when the container is already frozen', () => {
@@ -247,7 +250,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.register('bar', class Bar {})
 
       // Assert.
-      assert.throws(actual, Error, 'You cannot register more services when the container is frozen')
+      return assert.throws(actual, Error, 'You cannot register more services when the container is frozen')
     })
 
     it('should prevent instantiate class again if we get a service and then compile', () => {
@@ -267,7 +270,7 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       assert.strictEqual(constructorCalls, 1)
-      assert.instanceOf(foo, Foo)
+      return assert.instanceOf(foo, Foo)
     })
 
     it('should process the registered pass process method', () => {
@@ -287,7 +290,7 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       assert.isTrue(processedPass)
-      assert.strictEqual(container, expectedContainer)
+      return assert.strictEqual(container, expectedContainer)
     })
 
     it('should not instantiate twice even if there is a compiler pass during compilation', () => {
@@ -306,7 +309,33 @@ describe('ContainerBuilder', () => {
       container.compile()
 
       // Assert.
-      assert.strictEqual(actualCompilations, 1)
+      return assert.strictEqual(actualCompilations, 1)
+    })
+
+    it('should not instantiate a service twice even if a dependency needs another service from yml loader', () => {
+      // Arrange.
+      FooManager.prototype.fooManagerCalls = 0
+      let loader = new YamlFileLoader(container, path.join(__dirname, '../Resources/config/fake-services-2.yml'))
+      loader.load()
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      return assert.strictEqual(FooManager.prototype.fooManagerCalls, 1)
+    })
+
+    it('should not instantiate a service twice even if a dependency needs another service from container builder', () => {
+      // Arrange.
+      FooManager.prototype.fooManagerCalls = 0
+      container.register('foo_manager', FooManager)
+      container.register('bar_manager', BarManager).addArgument(new Reference('foo_manager'))
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      return assert.strictEqual(FooManager.prototype.fooManagerCalls, 1)
     })
   })
 
@@ -319,7 +348,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.addCompilerPass(new FooPass())
 
       // Assert.
-      assert.throws(actual, Error, 'Your compiler pass does not have the process method')
+      return assert.throws(actual, Error, 'Your compiler pass does not have the process method')
     })
 
     it('should register properly a compiler pass if has the process method', () => {
@@ -332,7 +361,7 @@ describe('ContainerBuilder', () => {
       container.addCompilerPass(new FooPass())
 
       // Assert.
-      assert.strictEqual(container._compilerPass.length, 1)
+      return assert.strictEqual(container._compilerPass.length, 1)
     })
   })
 
@@ -349,7 +378,7 @@ describe('ContainerBuilder', () => {
       let actual = container.get(aliasId)
 
       // Assert.
-      assert.instanceOf(actual, Foo)
+      return assert.instanceOf(actual, Foo)
     })
 
     it('should return the same service instance using aliasing', () => {
@@ -365,7 +394,7 @@ describe('ContainerBuilder', () => {
       let actual = container.get(aliasId)
 
       // Assert.
-      assert.strictEqual(actual, expected)
+      return assert.strictEqual(actual, expected)
     })
   })
 
@@ -378,7 +407,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.setDefinition('bar', definition)
 
       // Assert.
-      assert.throws(actual, Error, 'You cannot register not valid definition')
+      return assert.throws(actual, Error, 'You cannot register not valid definition')
     })
 
     it('should register the definition properly and return the definition', () => {
@@ -391,7 +420,7 @@ describe('ContainerBuilder', () => {
       container.setDefinition(id, definition)
 
       // Assert.
-      assert.instanceOf(container.get(id), Foo)
+      return assert.instanceOf(container.get(id), Foo)
     })
   })
 
@@ -409,7 +438,7 @@ describe('ContainerBuilder', () => {
       let actual = container.findTaggedServiceIds(tag)
 
       // Assert.
-      assert.lengthOf(actual.toArray(), 1)
+      return assert.lengthOf(actual.toArray(), 1)
     })
 
     it('should return an array with mutiple tagged services', () => {
@@ -428,7 +457,7 @@ describe('ContainerBuilder', () => {
       let actual = container.findTaggedServiceIds(barTag)
 
       // Assert.
-      assert.lengthOf(actual.toArray(), 1)
+      return assert.lengthOf(actual.toArray(), 1)
     })
   })
 })

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.3] - 2016-02-07
+### Changed
+- Refactoring container builder preventing having two different container builders for compiled and not compiled containers
+- Fixing definition private get arguments class.
+- Preventing instantiating reference service twice
+
 ## [1.3.2] - 2016-02-06
 ### Changed
 - Preventing compiling an already compiled container
