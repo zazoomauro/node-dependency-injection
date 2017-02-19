@@ -4,6 +4,7 @@ import chai from 'chai'
 import YamlFileLoader from '../../../lib/Loader/YamlFileLoader'
 import ContainerBuilder from '../../../lib/ContainerBuilder'
 import Foo from '../../Resources/foo'
+import FooManager from '../../Resources/fooManager'
 import Bar from '../../Resources/bar'
 import FooBar from '../../Resources/foobar'
 import path from 'path'
@@ -14,12 +15,12 @@ describe('YamlFileLoader', () => {
   let loader
   let container
 
-  beforeEach(() => {
-    container = new ContainerBuilder()
-    loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.yml'))
-  })
-
   describe('load', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+    })
+
     it('should throw an exception if the yaml file not exists', () => {
       // Arrange.
       let path = 'fake-filePath.yml'
@@ -51,6 +52,28 @@ describe('YamlFileLoader', () => {
       assert.strictEqual(service.param, 'foo-bar')
       assert.strictEqual(aliasService, service)
       assert.lengthOf(taggedServices.toArray(), 2)
+    })
+  })
+
+  describe('load multiple imports', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-imports.yml'))
+    })
+
+    it('should load multiple service files', () => {
+      // Arrange.
+      let serviceName1 = 'foo'
+      let serviceName2 = 'foo_manager'
+
+      // Act.
+      loader.load()
+      let service1 = container.get(serviceName1)
+      let service2 = container.get(serviceName2)
+
+      // Assert.
+      assert.instanceOf(service1, Foo)
+      assert.instanceOf(service2, FooManager)
     })
   })
 })

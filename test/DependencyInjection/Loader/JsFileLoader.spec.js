@@ -14,12 +14,12 @@ describe('JsFileLoader', () => {
   let loader
   let container
 
-  beforeEach(() => {
-    container = new ContainerBuilder()
-    loader = new JsFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.js'))
-  })
-
   describe('load', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new JsFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.js'))
+    })
+
     it('should throw an exception if the js file not exists', () => {
       // Arrange.
       let path = 'fake-filePath.js'
@@ -51,6 +51,25 @@ describe('JsFileLoader', () => {
       assert.strictEqual(service.param, 'foo-bar')
       assert.strictEqual(aliasService, service)
       assert.lengthOf(taggedServices.toArray(), 2)
+    })
+  })
+
+  describe('load multiple imports', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new JsFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-imports.js'))
+    })
+
+    it('should load multiple service files', () => {
+      // Arrange.
+      let serviceName = 'foo'
+
+      // Act.
+      loader.load()
+      let service = container.get(serviceName)
+
+      // Assert.
+      assert.instanceOf(service, Foo)
     })
   })
 })

@@ -14,12 +14,12 @@ describe('JsonFileLoader', () => {
   let loader
   let container
 
-  beforeEach(() => {
-    container = new ContainerBuilder()
-    loader = new JsonFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.json'))
-  })
-
   describe('load', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new JsonFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.json'))
+    })
+
     it('should throw an exception if the json file not exists', () => {
       // Arrange.
       let path = 'fake-filePath.json'
@@ -51,6 +51,25 @@ describe('JsonFileLoader', () => {
       assert.strictEqual(service.param, 'foo-bar')
       assert.strictEqual(aliasService, service)
       assert.lengthOf(taggedServices.toArray(), 2)
+    })
+  })
+
+  describe('load multiple imports', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new JsonFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-imports.json'))
+    })
+
+    it('should load multiple service files', () => {
+      // Arrange.
+      let serviceName = 'foo'
+
+      // Act.
+      loader.load()
+      let service = container.get(serviceName)
+
+      // Assert.
+      assert.instanceOf(service, Foo)
     })
   })
 })
