@@ -1,0 +1,7 @@
+{
+  "imports": [
+    {
+      "resource": "./fake-services.json"
+    }
+  ]
+}
