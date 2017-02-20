@@ -8,9 +8,9 @@ However, there are a couple of things you can do to make the lives of the develo
   * Post a _minimal_ code sample that reproduces the issue
   * What do you expect to happen?
   * What is actually happening?
-* Which nodejs you are using?
+* Which NodeJS version you are using?
 * Which Ecma Script version you are using?
-* Which Ecma Script presets your are using?
+* Which Ecma Script presets you are using?
 
 When you post code, please use [Github flavored markdown](https://help.github.com/articles/github-flavored-markdown), 
 in order to get proper syntax highlighting!

@@ -1,8 +1,12 @@
 module.exports = {
+  parameters: {
+    fooParameter: 'barValue',
+    barParameter: ['foo', 'bar']
+  },
   services: {
     foo: {
       class: './../foo',
-      arguments: ['@bar', '%fs-extra', 'foo-bar'],
+      arguments: ['@bar', '%fs-extra', 'foo-bar', '%fooParameter%'],
       tags: [
         {name: 'fooTag'}
       ]

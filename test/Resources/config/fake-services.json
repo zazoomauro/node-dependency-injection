@@ -1,11 +1,19 @@
 {
+  "parameters": {
+    "fooParameter": "barValue",
+    "barParameter": [
+      "foo",
+      "bar"
+    ]
+  },
   "services": {
     "foo": {
       "class": "./../foo",
       "arguments": [
         "@bar",
         "%fs-extra",
-        "foo-bar"
+        "foo-bar",
+        "%fooParameter%"
       ],
       "tags": [
         {

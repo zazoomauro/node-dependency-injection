@@ -1,8 +1,9 @@
 class Foo {
-  constructor (bar, fs, param) {
+  constructor (bar, fs, param, parameter) {
     this._bar = bar
     this._fs = fs
     this._param = param
+    this._parameter = parameter
   }
 
   get bar () {
@@ -15,6 +16,10 @@ class Foo {
 
   get param () {
     return this._param
+  }
+
+  get parameter () {
+    return this._parameter
   }
 }
 

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.0] - 2016-02-20
+### Added 
+- Adding parameters on arguments wrapped on %{string}% with the configuration files
+- Adding imports feature to load automatically more services in another files
+
 ## [1.3.3] - 2016-02-07
 ### Changed
 - Refactoring container builder preventing having two different container builders for compiled and not compiled containers

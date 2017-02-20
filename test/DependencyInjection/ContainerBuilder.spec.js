@@ -460,4 +460,82 @@ describe('ContainerBuilder', () => {
       return assert.lengthOf(actual.toArray(), 1)
     })
   })
+
+  describe('setParameter', () => {
+    it('should set a string parameter properly', () => {
+      // Arrange.
+      let key = 'foo.bar'
+      let value = 'foobar'
+
+      // Act.
+      container.setParameter(key, value)
+
+      // Assert.
+      assert.strictEqual(container._parameters.get(key), value)
+    })
+
+    it('should set an array parameter properly', () => {
+      // Arrange.
+      let key = 'foo.bar'
+      let value = ['foo', 'bar']
+
+      // Act.
+      container.setParameter(key, value)
+
+      // Assert.
+      assert.strictEqual(container._parameters.get(key), value)
+    })
+
+    it('should throw an exception if the set value is not a valid parameter', () => {
+      // Arrange.
+      let key = 'foo.bar'
+      let value = {}
+
+      // Act.
+      let actual = () => container.setParameter(key, value)
+
+      // Assert.
+      return assert.throws(actual, TypeError, 'The expected value is not a flat string or an array')
+    })
+  })
+
+  describe('getParameter', () => {
+    it('should get a parameter properly', () => {
+      // Arrange.
+      let key = 'foo.bar'
+      let value = 'foobar'
+      container.setParameter(key, value)
+
+      // Act.
+      let actual = container.getParameter(key)
+
+      // Assert.
+      assert.strictEqual(actual, value)
+    })
+  })
+
+  describe('hasParameter', () => {
+    it('should return true if the parameters was previously set', () => {
+      // Arrange.
+      let key = 'foo.bar'
+      let value = 'foobar'
+      container.setParameter(key, value)
+
+      // Act.
+      let actual = container.hasParameter(key)
+
+      // Assert.
+      assert.isTrue(actual)
+    })
+
+    it('should return false if the parameters was not previously set', () => {
+      // Arrange not needed.
+
+      // Act.
+      let actual = container.hasParameter('foo')
+
+      // Assert.
+      assert.isFalse(actual)
+    })
+  })
 })
