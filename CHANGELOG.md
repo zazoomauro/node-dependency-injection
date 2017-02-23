@@ -1,8 +1,9 @@
 # Change Log
-All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
+## [1.4.1] - 2016-02-23
+### Changed
+- Removing CHANGELOG file description
+- Using npm version script instead or server:release to do npm packages releases
 
 ## [1.4.0] - 2016-02-20
 ### Added 
