@@ -9,6 +9,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",
     "test:coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text mocha",
+    "test:standard": "standard",
     "test:standard:fix": "standard --fix",
     "build": "babel lib -d dist",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
