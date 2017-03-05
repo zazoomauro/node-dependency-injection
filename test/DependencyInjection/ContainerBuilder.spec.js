@@ -41,7 +41,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.get(id)
 
       // Assert.
-      return assert.throws(actual, Error, 'The service ' + id + ' is not registered')
+      return assert.throws(actual, Error, `The service ${id} is not registered`)
     })
 
     it('should return the right service', () => {
@@ -372,9 +372,9 @@ describe('ContainerBuilder', () => {
       let aliasId = 'foo'
       class Foo {}
       container.register(fooId, Foo)
-      container.setAlias(aliasId, fooId)
 
       // Act.
+      container.setAlias(aliasId, fooId)
       let actual = container.get(aliasId)
 
       // Assert.
@@ -421,6 +421,25 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.instanceOf(container.get(id), Foo)
+    })
+
+    it('should add the right arguments dependencies in the definition constructor', () => {
+      // Arrange.
+      class Foo {
+        constructor (string) {
+          this.string = string
+        }
+      }
+      let id = 'foo'
+      let stringValue = 'foo'
+      let definition = new Definition(Foo, [stringValue])
+
+      // Act.
+      container.setDefinition(id, definition)
+      let actual = container.get(id).string
+
+      // Assert.
+      return assert.strictEqual(actual, stringValue)
     })
   })
 
@@ -536,6 +555,162 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       assert.isFalse(actual)
+    })
+  })
+
+  describe('hasDefinition', () => {
+    it('should return true if the definition was properly set', () => {
+      // Arrange.
+      class Foo {}
+      let key = 'foo'
+      let definition = new Definition(Foo)
+      container.setDefinition(key, definition)
+
+      // Act.
+      let actual = container.hasDefinition(key)
+
+      // Assert.
+      return assert.isTrue(actual)
+    })
+
+    it('should return false if the definition if was not properly set', () => {
+      // Arrange.
+      let key = 'foo'
+
+      // Act.
+      let actual = container.hasDefinition(key)
+
+      // Assert.
+      return assert.isFalse(actual)
+    })
+
+    it('should return false if we are looking for an alias definition', () => {
+      // Arrange.
+      class Foo {}
+      let key = 'foo'
+      let keyAlias = 'f'
+      let definition = new Definition(Foo)
+      container.setDefinition(key, definition)
+      container.setAlias(keyAlias, key)
+
+      // Act.
+      let actual = container.hasDefinition(keyAlias)
+
+      // Assert.
+      return assert.isFalse(actual);
+    })
+  })
+
+  describe('has', () => {
+    it('should return true if an alias was properly set', () => {
+      // Arrange.
+      class Foo {}
+      let key = 'foo'
+      let keyAlias = 'f'
+      let definition = new Definition(Foo)
+      container.setDefinition(key, definition)
+      container.setAlias(keyAlias, key)
+
+      // Act.
+      let actual = container.has(keyAlias)
+
+      // Assert.
+      return assert.isTrue(actual);
+    })
+
+    it('should return true if a parameter was properly set', () => {
+      // Arrange.
+      let key = 'foo'
+      container.setParameter(key, 'bar')
+
+      // Act.
+      let actual = container.has(key)
+
+      // Assert.
+      return assert.isTrue(actual)
+    })
+
+    it('should return true if a parameter was properly set', () => {
+      // Arrange.
+      let key = 'foo'
+
+      // Act.
+      let actual = container.has(key)
+
+      // Assert.
+      return assert.isFalse(actual)
+    })
+  })
+
+  describe('getDefinition', () => {
+    it('should return the set definition', () => {
+      // Arrange.
+      class Foo {}
+      let key = 'foo'
+      let definition = new Definition(Foo)
+      container.setDefinition(key, definition)
+
+      // Act.
+      let actual = container.getDefinition(key)
+
+      // Assert.
+      return assert.instanceOf(actual, Definition)
+    })
+
+    it('should throw an exception if the definition alias was not set', () => {
+      // Arrange.
+      class Foo {}
+      let key = 'foo'
+      let keyAlias = 'f'
+      let definition = new Definition(Foo)
+      container.setDefinition(key, definition)
+      container.setAlias(keyAlias, key)
+
+      // Act.
+      let actual = () => container.getDefinition(keyAlias)
+
+      // Assert.
+      return assert.throws(actual, Error, `${keyAlias} definition not found`)
+    })
+
+    it('should throw an exception if the definition was not set', () => {
+      // Arrange.
+      let key = 'foo'
+
+      // Act.
+      let actual = () => container.getDefinition(key)
+
+      // Assert.
+      return assert.throws(actual, Error, `${key} definition not found`)
+    })
+  })
+
+  describe('findDefinition', () => {
+    it('should return a definition if an alias was properly set', () => {
+      // Arrange.
+      class Foo {}
+      let key = 'foo'
+      let keyAlias = 'f'
+      let definition = new Definition(Foo)
+      container.setDefinition(key, definition)
+      container.setAlias(keyAlias, key)
+
+      // Act.
+      let actual = container.findDefinition(keyAlias)
+
+      // Assert.
+      return assert.instanceOf(actual, Definition)
+    })
+
+    it('should throw an exception if a definition was not set properly', () => {
+      // Arrange.
+      let key = 'foo'
+
+      // Act.
+      let actual = () => container.findDefinition(key)
+
+      // Assert.
+      return assert.throws(actual, Error, `${key} definition not found`)
     })
   })
 })

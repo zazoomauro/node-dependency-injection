@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.5.0] - 2016-03-05
+### Added
+- Adding hasDefinition public container method
+- Adding has container public method
+- Adding getDefinition public container method
+- Adding findDefinition public container method
+
 ## [1.4.1] - 2016-02-23
 ### Changed
 - Removing CHANGELOG file description
