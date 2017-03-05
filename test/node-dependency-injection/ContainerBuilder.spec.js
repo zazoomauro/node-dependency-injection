@@ -315,8 +315,8 @@ describe('ContainerBuilder', () => {
     it('should not instantiate a service twice even if a dependency needs another service from yml loader', () => {
       // Arrange.
       FooManager.prototype.fooManagerCalls = 0
-      let loader = new YamlFileLoader(container, path.join(__dirname, '../Resources/config/fake-services-2.yml'))
-      loader.load()
+      let loader = new YamlFileLoader(container)
+      loader.load(path.join(__dirname, '../Resources/config/fake-services-2.yml'))
 
       // Act.
       container.compile()
@@ -597,7 +597,7 @@ describe('ContainerBuilder', () => {
       let actual = container.hasDefinition(keyAlias)
 
       // Assert.
-      return assert.isFalse(actual);
+      return assert.isFalse(actual)
     })
   })
 
@@ -615,7 +615,7 @@ describe('ContainerBuilder', () => {
       let actual = container.has(keyAlias)
 
       // Assert.
-      return assert.isTrue(actual);
+      return assert.isTrue(actual)
     })
 
     it('should return true if a parameter was properly set', () => {

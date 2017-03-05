@@ -18,19 +18,18 @@ describe('YamlFileLoader', () => {
   describe('load', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
-      loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+      loader = new YamlFileLoader(container)
     })
 
     it('should throw an exception if the yaml file not exists', () => {
       // Arrange.
-      let path = 'fake-filePath.yml'
-      loader = new YamlFileLoader(container, path)
+      let file = 'fake-filePath.yml'
 
       // Act.
-      let actual = () => loader.load()
+      let actual = () => loader.load(file)
 
       // Assert.
-      return assert.throws(actual, Error, 'The file ' + path + ' not exists')
+      return assert.throws(actual, Error, `The file ${file} not exists`)
     })
 
     it('should load a simple container', () => {
@@ -43,7 +42,7 @@ describe('YamlFileLoader', () => {
       let arrayParameterName = 'barParameter'
 
       // Act.
-      loader.load()
+      loader.load(path.join(__dirname, '/../../Resources/config/fake-services.yml'))
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
       let taggedServices = container.findTaggedServiceIds(tagName)
@@ -69,7 +68,7 @@ describe('YamlFileLoader', () => {
   describe('load multiple imports', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
-      loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-imports.yml'))
+      loader = new YamlFileLoader(container)
     })
 
     it('should load multiple service files', () => {
@@ -78,7 +77,7 @@ describe('YamlFileLoader', () => {
       let serviceName2 = 'foo_manager'
 
       // Act.
-      loader.load()
+      loader.load(path.join(__dirname, '/../../Resources/config/fake-imports.yml'))
       let service1 = container.get(serviceName1)
       let service2 = container.get(serviceName2)
 
@@ -86,6 +85,25 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(service1, Foo)
 
       return assert.instanceOf(service2, FooManager)
+    })
+  })
+
+  describe('old way of loading yaml config file', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+    })
+
+    it('should load multiple service files', () => {
+      // Arrange.
+      let serviceName = 'foo'
+
+      // Act.
+      loader.load()
+      let service = container.get(serviceName)
+
+      // Assert.
+      return assert.instanceOf(service, Foo)
     })
   })
 })

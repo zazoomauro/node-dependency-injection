@@ -6,6 +6,9 @@
 - Adding has container public method
 - Adding getDefinition public container method
 - Adding findDefinition public container method
+### Changed
+- Deprecating second constructor argument of File loader
+- Deprecating not setting first argument on config file load method
 
 ## [1.4.1] - 2016-02-23
 ### Changed
