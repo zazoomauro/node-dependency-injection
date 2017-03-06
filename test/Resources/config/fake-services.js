@@ -2,7 +2,7 @@ module.exports = {
   parameters: {
     fooParameter: 'barValue',
     barParameter: ['foo', 'bar'],
-    fooProperty: 'fooProperty',
+    fooProperty: 'fooProperty'
   },
   services: {
     foo: {

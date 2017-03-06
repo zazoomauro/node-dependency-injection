@@ -232,7 +232,7 @@ describe('ContainerBuilder', () => {
       return assert.strictEqual(actual.bar, value)
     })
 
-    it ('should instantiate a lazy service only when get the service', () => {
+    it('should instantiate a lazy service only when get the service', () => {
       // Arrange.
       let fooId = 'service.foo'
       let constructorCalls = 0
@@ -409,7 +409,7 @@ describe('ContainerBuilder', () => {
       return assert.strictEqual(container.get(serviceId).bar, value)
     })
 
-    it ('should not instantiate a lazy service on compile', () => {
+    it('should not instantiate a lazy service on compile', () => {
       // Arrange.
       let fooId = 'service.foo'
       let constructorCalls = 0
