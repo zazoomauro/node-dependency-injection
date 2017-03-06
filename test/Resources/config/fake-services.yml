@@ -1,6 +1,7 @@
 parameters:
     fooParameter: barValue
     barParameter: ['foo', 'bar']
+    fooProperty: 'fooProperty'
 
 services:
     foo:
@@ -8,6 +9,8 @@ services:
         arguments: ['@bar', '%fs-extra', 'foo-bar', '%fooParameter%']
         tags:
             - {name: 'fooTag'}
+        properties:
+            property: '%fooProperty%'
 
     bar:
         class: ./../bar

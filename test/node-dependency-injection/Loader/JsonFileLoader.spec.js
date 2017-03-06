@@ -39,6 +39,7 @@ describe('JsonFileLoader', () => {
       let stringParameterName = 'fooParameter'
       let stringExpectedParameter = 'barValue'
       let arrayParameterName = 'barParameter'
+      let stringPropertyExpected = 'fooProperty'
 
       // Act.
       loader.load(path.join(__dirname, '/../../Resources/config/fake-services.json'))
@@ -59,6 +60,7 @@ describe('JsonFileLoader', () => {
       assert.strictEqual(stringActualParameter, stringExpectedParameter)
       assert.isArray(arrayActualParameter)
       assert.strictEqual(service.parameter, stringExpectedParameter)
+      assert.strictEqual(service.property, stringPropertyExpected)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })

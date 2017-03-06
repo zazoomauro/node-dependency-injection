@@ -21,6 +21,14 @@ class Foo {
   get parameter () {
     return this._parameter
   }
+
+  set property (value) {
+    this._property = value
+  }
+
+  get property () {
+    return this._property
+  }
 }
 
 export default Foo

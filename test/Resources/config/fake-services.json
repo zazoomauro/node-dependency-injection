@@ -4,7 +4,8 @@
     "barParameter": [
       "foo",
       "bar"
-    ]
+    ],
+    "fooProperty": "fooProperty"
   },
   "services": {
     "foo": {
@@ -19,7 +20,10 @@
         {
           "name": "fooTag"
         }
-      ]
+      ],
+      "properties": {
+        "property": "%fooProperty%"
+      }
     },
     "bar": {
       "class": "./../bar",

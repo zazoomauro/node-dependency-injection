@@ -206,6 +206,31 @@ describe('ContainerBuilder', () => {
       // Assert.
       return assert.strictEqual(constructorCalls, 1)
     })
+
+    it('should return an instance with set properties', () => {
+      // Arrange.
+      class Foo {
+        set bar (value) {
+          this._bar = value
+        }
+
+        get bar () {
+          return this._bar
+        }
+      }
+      let serviceId = 'foo'
+      let propertyKey = 'bar'
+      let value = 'foo.bar'
+      let definition = new Definition(Foo)
+      definition.addProperty(propertyKey, value)
+      container.setDefinition(serviceId, definition)
+
+      // Act.
+      let actual = container.get(serviceId)
+
+      // Assert.
+      return assert.strictEqual(actual.bar, value)
+    })
   })
 
   describe('compile', () => {
@@ -336,6 +361,31 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.strictEqual(FooManager.prototype.fooManagerCalls, 1)
+    })
+
+    it('should return an instance with set properties', () => {
+      // Arrange.
+      class Foo {
+        set bar (value) {
+          this._bar = value
+        }
+
+        get bar () {
+          return this._bar
+        }
+      }
+      let serviceId = 'foo'
+      let propertyKey = 'bar'
+      let value = 'foo.bar'
+      let definition = new Definition(Foo)
+      definition.addProperty(propertyKey, value)
+      container.setDefinition(serviceId, definition)
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      return assert.strictEqual(container.get(serviceId).bar, value)
     })
   })
 
