@@ -62,6 +62,7 @@ describe('YamlFileLoader', () => {
       assert.isArray(arrayActualParameter)
       assert.strictEqual(service.parameter, stringExpectedParameter)
       assert.strictEqual(service.property, stringPropertyExpected)
+      assert.strictEqual()
 
       return assert.lengthOf(arrayActualParameter, 2)
     })

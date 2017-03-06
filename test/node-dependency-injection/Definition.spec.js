@@ -115,4 +115,16 @@ describe('Definition', () => {
       assert.lengthOf(definition.properties, 1)
     })
   })
+
+  describe('lazy', () => {
+    it('should set as true', () => {
+      // Arrange not needed.
+
+      // Act.
+      definition.lazy = true
+
+      // Assert.
+      assert.isTrue(definition.lazy)
+    })
+  })
 })

@@ -231,6 +231,27 @@ describe('ContainerBuilder', () => {
       // Assert.
       return assert.strictEqual(actual.bar, value)
     })
+
+    it ('should instantiate a lazy service only when get the service', () => {
+      // Arrange.
+      let fooId = 'service.foo'
+      let constructorCalls = 0
+      class Foo {
+        constructor () {
+          constructorCalls++
+        }
+      }
+      let definition = new Definition(Foo)
+      definition.lazy = true
+      container.setDefinition(fooId, definition)
+      container.compile()
+
+      // Act.
+      container.get(fooId)
+
+      // Assert.
+      return assert.strictEqual(constructorCalls, 1)
+    })
   })
 
   describe('compile', () => {
@@ -386,6 +407,26 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.strictEqual(container.get(serviceId).bar, value)
+    })
+
+    it ('should not instantiate a lazy service on compile', () => {
+      // Arrange.
+      let fooId = 'service.foo'
+      let constructorCalls = 0
+      class Foo {
+        constructor () {
+          constructorCalls++
+        }
+      }
+      let definition = new Definition(Foo)
+      definition.lazy = true
+      container.setDefinition(fooId, definition)
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      return assert.strictEqual(constructorCalls, 0)
     })
   })
 
