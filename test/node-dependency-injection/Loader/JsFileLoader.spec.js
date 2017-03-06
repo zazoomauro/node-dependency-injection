@@ -17,19 +17,18 @@ describe('JsFileLoader', () => {
   describe('load', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
-      loader = new JsFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.js'))
+      loader = new JsFileLoader(container)
     })
 
     it('should throw an exception if the js file not exists', () => {
       // Arrange.
-      let path = 'fake-filePath.js'
-      loader = new JsFileLoader(container, path)
+      let file = 'fake-filePath.js'
 
       // Act.
-      let actual = () => loader.load()
+      let actual = () => loader.load(file)
 
       // Assert.
-      return assert.throws(actual, Error, 'The file ' + path + ' not exists')
+      return assert.throws(actual, Error, `The file ${file} not exists`)
     })
 
     it('should load a simple container', () => {
@@ -40,9 +39,10 @@ describe('JsFileLoader', () => {
       let stringParameterName = 'fooParameter'
       let stringExpectedParameter = 'barValue'
       let arrayParameterName = 'barParameter'
+      let stringPropertyExpected = 'fooProperty'
 
       // Act.
-      loader.load()
+      loader.load(path.join(__dirname, '/../../Resources/config/fake-services.js'))
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
       let taggedServices = container.findTaggedServiceIds(tagName)
@@ -60,6 +60,7 @@ describe('JsFileLoader', () => {
       assert.strictEqual(stringActualParameter, stringExpectedParameter)
       assert.isArray(arrayActualParameter)
       assert.strictEqual(service.parameter, stringExpectedParameter)
+      assert.strictEqual(service.property, stringPropertyExpected)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })
@@ -68,7 +69,26 @@ describe('JsFileLoader', () => {
   describe('load multiple imports', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
-      loader = new JsFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-imports.js'))
+      loader = new JsFileLoader(container)
+    })
+
+    it('should load multiple service files', () => {
+      // Arrange.
+      let serviceName = 'foo'
+
+      // Act.
+      loader.load(path.join(__dirname, '/../../Resources/config/fake-imports.js'))
+      let service = container.get(serviceName)
+
+      // Assert.
+      return assert.instanceOf(service, Foo)
+    })
+  })
+
+  describe('old way of loading js config file', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new JsFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.js'))
     })
 
     it('should load multiple service files', () => {

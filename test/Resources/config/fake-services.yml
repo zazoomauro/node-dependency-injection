@@ -1,6 +1,7 @@
 parameters:
     fooParameter: barValue
     barParameter: ['foo', 'bar']
+    fooProperty: 'fooProperty'
 
 services:
     foo:
@@ -8,6 +9,8 @@ services:
         arguments: ['@bar', '%fs-extra', 'foo-bar', '%fooParameter%']
         tags:
             - {name: 'fooTag'}
+        properties:
+            property: '%fooProperty%'
 
     bar:
         class: ./../bar
@@ -18,5 +21,15 @@ services:
 
     foobar:
         class: ./../foobar
+        arguments:
+            - '@injected.lazy.service'
 
     f:  '@foo'
+
+    lazy.service:
+        class: ./../foobar
+        lazy: true
+
+    injected.lazy.service:
+        class: ./../foobar
+        lazy: true

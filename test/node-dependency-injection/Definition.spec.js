@@ -101,4 +101,30 @@ describe('Definition', () => {
       assert.lengthOf(definition.tags, 1)
     })
   })
+
+  describe('addProperty', () => {
+    it('should add a new property', () => {
+      // Arrange.
+      let key = 'foo'
+      let value = 'bar'
+
+      // Act.
+      definition.addProperty(key, value)
+
+      // Assert.
+      assert.lengthOf(definition.properties, 1)
+    })
+  })
+
+  describe('lazy', () => {
+    it('should set as true', () => {
+      // Arrange not needed.
+
+      // Act.
+      definition.lazy = true
+
+      // Assert.
+      assert.isTrue(definition.lazy)
+    })
+  })
 })

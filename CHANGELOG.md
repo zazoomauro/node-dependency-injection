@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.5.0] - 2016-03-06
+### Added
+- Adding hasDefinition public container method
+- Adding has container public method
+- Adding getDefinition public container method
+- Adding findDefinition public container method
+- Injecting in to public fields properties
+- Adding Definition lazy service property 
+### Changed
+- Deprecating second constructor argument of File loader
+- Deprecating not setting first argument on config file load method
+
 ## [1.4.1] - 2016-02-23
 ### Changed
 - Removing CHANGELOG file description

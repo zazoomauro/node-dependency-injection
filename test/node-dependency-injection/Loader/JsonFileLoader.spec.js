@@ -1,36 +1,34 @@
 /* global describe, beforeEach, it */
 
 import chai from 'chai'
-import YamlFileLoader from '../../../lib/Loader/YamlFileLoader'
+import JsonFileLoader from '../../../lib/Loader/JsonFileLoader'
 import ContainerBuilder from '../../../lib/ContainerBuilder'
 import Foo from '../../Resources/foo'
-import FooManager from '../../Resources/fooManager'
 import Bar from '../../Resources/bar'
 import FooBar from '../../Resources/foobar'
 import path from 'path'
 
 let assert = chai.assert
 
-describe('YamlFileLoader', () => {
+describe('JsonFileLoader', () => {
   let loader
   let container
 
   describe('load', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
-      loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+      loader = new JsonFileLoader(container)
     })
 
-    it('should throw an exception if the yaml file not exists', () => {
+    it('should throw an exception if the json file not exists', () => {
       // Arrange.
-      let path = 'fake-filePath.yml'
-      loader = new YamlFileLoader(container, path)
+      let file = 'fake-filePath.json'
 
       // Act.
-      let actual = () => loader.load()
+      let actual = () => loader.load(file)
 
       // Assert.
-      return assert.throws(actual, Error, 'The file ' + path + ' not exists')
+      return assert.throws(actual, Error, `The file ${file} not exists`)
     })
 
     it('should load a simple container', () => {
@@ -41,9 +39,10 @@ describe('YamlFileLoader', () => {
       let stringParameterName = 'fooParameter'
       let stringExpectedParameter = 'barValue'
       let arrayParameterName = 'barParameter'
+      let stringPropertyExpected = 'fooProperty'
 
       // Act.
-      loader.load()
+      loader.load(path.join(__dirname, '/../../Resources/config/fake-services.json'))
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
       let taggedServices = container.findTaggedServiceIds(tagName)
@@ -61,6 +60,7 @@ describe('YamlFileLoader', () => {
       assert.strictEqual(stringActualParameter, stringExpectedParameter)
       assert.isArray(arrayActualParameter)
       assert.strictEqual(service.parameter, stringExpectedParameter)
+      assert.strictEqual(service.property, stringPropertyExpected)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })
@@ -69,23 +69,38 @@ describe('YamlFileLoader', () => {
   describe('load multiple imports', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
-      loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-imports.yml'))
+      loader = new JsonFileLoader(container)
     })
 
     it('should load multiple service files', () => {
       // Arrange.
-      let serviceName1 = 'foo'
-      let serviceName2 = 'foo_manager'
+      let serviceName = 'foo'
+
+      // Act.
+      loader.load(path.join(__dirname, '/../../Resources/config/fake-services.json'))
+      let service = container.get(serviceName)
+
+      // Assert.
+      return assert.instanceOf(service, Foo)
+    })
+  })
+
+  describe('old way of loading json config file', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new JsonFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.json'))
+    })
+
+    it('should load multiple service files', () => {
+      // Arrange.
+      let serviceName = 'foo'
 
       // Act.
       loader.load()
-      let service1 = container.get(serviceName1)
-      let service2 = container.get(serviceName2)
+      let service = container.get(serviceName)
 
       // Assert.
-      assert.instanceOf(service1, Foo)
-
-      return assert.instanceOf(service2, FooManager)
+      return assert.instanceOf(service, Foo)
     })
   })
 })

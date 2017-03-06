@@ -11,7 +11,7 @@
     "test:coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text mocha",
     "test:standard": "standard",
     "test:standard:fix": "standard --fix",
-    "build": "babel lib -d dist",
+    "build": "rm -rf dist/* && babel lib -d dist",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "preversion": "npm run test:standard:fix && npm test",
     "version": "npm run build",
