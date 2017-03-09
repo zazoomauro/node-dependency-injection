@@ -12,6 +12,7 @@ services:
         properties:
             property: '%fooProperty%'
 
+
     bar:
         class: ./../bar
         calls:
@@ -23,6 +24,7 @@ services:
         class: ./../foobar
         arguments:
             - '@injected.lazy.service'
+        deprecated: 'Deprecated service'
 
     f:  '@foo'
 

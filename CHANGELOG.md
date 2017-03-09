@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.6.0] - 2016-03-09
+### Added
+- Deprecating Services
+
 ## [1.5.0] - 2016-03-06
 ### Added
 - Adding hasDefinition public container method

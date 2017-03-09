@@ -127,4 +127,27 @@ describe('Definition', () => {
       assert.isTrue(definition.lazy)
     })
   })
+
+  describe('deprecated', () => {
+    it('should set as true', () => {
+      // Arrange not needed.
+
+      // Act.
+      definition.deprecated = true
+
+      // Assert.
+      assert.isTrue(definition.deprecated)
+    })
+
+    it('should set as false', () => {
+      // Arrange.
+      definition.deprecated = true
+
+      // Act.
+      definition.deprecated = false
+
+      // Assert.
+      assert.isFalse(definition.deprecated)
+    })
+  })
 })
