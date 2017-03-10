@@ -53,6 +53,7 @@ describe('YamlFileLoader', () => {
       let fromFactoryWithArgs = container.get('from_factory_with_args')
       let fromFactoryWithReferenceWithoutArgs = container.get('from_factory_with_reference_without_args')
       let fromFactoryWithReferenceWithArgs = container.get('from_factory_with_reference_with_args')
+      let fromFactoryWithReferenceWithServiceArg = container.get('from_factory_with_reference_with_service_arg')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -70,6 +71,7 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(fromFactoryWithArgs, FooBar)
       assert.instanceOf(fromFactoryWithReferenceWithoutArgs, FooBar)
       assert.instanceOf(fromFactoryWithReferenceWithArgs, FooBar)
+      assert.instanceOf(fromFactoryWithReferenceWithServiceArg, FooBar)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })

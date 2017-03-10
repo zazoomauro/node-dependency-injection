@@ -60,3 +60,9 @@ services:
         factory:
             class: '@factory'
             method: getFactoryWithArgs
+
+    from_factory_with_reference_with_service_arg:
+        arguments: ['@f']
+        factory:
+            class: '@factory'
+            method: getFactoryWithServiceArg
