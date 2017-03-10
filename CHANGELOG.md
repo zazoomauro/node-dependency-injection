@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.6.0] - 2016-03-10
+### Added
+- Deprecating Services
+- Using a Factory to Create Services
+- Passing Parsed Arguments to the Factory Method
+- Ignoring Missing Dependencies
+
 ## [1.5.0] - 2016-03-06
 ### Added
 - Adding hasDefinition public container method

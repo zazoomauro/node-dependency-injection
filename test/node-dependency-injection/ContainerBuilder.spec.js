@@ -33,6 +33,102 @@ describe('ContainerBuilder', () => {
   })
 
   describe('get', () => {
+    it('should return the instance with a factory definition', () => {
+      // Arrange.
+      class Foo {
+        static getFactory () {
+          return new Bar()
+        }
+      }
+      class Bar {}
+      let method = 'getFactory'
+      let id = 'foo.service'
+      let definition = new Definition()
+      definition.setFactory(Foo, method)
+      container.setDefinition(id, definition)
+
+      // Act.
+      let actual = container.get(id)
+
+      // Assert.
+      assert.instanceOf(actual, Bar)
+    })
+
+    it('should return the instance with a factory definition and arguments', () => {
+      // Arrange.
+      class Foo {
+        static getFactory (value = false) {
+          if (value) return new Bar()
+
+          return false
+        }
+      }
+      class Bar {}
+      let method = 'getFactory'
+      let id = 'foo.service'
+      let definition = new Definition()
+      definition.args = [true]
+      definition.setFactory(Foo, method)
+      container.setDefinition(id, definition)
+
+      // Act.
+      let actual = container.get(id)
+
+      // Assert.
+      assert.instanceOf(actual, Bar)
+    })
+
+    it('should return the instance with a reference factory definition', () => {
+      // Arrange.
+      class Foo {
+        static getFactory () {
+          return new Bar()
+        }
+      }
+      class Bar {}
+      let method = 'getFactory'
+      let id = 'foo.service'
+      let factoryId = 'factory.service'
+      container.register(factoryId, Foo)
+      let definition = new Definition()
+      definition.setFactory(new Reference(factoryId), method)
+      container.setDefinition(id, definition)
+
+      // Act.
+      let actual = container.get(id)
+
+      // Assert.
+      assert.instanceOf(actual, Bar)
+    })
+
+    it('should return the instance with a reference factory definition and arguments', () => {
+      // Arrange.
+      class Foo {
+        static getFactory (value = 'ko') {
+          if (value === 'ok') {
+            return new Bar()
+          }
+
+          return null
+        }
+      }
+      class Bar {}
+      let method = 'getFactory'
+      let id = 'foo.service'
+      let factoryId = 'factory.service'
+      container.register(factoryId, Foo)
+      let definition = new Definition()
+      definition.args = ['ok']
+      definition.setFactory(new Reference(factoryId), method)
+      container.setDefinition(id, definition)
+
+      // Act.
+      let actual = container.get(id)
+
+      // Assert.
+      assert.instanceOf(actual, Bar)
+    })
+
     it('should throw an exception if the service not exists', () => {
       // Arrange.
       let id = 'service._foo_bar'
@@ -103,6 +199,57 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.instanceOf(actual.bar, Bar)
+    })
+
+    it('should return the right service with reference argument', () => {
+      // Arrange.
+      let id = 'service.foo'
+      let referenceId = 'service.bar'
+      class Bar {
+      }
+      class Foo {
+        constructor (bar = null) {
+          this._bar = bar
+        }
+
+        get bar () {
+          return this._bar
+        }
+      }
+      container.register(referenceId, Bar)
+      container.register(id, Foo).addArgument(new Reference(referenceId, true))
+
+      // Act.
+      let actual = container.get(id)
+
+      // Assert.
+      assert.instanceOf(actual.bar, Bar)
+
+      return assert.instanceOf(actual, Foo)
+    })
+
+    it('should return the right service with reference argument nullable', () => {
+      // Arrange.
+      let id = 'service.foo'
+      let referenceId = 'service.bar'
+      class Foo {
+        constructor (bar = null) {
+          this._bar = bar
+        }
+
+        get bar () {
+          return this._bar
+        }
+      }
+      container.register(id, Foo).addArgument(new Reference(referenceId, true))
+
+      // Act.
+      let actual = container.get(id)
+
+      // Assert.
+      assert.isNull(actual.bar)
+
+      return assert.instanceOf(actual, Foo)
     })
 
     it('should return the right service with reference argument', () => {

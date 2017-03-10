@@ -18,4 +18,17 @@ describe('Reference', () => {
       assert.strictEqual(actual.id, id)
     })
   })
+
+  describe('nullable', () => {
+    it('should get the right constructor id', () => {
+      // Arrange.
+      let nullable = true
+
+      // Act.
+      let actual = new Reference('foo', nullable)
+
+      // Assert.
+      assert.isTrue(actual.nullable)
+    })
+  })
 })

@@ -8,6 +8,7 @@ import FooManager from '../../Resources/fooManager'
 import Bar from '../../Resources/bar'
 import FooBar from '../../Resources/foobar'
 import path from 'path'
+import MissingDependencies from '../../Resources/missingDependencies'
 
 let assert = chai.assert
 
@@ -49,6 +50,15 @@ describe('YamlFileLoader', () => {
       let taggedServices = container.findTaggedServiceIds(tagName)
       let stringActualParameter = container.getParameter(stringParameterName)
       let arrayActualParameter = container.getParameter(arrayParameterName)
+      let fromFactoryWithoutArgs = container.get('from_factory_without_args')
+      let fromFactoryWithArgs = container.get('from_factory_with_args')
+      let fromFactoryWithReferenceWithoutArgs = container.get('from_factory_with_reference_without_args')
+      let fromFactoryWithReferenceWithArgs = container.get('from_factory_with_reference_with_args')
+      let fromFactoryWithReferenceWithServiceArg = container.get('from_factory_with_reference_with_service_arg')
+      let serviceMissingDependencies = container.get('service_missing_dependencies')
+      let serviceWithDependencies = container.get('service_with_dependencies')
+      let serviceMissingDependenciesCall = container.get('service_missing_dependencies_call')
+      let serviceWithDependenciesCall = container.get('service_with_dependencies_call')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -62,7 +72,19 @@ describe('YamlFileLoader', () => {
       assert.isArray(arrayActualParameter)
       assert.strictEqual(service.parameter, stringExpectedParameter)
       assert.strictEqual(service.property, stringPropertyExpected)
-      assert.strictEqual()
+      assert.instanceOf(fromFactoryWithoutArgs, FooBar)
+      assert.instanceOf(fromFactoryWithArgs, FooBar)
+      assert.instanceOf(fromFactoryWithReferenceWithoutArgs, FooBar)
+      assert.instanceOf(fromFactoryWithReferenceWithArgs, FooBar)
+      assert.instanceOf(fromFactoryWithReferenceWithServiceArg, FooBar)
+      assert.instanceOf(serviceMissingDependencies, MissingDependencies)
+      assert.isNull(serviceMissingDependencies.optional)
+      assert.instanceOf(serviceWithDependencies, MissingDependencies)
+      assert.instanceOf(serviceWithDependencies.optional, FooBar)
+      assert.instanceOf(serviceMissingDependenciesCall, MissingDependencies)
+      assert.isNull(serviceMissingDependenciesCall.optional)
+      assert.instanceOf(serviceWithDependenciesCall, MissingDependencies)
+      assert.instanceOf(serviceWithDependenciesCall.optional, FooBar)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })
