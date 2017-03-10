@@ -35,3 +35,28 @@ services:
     injected.lazy.service:
         class: ./../foobar
         lazy: true
+
+    factory:
+        class: ./../factory
+
+    from_factory_without_args:
+        factory:
+            class: ./../factory
+            method: getFactoryWithoutArgs
+
+    from_factory_with_args:
+        arguments: ['ok']
+        factory:
+            class: ./../factory
+            method: getFactoryWithArgs
+
+    from_factory_with_reference_without_args:
+        factory:
+            class: '@factory'
+            method: getFactoryWithoutArgs
+
+    from_factory_with_reference_with_args:
+        arguments: ['ok']
+        factory:
+            class: '@factory'
+            method: getFactoryWithArgs

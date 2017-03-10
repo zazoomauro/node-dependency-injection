@@ -150,4 +150,19 @@ describe('Definition', () => {
       assert.isFalse(definition.deprecated)
     })
   })
+
+  describe('setFactory', () => {
+    it('should store the factory with object and method', () => {
+      // Arrange.
+      class Foo {}
+      let method = 'getFactory'
+
+      // Act.
+      definition.setFactory(Foo, method)
+
+      // Assert.
+      assert.strictEqual(definition.factory.Object, Foo)
+      assert.strictEqual(definition.factory.method, method)
+    })
+  })
 })
