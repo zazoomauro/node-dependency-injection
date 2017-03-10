@@ -204,6 +204,57 @@ describe('ContainerBuilder', () => {
     it('should return the right service with reference argument', () => {
       // Arrange.
       let id = 'service.foo'
+      let referenceId = 'service.bar'
+      class Bar {
+      }
+      class Foo {
+        constructor (bar = null) {
+          this._bar = bar
+        }
+
+        get bar () {
+          return this._bar
+        }
+      }
+      container.register(referenceId, Bar)
+      container.register(id, Foo).addArgument(new Reference(referenceId, true))
+
+      // Act.
+      let actual = container.get(id)
+
+      // Assert.
+      assert.instanceOf(actual.bar, Bar)
+
+      return assert.instanceOf(actual, Foo)
+    })
+
+    it('should return the right service with reference argument nullable', () => {
+      // Arrange.
+      let id = 'service.foo'
+      let referenceId = 'service.bar'
+      class Foo {
+        constructor (bar = null) {
+          this._bar = bar
+        }
+
+        get bar () {
+          return this._bar
+        }
+      }
+      container.register(id, Foo).addArgument(new Reference(referenceId, true))
+
+      // Act.
+      let actual = container.get(id)
+
+      // Assert.
+      assert.isNull(actual.bar)
+
+      return assert.instanceOf(actual, Foo)
+    })
+
+    it('should return the right service with reference argument', () => {
+      // Arrange.
+      let id = 'service.foo'
       let reference1Id = 'service.bar'
       let reference2Id = 'service.foo_bar'
       class FooBar {

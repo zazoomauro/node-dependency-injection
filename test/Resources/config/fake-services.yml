@@ -66,3 +66,21 @@ services:
         factory:
             class: '@factory'
             method: getFactoryWithServiceArg
+
+    service_missing_dependencies:
+        class: ./../missingDependencies
+        arguments: ['@f', '@?not_exists']
+
+    service_with_dependencies:
+        class: ./../missingDependencies
+        arguments: ['@f', '@?foobar']
+
+    service_missing_dependencies_call:
+        class: ./../missingDependencies
+        calls:
+            - {method: setMethod, arguments: ['@?not_exists']}
+
+    service_with_dependencies_call:
+        class: ./../missingDependencies
+        calls:
+            - {method: setMethod, arguments: ['@foobar']}
