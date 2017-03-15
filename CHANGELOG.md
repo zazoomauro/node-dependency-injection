@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.6.1] - 2016-03-15
+### Changed
+- Fixing configuration files Boolean arguments issue
+- Fixing configuration files Boolean parameters issue
+
 ## [1.6.0] - 2016-03-10
 ### Added
 - Deprecating Services

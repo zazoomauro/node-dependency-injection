@@ -59,6 +59,8 @@ describe('YamlFileLoader', () => {
       let serviceWithDependencies = container.get('service_with_dependencies')
       let serviceMissingDependenciesCall = container.get('service_missing_dependencies_call')
       let serviceWithDependenciesCall = container.get('service_with_dependencies_call')
+      let fooWithTrue = container.get('foo_with_true')
+      let fooWithFalse = container.get('foo_with_false')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -85,6 +87,8 @@ describe('YamlFileLoader', () => {
       assert.isNull(serviceMissingDependenciesCall.optional)
       assert.instanceOf(serviceWithDependenciesCall, MissingDependencies)
       assert.instanceOf(serviceWithDependenciesCall.optional, FooBar)
+      assert.isTrue(fooWithTrue.param)
+      assert.isFalse(fooWithFalse.parameter)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })

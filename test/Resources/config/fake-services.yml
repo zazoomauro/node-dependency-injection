@@ -2,6 +2,7 @@ parameters:
     fooParameter: barValue
     barParameter: ['foo', 'bar']
     fooProperty: 'fooProperty'
+    param_false: false
 
 services:
     foo:
@@ -84,3 +85,11 @@ services:
         class: ./../missingDependencies
         calls:
             - {method: setMethod, arguments: ['@foobar']}
+
+    foo_with_true:
+        class: ./../foo
+        arguments: ['@bar', '%fs-extra', true, '%true%']
+
+    foo_with_false:
+        class: ./../foo
+        arguments: ['@bar', '%fs-extra%', 'not', '%param_false%']

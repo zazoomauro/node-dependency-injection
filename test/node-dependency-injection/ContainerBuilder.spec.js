@@ -719,6 +719,18 @@ describe('ContainerBuilder', () => {
   })
 
   describe('setParameter', () => {
+    it('should set a boolean parameter properly', () => {
+      // Arrange.
+      let key = 'foo.bar'
+      let value = true
+
+      // Act.
+      container.setParameter(key, value)
+
+      // Assert.
+      assert.strictEqual(container._parameters.get(key), value)
+    })
+
     it('should set a string parameter properly', () => {
       // Arrange.
       let key = 'foo.bar'
@@ -752,7 +764,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.setParameter(key, value)
 
       // Assert.
-      return assert.throws(actual, TypeError, 'The expected value is not a flat string or an array')
+      return assert.throws(actual, TypeError)
     })
   })
 
