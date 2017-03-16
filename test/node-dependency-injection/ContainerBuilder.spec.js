@@ -399,6 +399,21 @@ describe('ContainerBuilder', () => {
       // Assert.
       return assert.strictEqual(constructorCalls, 1)
     })
+
+    it('should instantiate a lazy service only when get the service', () => {
+      // Arrange.
+      let fooId = 'service.foo'
+      class Foo {}
+      let definition = new Definition(Foo)
+      definition.public = false
+      container.setDefinition(fooId, definition)
+
+      // Act.
+      let actual = () => container.get(fooId)
+
+      // Assert.
+      return assert.throw(actual, Error, `The service ${fooId} is private`)
+    })
   })
 
   describe('compile', () => {

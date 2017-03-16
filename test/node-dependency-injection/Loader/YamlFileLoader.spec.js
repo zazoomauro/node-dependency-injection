@@ -61,6 +61,8 @@ describe('YamlFileLoader', () => {
       let serviceWithDependenciesCall = container.get('service_with_dependencies_call')
       let fooWithTrue = container.get('foo_with_true')
       let fooWithFalse = container.get('foo_with_false')
+      let throwException = () => container.get('private_service')
+      let serviceUsingPrivateService = container.get('service_using_private_service')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -89,6 +91,8 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(serviceWithDependenciesCall.optional, FooBar)
       assert.isTrue(fooWithTrue.param)
       assert.isFalse(fooWithFalse.parameter)
+      assert.throws(throwException, Error, `The service private_service is private`)
+      assert.instanceOf(serviceUsingPrivateService.bar, Foo)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })
