@@ -963,4 +963,31 @@ describe('ContainerBuilder', () => {
       return assert.throws(actual, Error, `${key} definition not found`)
     })
   })
+
+  describe('removeDefinition', () => {
+    it('should remove an already registered definition', () => {
+      // Arrange.
+      let key = 'foo'
+      class Foo {}
+      let definition = new Definition(Foo)
+      container.setDefinition(key, definition)
+
+      // Act.
+      container.removeDefinition(key)
+
+      // Assert.
+      return assert.isUndefined(container._definitions.get(key))
+    })
+
+    it('should throw an exception if we try to remove an undefined definition', () => {
+      // Arrange.
+      let key = 'foo'
+
+      // Act.
+      let actual = () => container.removeDefinition(key)
+
+      // Assert.
+      return assert.throws(actual, Error, `${key} definition not found`)
+    })
+  })
 })

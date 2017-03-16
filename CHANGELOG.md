@@ -1,5 +1,9 @@
 # Change Log
 
+# [1.7.0] - 2016-03-16
+### Added
+- Remove definition container method
+
 ## [1.6.1] - 2016-03-15
 ### Changed
 - Fixing configuration files Boolean arguments issue
