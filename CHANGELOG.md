@@ -1,6 +1,6 @@
 # Change Log
 
-# [1.7.0] - 2016-03-16
+# [1.7.0] - 2016-03-20
 ### Added
 - Remove definition container method
 - Managing Configuration with Extensions

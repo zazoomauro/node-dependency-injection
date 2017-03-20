@@ -421,7 +421,11 @@ describe('ContainerBuilder', () => {
     it('should load an extension when compile', () => {
       // Arrange.
       let extensionLoaded = false
-      class FooExtension {load () {extensionLoaded = true}}
+      class FooExtension {
+        load () {
+          extensionLoaded = true
+        }
+      }
       container.registerExtension(new FooExtension())
 
       // Act.
