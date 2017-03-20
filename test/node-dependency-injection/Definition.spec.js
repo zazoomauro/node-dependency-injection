@@ -165,4 +165,26 @@ describe('Definition', () => {
       assert.strictEqual(definition.factory.method, method)
     })
   })
+
+  describe('public', () => {
+    it('should set as true', () => {
+      // Arrange not needed.
+
+      // Act.
+      definition.public = true
+
+      // Assert.
+      assert.isTrue(definition.public)
+    })
+
+    it('should set as false', () => {
+      // Arrange not needed.
+
+      // Act not needed.
+      definition.public = false
+
+      // Assert.
+      assert.isFalse(definition.public)
+    })
+  })
 })

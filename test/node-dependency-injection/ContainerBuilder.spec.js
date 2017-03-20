@@ -5,6 +5,7 @@ import ContainerBuilder from '../../lib/ContainerBuilder'
 import Definition from '../../lib/Definition'
 import Reference from '../../lib/Reference'
 import YamlFileLoader from '../../lib/Loader/YamlFileLoader'
+import PassConfig from '../../lib/PassConfig'
 import path from 'path'
 import FooManager from './../Resources/fooManager'
 import BarManager from './../Resources/barManager'
@@ -399,10 +400,56 @@ describe('ContainerBuilder', () => {
       // Assert.
       return assert.strictEqual(constructorCalls, 1)
     })
+
+    it('should throw an exception if we get a private service', () => {
+      // Arrange.
+      let fooId = 'service.foo'
+      class Foo {}
+      let definition = new Definition(Foo)
+      definition.public = false
+      container.setDefinition(fooId, definition)
+
+      // Act.
+      let actual = () => container.get(fooId)
+
+      // Assert.
+      return assert.throw(actual, Error, `The service ${fooId} is private`)
+    })
   })
 
   describe('compile', () => {
-    it('should compile the container and froze the same container', () => {
+    it('should load an extension when compile', () => {
+      // Arrange.
+      let extensionLoaded = false
+      class FooExtension {
+        load () {
+          extensionLoaded = true
+        }
+      }
+      container.registerExtension(new FooExtension())
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      assert.isTrue(extensionLoaded)
+    })
+
+    it('should register an empty compiler pass with a optimize type will not freeze the container', () => {
+      // Arrange.
+      class FooPass {
+        process () {}
+      }
+      container.addCompilerPass(new FooPass(), PassConfig.TYPE_OPTIMIZE)
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      return assert.isFalse(container.frozen)
+    })
+
+    it('should compile the container and freeze the same container', () => {
       // Arrange not needed.
 
       // Act.
@@ -599,7 +646,34 @@ describe('ContainerBuilder', () => {
       container.addCompilerPass(new FooPass())
 
       // Assert.
-      return assert.strictEqual(container._compilerPass.length, 1)
+      return assert.strictEqual(container._compilerPass[PassConfig.TYPE_BEFORE_OPTIMIZATION].length, 1)
+    })
+
+    it('should register a compiler pass with a different compiler pass type config', () => {
+      // Arrange.
+      class FooPass {
+        process () {}
+      }
+
+      // Act.
+      container.addCompilerPass(new FooPass(), PassConfig.TYPE_OPTIMIZE)
+
+      // Assert.
+      return assert.strictEqual(container._compilerPass[PassConfig.TYPE_OPTIMIZE].length, 1)
+    })
+
+    it('should throw an exception if the pass config type is wrong', () => {
+      // Arrange.
+      let type = 'foo'
+      class FooPass {
+        process () {}
+      }
+
+      // Act.
+      let actual = () => container.addCompilerPass(new FooPass(), type)
+
+      // Assert.
+      return assert.throws(actual, Error, `${type} is a wrong compiler pass config type`)
     })
   })
 
@@ -961,6 +1035,57 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.throws(actual, Error, `${key} definition not found`)
+    })
+  })
+
+  describe('removeDefinition', () => {
+    it('should remove an already registered definition', () => {
+      // Arrange.
+      let key = 'foo'
+      class Foo {}
+      let definition = new Definition(Foo)
+      container.setDefinition(key, definition)
+
+      // Act.
+      container.removeDefinition(key)
+
+      // Assert.
+      return assert.isUndefined(container._definitions.get(key))
+    })
+
+    it('should throw an exception if we try to remove an undefined definition', () => {
+      // Arrange.
+      let key = 'foo'
+
+      // Act.
+      let actual = () => container.removeDefinition(key)
+
+      // Assert.
+      return assert.throws(actual, Error, `${key} definition not found`)
+    })
+  })
+
+  describe('registerExtension', () => {
+    it('should throw an exception if the extension instance does not have the load method', () => {
+      // Arrange.
+      class FooExtension {}
+
+      // Act.
+      let actual = () => container.registerExtension(new FooExtension())
+
+      // Assert.
+      assert.throws(actual, Error, 'Your extension does not have the load method')
+    })
+
+    it('should register the extension properly', () => {
+      // Arrange.
+      class FooExtension {load () {}}
+
+      // Act.
+      container.registerExtension(new FooExtension())
+
+      // Assert.
+      assert.lengthOf(container.extensions, 1)
     })
   })
 })

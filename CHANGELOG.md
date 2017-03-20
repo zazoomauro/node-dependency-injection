@@ -1,5 +1,12 @@
 # Change Log
 
+# [1.7.0] - 2016-03-20
+### Added
+- Remove definition container method
+- Managing Configuration with Extensions
+- Controlling the pass ordering
+- Adding code climate badge
+
 ## [1.6.1] - 2016-03-15
 ### Changed
 - Fixing configuration files Boolean arguments issue

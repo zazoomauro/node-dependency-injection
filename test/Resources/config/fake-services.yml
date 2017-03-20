@@ -93,3 +93,12 @@ services:
     foo_with_false:
         class: ./../foo
         arguments: ['@bar', '%fs-extra%', 'not', '%param_false%']
+
+    private_service:
+        class: ./../foo
+        arguments: ['@bar', '%fs-extra%']
+        public: false
+
+    service_using_private_service:
+        class: ./../foo
+        arguments: ['@private_service']
