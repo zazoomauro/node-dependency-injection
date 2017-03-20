@@ -401,7 +401,7 @@ describe('ContainerBuilder', () => {
       return assert.strictEqual(constructorCalls, 1)
     })
 
-    it('should instantiate a lazy service only when get the service', () => {
+    it('should throw an exception if we get a private service', () => {
       // Arrange.
       let fooId = 'service.foo'
       class Foo {}
@@ -418,6 +418,19 @@ describe('ContainerBuilder', () => {
   })
 
   describe('compile', () => {
+    it('should load an extension when compile', () => {
+      // Arrange.
+      let extensionLoaded = false
+      class FooExtension {load () {extensionLoaded = true}}
+      container.registerExtension(new FooExtension())
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      assert.isTrue(extensionLoaded)
+    })
+
     it('should register an empty compiler pass with a optimize type will not freeze the container', () => {
       // Arrange.
       class FooPass {
@@ -1045,6 +1058,30 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.throws(actual, Error, `${key} definition not found`)
+    })
+  })
+
+  describe('registerExtension', () => {
+    it('should throw an exception if the extension instance does not have the load method', () => {
+      // Arrange.
+      class FooExtension {}
+
+      // Act.
+      let actual = () => container.registerExtension(new FooExtension())
+
+      // Assert.
+      assert.throws(actual, Error, 'Your extension does not have the load method')
+    })
+
+    it('should register the extension properly', () => {
+      // Arrange.
+      class FooExtension {load () {}}
+
+      // Act.
+      container.registerExtension(new FooExtension())
+
+      // Assert.
+      assert.lengthOf(container.extensions, 1)
     })
   })
 })
