@@ -5,6 +5,7 @@ import ContainerBuilder from '../../lib/ContainerBuilder'
 import Definition from '../../lib/Definition'
 import Reference from '../../lib/Reference'
 import YamlFileLoader from '../../lib/Loader/YamlFileLoader'
+import PassConfig from '../../lib/PassConfig'
 import path from 'path'
 import FooManager from './../Resources/fooManager'
 import BarManager from './../Resources/barManager'
@@ -417,7 +418,21 @@ describe('ContainerBuilder', () => {
   })
 
   describe('compile', () => {
-    it('should compile the container and froze the same container', () => {
+    it('should register an empty compiler pass with a optimize type will not freeze the container', () => {
+      // Arrange.
+      class FooPass {
+        process () {}
+      }
+      container.addCompilerPass(new FooPass(), PassConfig.TYPE_OPTIMIZE)
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      return assert.isFalse(container.frozen)
+    })
+
+    it('should compile the container and freeze the same container', () => {
       // Arrange not needed.
 
       // Act.
@@ -614,7 +629,34 @@ describe('ContainerBuilder', () => {
       container.addCompilerPass(new FooPass())
 
       // Assert.
-      return assert.strictEqual(container._compilerPass.length, 1)
+      return assert.strictEqual(container._compilerPass[PassConfig.TYPE_BEFORE_OPTIMIZATION].length, 1)
+    })
+
+    it('should register a compiler pass with a different compiler pass type config', () => {
+      // Arrange.
+      class FooPass {
+        process () {}
+      }
+
+      // Act.
+      container.addCompilerPass(new FooPass(), PassConfig.TYPE_OPTIMIZE)
+
+      // Assert.
+      return assert.strictEqual(container._compilerPass[PassConfig.TYPE_OPTIMIZE].length, 1)
+    })
+
+    it('should throw an exception if the pass config type is wrong', () => {
+      // Arrange.
+      let type = 'foo'
+      class FooPass {
+        process () {}
+      }
+
+      // Act.
+      let actual = () => container.addCompilerPass(new FooPass(), type)
+
+      // Assert.
+      return assert.throws(actual, Error, `${type} is a wrong compiler pass config type`)
     })
   })
 
