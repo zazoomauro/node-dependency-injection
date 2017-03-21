@@ -1,5 +1,13 @@
 # Change Log
 
+# [1.7.2] - 2016-03-21
+### Changed
+- Add Definition class in to the index file
+
+# [1.7.1] - 2016-03-20
+### Changed
+- Fixing npm version issue
+
 # [1.7.0] - 2016-03-20
 ### Added
 - Remove definition container method
