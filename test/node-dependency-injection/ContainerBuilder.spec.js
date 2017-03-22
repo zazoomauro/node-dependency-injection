@@ -306,13 +306,28 @@ describe('ContainerBuilder', () => {
       container
         .register(id, Foo)
         .addMethodCall('bar', [parameter])
-        .addMethodCall('fake')
 
       // Act.
       let foo = container.get(id)
 
       // Assert.
       return assert.strictEqual(foo.parameter, parameter)
+    })
+
+    it('should throw an exception if the method call does not exists', () => {
+      // Arrange.
+      let id = 'service.foo'
+      let method = 'bar'
+      class Foo {}
+      container
+        .register(id, Foo)
+        .addMethodCall(method)
+
+      // Act.
+      let actual = () => container.get(id)
+
+      // Assert.
+      return assert.throws(actual, Error, `The method ${method} does not exists`)
     })
 
     it('should get the service instance and instantiate ones multiple service dependency', () => {

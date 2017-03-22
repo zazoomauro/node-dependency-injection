@@ -1,5 +1,13 @@
 # Change Log
 
+# [1.7.4] - 2016-03-22
+### Changed
+- Throw an exception if the method call does not exists
+
+# [1.7.3] - 2016-03-21
+### Changed 
+- Adding standard coding style configuration
+
 # [1.7.2] - 2016-03-21
 ### Changed
 - Add Definition class in to the index file
