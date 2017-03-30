@@ -30,9 +30,7 @@ describe('Definition', () => {
       let argument2 = 'barfoo'
 
       // Act.
-      definition
-        .addArgument(argument1)
-        .addArgument(argument2)
+      definition.addArgument(argument1).addArgument(argument2)
 
       // Assert.
       assert.lengthOf(definition.args, 2)
@@ -148,6 +146,29 @@ describe('Definition', () => {
 
       // Assert.
       assert.isFalse(definition.deprecated)
+    })
+  })
+
+  describe('synthetic', () => {
+    it('should set as true', () => {
+      // Arrange not needed.
+
+      // Act.
+      definition.synthetic = true
+
+      // Assert.
+      assert.isTrue(definition.synthetic)
+    })
+
+    it('should set as false', () => {
+      // Arrange.
+      definition.synthetic = true
+
+      // Act.
+      definition.synthetic = false
+
+      // Assert.
+      assert.isFalse(definition.synthetic)
     })
   })
 

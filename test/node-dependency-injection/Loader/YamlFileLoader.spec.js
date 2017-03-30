@@ -9,6 +9,7 @@ import Bar from '../../Resources/bar'
 import FooBar from '../../Resources/foobar'
 import path from 'path'
 import MissingDependencies from '../../Resources/missingDependencies'
+import SyntheticService from '../../Resources/syntheticService'
 
 let assert = chai.assert
 
@@ -44,7 +45,8 @@ describe('YamlFileLoader', () => {
       let stringPropertyExpected = 'fooProperty'
 
       // Act.
-      loader.load(path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+      loader.load(
+        path.join(__dirname, '/../../Resources/config/fake-services.yml'))
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
       let taggedServices = container.findTaggedServiceIds(tagName)
@@ -52,17 +54,24 @@ describe('YamlFileLoader', () => {
       let arrayActualParameter = container.getParameter(arrayParameterName)
       let fromFactoryWithoutArgs = container.get('from_factory_without_args')
       let fromFactoryWithArgs = container.get('from_factory_with_args')
-      let fromFactoryWithReferenceWithoutArgs = container.get('from_factory_with_reference_without_args')
-      let fromFactoryWithReferenceWithArgs = container.get('from_factory_with_reference_with_args')
-      let fromFactoryWithReferenceWithServiceArg = container.get('from_factory_with_reference_with_service_arg')
-      let serviceMissingDependencies = container.get('service_missing_dependencies')
+      let fromFactoryWithReferenceWithoutArgs = container.get(
+        'from_factory_with_reference_without_args')
+      let fromFactoryWithReferenceWithArgs = container.get(
+        'from_factory_with_reference_with_args')
+      let fromFactoryWithReferenceWithServiceArg = container.get(
+        'from_factory_with_reference_with_service_arg')
+      let serviceMissingDependencies = container.get(
+        'service_missing_dependencies')
       let serviceWithDependencies = container.get('service_with_dependencies')
-      let serviceMissingDependenciesCall = container.get('service_missing_dependencies_call')
-      let serviceWithDependenciesCall = container.get('service_with_dependencies_call')
+      let serviceMissingDependenciesCall = container.get(
+        'service_missing_dependencies_call')
+      let serviceWithDependenciesCall = container.get(
+        'service_with_dependencies_call')
       let fooWithTrue = container.get('foo_with_true')
       let fooWithFalse = container.get('foo_with_false')
       let throwException = () => container.get('private_service')
-      let serviceUsingPrivateService = container.get('service_using_private_service')
+      let serviceUsingPrivateService = container.get(
+        'service_using_private_service')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -91,10 +100,26 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(serviceWithDependenciesCall.optional, FooBar)
       assert.isTrue(fooWithTrue.param)
       assert.isFalse(fooWithFalse.parameter)
-      assert.throws(throwException, Error, `The service private_service is private`)
+      assert.throws(throwException, Error,
+        `The service private_service is private`)
       assert.instanceOf(serviceUsingPrivateService.bar, Foo)
 
       return assert.lengthOf(arrayActualParameter, 2)
+    })
+
+    it('should load properly synthetic service', () => {
+      // Arrange.
+      let syntheticServiceName = 'synthetic_service'
+      let syntheticInstance = new SyntheticService()
+      container.set(syntheticServiceName, syntheticInstance)
+
+      // Act.
+      loader.load(
+        path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+      let syntheticService = container.get(syntheticServiceName)
+
+      // Assert.
+      return assert.instanceOf(syntheticService, SyntheticService)
     })
   })
 
@@ -110,7 +135,8 @@ describe('YamlFileLoader', () => {
       let serviceName2 = 'foo_manager'
 
       // Act.
-      loader.load(path.join(__dirname, '/../../Resources/config/fake-imports.yml'))
+      loader.load(
+        path.join(__dirname, '/../../Resources/config/fake-imports.yml'))
       let service1 = container.get(serviceName1)
       let service2 = container.get(serviceName2)
 
@@ -124,7 +150,8 @@ describe('YamlFileLoader', () => {
   describe('old way of loading yaml config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
-      loader = new YamlFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+      loader = new YamlFileLoader(container,
+        path.join(__dirname, '/../../Resources/config/fake-services.yml'))
     })
 
     it('should load multiple service files', () => {

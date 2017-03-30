@@ -102,3 +102,6 @@ services:
     service_using_private_service:
         class: ./../foo
         arguments: ['@private_service']
+
+    synthetic_service:
+        synthetic: true

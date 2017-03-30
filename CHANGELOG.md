@@ -1,5 +1,13 @@
 # Change Log
 
+# [1.8.0] - 2016-03-30
+### Added
+- Adding definition synthetic parameter
+- Public container direct set method
+- Container get method will only return you a valid instance
+### Changed
+- Refactor following new standard rules
+
 # [1.7.4] - 2016-03-22
 ### Changed
 - Throw an exception if the method call does not exists

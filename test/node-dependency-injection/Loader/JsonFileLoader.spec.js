@@ -42,7 +42,8 @@ describe('JsonFileLoader', () => {
       let stringPropertyExpected = 'fooProperty'
 
       // Act.
-      loader.load(path.join(__dirname, '/../../Resources/config/fake-services.json'))
+      loader.load(
+        path.join(__dirname, '/../../Resources/config/fake-services.json'))
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
       let taggedServices = container.findTaggedServiceIds(tagName)
@@ -77,7 +78,8 @@ describe('JsonFileLoader', () => {
       let serviceName = 'foo'
 
       // Act.
-      loader.load(path.join(__dirname, '/../../Resources/config/fake-services.json'))
+      loader.load(
+        path.join(__dirname, '/../../Resources/config/fake-services.json'))
       let service = container.get(serviceName)
 
       // Assert.
@@ -88,7 +90,8 @@ describe('JsonFileLoader', () => {
   describe('old way of loading json config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
-      loader = new JsonFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.json'))
+      loader = new JsonFileLoader(container,
+        path.join(__dirname, '/../../Resources/config/fake-services.json'))
     })
 
     it('should load multiple service files', () => {

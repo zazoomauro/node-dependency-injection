@@ -1,5 +1,4 @@
 export default class BarManager {
-
   constructor (fooManager) {
     this._fooManager = fooManager
   }
