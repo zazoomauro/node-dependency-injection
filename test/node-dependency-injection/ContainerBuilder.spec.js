@@ -489,6 +489,42 @@ describe('ContainerBuilder', () => {
   })
 
   describe('compile', () => {
+    it('should remove private instances if no remove pass config passed',
+      () => {
+        // Arrange.
+        let fooId = 'service.foo'
+        class Foo {}
+        let definition = new Definition(Foo)
+        definition.public = false
+        container.setDefinition(fooId, definition)
+
+        // Act.
+        container.compile()
+
+        // Assert.
+        return assert.isUndefined(container._container.get(fooId))
+      })
+
+    it('should not remove private instances if remove pass config passed',
+      () => {
+        // Arrange.
+        let fooId = 'service.foo'
+        class Foo {}
+        let definition = new Definition(Foo)
+        definition.public = false
+        container.setDefinition(fooId, definition)
+        class FooPass {
+          process () {}
+        }
+        container.addCompilerPass(new FooPass(), PassConfig.TYPE_REMOVE)
+
+        // Act.
+        container.compile()
+
+        // Assert.
+        return assert.instanceOf(container._container.get(fooId), Foo)
+      })
+
     it('should load an extension when compile', () => {
       // Arrange.
       let extensionLoaded = false
