@@ -1,6 +1,8 @@
 Node Dependency Injection
 =========================
 
+#### A special thanks to [Symfony](http://symfony.com) which was a great inspiration and example for this project.
+
 The Node Dependency Injection component allows you to standardize and centralize the way objects are constructed in your application.
 
 [![Npm Version](https://badge.fury.io/js/node-dependency-injection.svg)](https://badge.fury.io/js/node-dependency-injection)
