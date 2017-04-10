@@ -21,5 +21,4 @@ Resources
 - [Collaboration and pull requests](CONTRIBUTING.md)
 - [Milestones](https://github.com/zazoomauro/node-dependency-injection/milestones)
 - [Twitter @zazoomauro](https://twitter.com/zazoomauro)
-- [LinkedIn](https://www.linkedin.com/in/maurogadaleta/)
 - [Changelog](CHANGELOG.md)
