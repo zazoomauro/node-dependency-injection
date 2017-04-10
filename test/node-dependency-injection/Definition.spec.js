@@ -30,9 +30,7 @@ describe('Definition', () => {
       let argument2 = 'barfoo'
 
       // Act.
-      definition
-        .addArgument(argument1)
-        .addArgument(argument2)
+      definition.addArgument(argument1).addArgument(argument2)
 
       // Assert.
       assert.lengthOf(definition.args, 2)
@@ -100,6 +98,30 @@ describe('Definition', () => {
       // Assert.
       assert.lengthOf(definition.tags, 1)
     })
+
+    it('should add a new tag with attributes', () => {
+      // Arrange.
+      let tagName = 'foo'
+      let attributes = new Map()
+
+      // Act.
+      definition.addTag(tagName, attributes)
+
+      // Assert.
+      assert.lengthOf(definition.tags, 1)
+    })
+
+    it('should throw an exception if attributes is an exception', () => {
+      // Arrange.
+      let tagName = 'foo'
+      let attributes = {}
+
+      // Act.
+      let actual = () => definition.addTag(tagName, attributes)
+
+      // Assert.
+      assert.throws(actual, Error, 'Attributes is not type Map')
+    })
   })
 
   describe('addProperty', () => {
@@ -148,6 +170,29 @@ describe('Definition', () => {
 
       // Assert.
       assert.isFalse(definition.deprecated)
+    })
+  })
+
+  describe('synthetic', () => {
+    it('should set as true', () => {
+      // Arrange not needed.
+
+      // Act.
+      definition.synthetic = true
+
+      // Assert.
+      assert.isTrue(definition.synthetic)
+    })
+
+    it('should set as false', () => {
+      // Arrange.
+      definition.synthetic = true
+
+      // Act.
+      definition.synthetic = false
+
+      // Assert.
+      assert.isFalse(definition.synthetic)
     })
   })
 

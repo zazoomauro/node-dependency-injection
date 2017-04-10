@@ -2,7 +2,6 @@ import FooBar from './foobar'
 import Foo from './foo'
 
 export default class Factory {
-
   static getFactoryWithoutArgs () {
     return new FooBar('foo_bar')
   }

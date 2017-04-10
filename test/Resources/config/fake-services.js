@@ -18,7 +18,7 @@ module.exports = {
     bar: {
       class: './../bar',
       calls: [
-        { method: 'setFooBar', arguments: ['@foobar'] }
+        {method: 'setFooBar', arguments: ['@foobar']}
       ],
       tags: [
         {name: 'fooTag'}

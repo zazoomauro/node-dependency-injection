@@ -42,7 +42,8 @@ describe('JsFileLoader', () => {
       let stringPropertyExpected = 'fooProperty'
 
       // Act.
-      loader.load(path.join(__dirname, '/../../Resources/config/fake-services.js'))
+      loader.load(
+        path.join(__dirname, '/../../Resources/config/fake-services.js'))
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
       let taggedServices = container.findTaggedServiceIds(tagName)
@@ -77,7 +78,8 @@ describe('JsFileLoader', () => {
       let serviceName = 'foo'
 
       // Act.
-      loader.load(path.join(__dirname, '/../../Resources/config/fake-imports.js'))
+      loader.load(
+        path.join(__dirname, '/../../Resources/config/fake-imports.js'))
       let service = container.get(serviceName)
 
       // Assert.
@@ -88,7 +90,8 @@ describe('JsFileLoader', () => {
   describe('old way of loading js config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
-      loader = new JsFileLoader(container, path.join(__dirname, '/../../Resources/config/fake-services.js'))
+      loader = new JsFileLoader(container,
+        path.join(__dirname, '/../../Resources/config/fake-services.js'))
     })
 
     it('should load multiple service files', () => {

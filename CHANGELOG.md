@@ -1,5 +1,22 @@
 # Change Log
 
+# [1.8.1] - 2016-04-10
+### Changed
+- Removing linkedIn link from README file
+
+# [1.8.0] - 2016-04-10
+### Added
+- Adding definition synthetic parameter
+- Public container direct set method
+- Container get method will only return you a valid instance
+- Remove not necessary instances from container on compile
+- Reference Symfony as a source of inspiration
+- Adding Additional Attributes on Tags
+- Inject Instances into the Container
+### Changed
+- Refactor following new standard rules
+- Removing linkedIn link from README file
+
 # [1.7.4] - 2016-03-22
 ### Changed
 - Throw an exception if the method call does not exists
