@@ -105,3 +105,8 @@ services:
 
     synthetic_service:
         synthetic: true
+
+    app.listener:
+        class: ./../listener
+        tags:
+            - {name: listener, attributes: {event: postUpdate}}

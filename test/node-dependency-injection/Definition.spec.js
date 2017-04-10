@@ -98,6 +98,30 @@ describe('Definition', () => {
       // Assert.
       assert.lengthOf(definition.tags, 1)
     })
+
+    it('should add a new tag with attributes', () => {
+      // Arrange.
+      let tagName = 'foo'
+      let attributes = new Map()
+
+      // Act.
+      definition.addTag(tagName, attributes)
+
+      // Assert.
+      assert.lengthOf(definition.tags, 1)
+    })
+
+    it('should throw an exception if attributes is an exception', () => {
+      // Arrange.
+      let tagName = 'foo'
+      let attributes = {}
+
+      // Act.
+      let actual = () => definition.addTag(tagName, attributes)
+
+      // Assert.
+      assert.throws(actual, Error, 'Attributes is not type Map')
+    })
   })
 
   describe('addProperty', () => {

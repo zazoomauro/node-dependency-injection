@@ -10,6 +10,7 @@ import FooBar from '../../Resources/foobar'
 import path from 'path'
 import MissingDependencies from '../../Resources/missingDependencies'
 import SyntheticService from '../../Resources/syntheticService'
+import Listener from '../../Resources/listener'
 
 let assert = chai.assert
 
@@ -72,6 +73,7 @@ describe('YamlFileLoader', () => {
       let throwException = () => container.get('private_service')
       let serviceUsingPrivateService = container.get(
         'service_using_private_service')
+      let listener = container.get('app.listener')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -103,6 +105,7 @@ describe('YamlFileLoader', () => {
       assert.throws(throwException, Error,
         `The service private_service is private`)
       assert.instanceOf(serviceUsingPrivateService.bar, Foo)
+      assert.instanceOf(listener, Listener)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })

@@ -873,7 +873,7 @@ describe('ContainerBuilder', () => {
       return assert.lengthOf(actual.toArray(), 1)
     })
 
-    it('should return an array with mutiple tagged services', () => {
+    it('should return an array with multiple tagged services', () => {
       // Arrange.
       class Foo {}
       let id = 'foo'
@@ -888,6 +888,28 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.lengthOf(actual.toArray(), 1)
+    })
+
+    it('should return a map of attributes', () => {
+      // Arrange.
+      const tagName = 'listener'
+      const eventName = 'event'
+      const eventValue = 'prePersist'
+      let definition = new Definition(class Foo {})
+      let attributes = new Map()
+      attributes.set(eventName, eventValue)
+      definition.addTag(tagName, attributes)
+      container.setDefinition('app.listener', definition)
+
+      // Act.
+      let actual = container.findTaggedServiceIds(tagName)
+
+      // Assert.
+      for (let definition of actual.values()) {
+        for (let tag of definition.tags) {
+          assert.strictEqual(eventValue, tag.attributes.get(eventName))
+        }
+      }
     })
   })
 
