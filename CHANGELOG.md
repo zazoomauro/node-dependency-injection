@@ -1,5 +1,14 @@
 # Change Log
 
+# [1.9.0] - 2016-04-13
+### Changed
+- refactoring compile optimization
+- refactoring compile removal
+- getInstanceFromDefinition is now public
+### Added
+- adding container builder remove method
+- adding container builder isSet method
+
 # [1.8.1] - 2016-04-10
 ### Changed
 - Removing linkedIn link from README file
