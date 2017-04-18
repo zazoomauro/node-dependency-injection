@@ -8,6 +8,7 @@
 ### Added
 - adding container builder remove method
 - adding container builder isSet method
+- adding add compiler pass priority argument
 
 # [1.8.1] - 2016-04-10
 ### Changed

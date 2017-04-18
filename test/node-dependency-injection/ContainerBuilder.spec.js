@@ -297,8 +297,8 @@ describe('ContainerBuilder', () => {
             return this._bar
           }
         }
-        container.register(id, Foo)
-          .addArgument(new Reference(referenceId, true))
+        container.register(id, Foo).
+          addArgument(new Reference(referenceId, true))
 
         // Act.
         let actual = container.get(id)
@@ -335,8 +335,8 @@ describe('ContainerBuilder', () => {
         }
       }
       container.register(reference2Id, FooBar)
-      container.register(reference1Id, Bar)
-        .addArgument(new Reference(reference2Id))
+      container.register(reference1Id, Bar).
+        addArgument(new Reference(reference2Id))
       container.register(id, Foo).addArgument(new Reference(reference1Id))
 
       // Act.
@@ -489,6 +489,51 @@ describe('ContainerBuilder', () => {
   })
 
   describe('compile', () => {
+    it('should call the process method by priority properly',
+      () => {
+        // Arrange.
+        let fooId = 'service.foo'
+        class Foo {}
+        container.register(fooId, Foo)
+        let valueFirstPass = 'foo'
+        let valueSecondPass = 'bar'
+        let expected = []
+        class FirstPass { process () { expected.push(valueFirstPass) } }
+        class SecondPass { process () { expected.push(valueSecondPass) } }
+        container.addCompilerPass(new SecondPass(),
+          PassConfig.TYPE_AFTER_REMOVING, 21)
+        container.addCompilerPass(new FirstPass(),
+          PassConfig.TYPE_AFTER_REMOVING, 17)
+
+        // Act.
+        container.compile()
+
+        // Assert.
+        assert.strictEqual(expected[0], valueFirstPass)
+
+        return assert.strictEqual(expected[1], valueSecondPass)
+      })
+
+    it('should add more compiler pass by priority',
+      () => {
+        // Arrange.
+        let fooId = 'service.foo'
+        class Foo {}
+        container.register(fooId, Foo)
+        class FirstPass { process () {} }
+        class SecondPass { process () {} }
+        container.addCompilerPass(new FirstPass(),
+          PassConfig.TYPE_AFTER_REMOVING, 1)
+        container.addCompilerPass(new SecondPass(),
+          PassConfig.TYPE_AFTER_REMOVING, 2)
+
+        // Act.
+        container.compile()
+
+        // Assert.
+        return assert.instanceOf(container.get(fooId), Foo)
+      })
+
     it('should remove private instances if no remove pass config passed',
       () => {
         // Arrange.
@@ -689,8 +734,8 @@ describe('ContainerBuilder', () => {
         // Arrange.
         FooManager.prototype.fooManagerCalls = 0
         container.register('foo_manager', FooManager)
-        container.register('bar_manager', BarManager)
-          .addArgument(new Reference('foo_manager'))
+        container.register('bar_manager', BarManager).
+          addArgument(new Reference('foo_manager'))
 
         // Act.
         container.compile()
