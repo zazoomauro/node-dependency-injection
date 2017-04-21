@@ -1,0 +1,3 @@
+services:
+    bar:
+        class: ./../../foobar
