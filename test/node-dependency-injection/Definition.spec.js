@@ -232,4 +232,26 @@ describe('Definition', () => {
       assert.isFalse(definition.public)
     })
   })
+
+  describe('decoratedService', () => {
+    it('should set a decorated service', () => {
+      // Arrange.
+      let service = 'bar'
+
+      // Act.
+      definition.decoratedService = service
+
+      // Assert.
+      assert.strictEqual(definition.decoratedService, service)
+    })
+
+    it('should get null as default decorated service', () => {
+      // No Arrange.
+
+      // No Act.
+
+      // Assert.
+      assert.isNull(definition.decoratedService)
+    })
+  })
 })

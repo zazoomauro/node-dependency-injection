@@ -1,6 +1,6 @@
 # Change Log
 
-# [1.9.0] - 2016-04-13
+# [1.9.0] - 2016-05-22
 ### Changed
 - refactoring compile optimization
 - refactoring compile removal
@@ -9,6 +9,7 @@
 - adding container builder remove method
 - adding container builder isSet method
 - adding add compiler pass priority argument
+- adding decorators
 
 # [1.8.1] - 2016-04-10
 ### Changed
