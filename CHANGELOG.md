@@ -1,5 +1,9 @@
 # Change Log
 
+# [1.8.2] - 2016-04-24
+### Changed
+- Fix: FileLoader cannot load files in subfolder
+
 # [1.8.1] - 2016-04-10
 ### Changed
 - Removing linkedIn link from README file
