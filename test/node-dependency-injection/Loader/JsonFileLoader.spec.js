@@ -65,6 +65,19 @@ describe('JsonFileLoader', () => {
 
       return assert.lengthOf(arrayActualParameter, 2)
     })
+
+    it('should load a service which use package class', () => {
+      // Arrange.
+      let serviceName = 'baz'
+      let configFile = '/../../Resources/config/fake-services.json'
+
+      // Act.
+      loader.load(path.join(__dirname, configFile))
+      let service = container.get(serviceName)
+
+      // Assert.
+      return assert.instanceOf(service, Foo)
+    })
   })
 
   describe('load multiple imports', () => {

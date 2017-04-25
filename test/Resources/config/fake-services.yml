@@ -29,6 +29,9 @@ services:
 
     f:  '@foo'
 
+    baz:
+        class: '%./../../../Resources/foo'
+
     lazy.service:
         class: ./../foobar
         lazy: true

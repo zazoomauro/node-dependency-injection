@@ -124,6 +124,19 @@ describe('YamlFileLoader', () => {
       // Assert.
       return assert.instanceOf(syntheticService, SyntheticService)
     })
+
+    it('should load a service which use package class', () => {
+      // Arrange.
+      let serviceName = 'baz'
+      let configFile = '/../../Resources/config/fake-services.yml'
+
+      // Act.
+      loader.load(path.join(__dirname, configFile))
+      let service = container.get(serviceName)
+
+      // Assert.
+      return assert.instanceOf(service, Foo)
+    })
   })
 
   describe('load multiple imports', () => {

@@ -25,6 +25,9 @@ module.exports = {
       ]
     },
     foobar: {class: './../foobar'},
-    f: '@foo'
+    f: '@foo',
+    baz: {
+      class: '%./../../../Resources/foo'
+    }
   }
 }
