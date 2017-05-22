@@ -1,5 +1,16 @@
 # Change Log
 
+# [1.9.0] - 2016-05-22
+### Changed
+- refactoring compile optimization
+- refactoring compile removal
+- getInstanceFromDefinition is now public
+### Added
+- adding container builder remove method
+- adding container builder isSet method
+- adding add compiler pass priority argument
+- adding decorators
+
 # [1.8.2] - 2016-04-24
 ### Changed
 - Fix: FileLoader cannot load files in subfolder

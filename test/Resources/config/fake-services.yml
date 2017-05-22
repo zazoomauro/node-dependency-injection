@@ -110,3 +110,12 @@ services:
         class: ./../listener
         tags:
             - {name: listener, attributes: {event: postUpdate}}
+
+    app.mailer:
+        class: ./../Mailer
+
+    app.decorating_mailer:
+        class: ./../DecoratingMailer
+        decorates: app.mailer
+        arguments: ['@app.decorating_mailer.inner']
+        public: false

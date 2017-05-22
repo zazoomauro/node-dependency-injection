@@ -49,6 +49,66 @@ describe('ContainerBuilder', () => {
   })
 
   describe('get', () => {
+    it('should get a decorated service properly', () => {
+      // Arrange.
+      class Foo {}
+      class DecoratingFoo {}
+      container.register('foo', Foo)
+      let decoratingDefinition = container.register('decorating.foo',
+        DecoratingFoo)
+      decoratingDefinition.decoratedService = 'foo'
+
+      // Act.
+      container.compile()
+      let actual = container.get('foo')
+
+      // Assert.
+      assert.instanceOf(actual, DecoratingFoo)
+    })
+
+    it('should get the inner service from a decorated service', () => {
+      // Arrange.
+      class Foo {}
+      class DecoratingFoo {}
+      container.register('foo', Foo)
+      let decoratingDefinition = container.register('decorating.foo',
+        DecoratingFoo)
+      decoratingDefinition.decoratedService = 'foo'
+
+      // Act.
+      container.compile()
+      let actual = container.get('decorating.foo.inner')
+
+      // Assert.
+      assert.instanceOf(actual, Foo)
+    })
+
+    it('should inject the inner service to the decorated service', () => {
+      // Arrange.
+      class Foo {}
+      class DecoratingFoo {
+        constructor (inner) {
+          this._inner = inner
+        }
+
+        get inner () {
+          return this._inner
+        }
+      }
+      container.register('foo', Foo)
+      let decoratingDefinition = container.register('decorating.foo',
+        DecoratingFoo)
+      decoratingDefinition.decoratedService = 'foo'
+      decoratingDefinition.args = [new Reference('decorating.foo.inner')]
+
+      // Act.
+      container.compile()
+      let actual = container.get('foo')
+
+      // Assert.
+      assert.instanceOf(actual.inner, Foo)
+    })
+
     it(
       'should not get an synthetic instance cos the definition does not exists',
       () => {
@@ -489,6 +549,51 @@ describe('ContainerBuilder', () => {
   })
 
   describe('compile', () => {
+    it('should call the process method by priority properly',
+      () => {
+        // Arrange.
+        let fooId = 'service.foo'
+        class Foo {}
+        container.register(fooId, Foo)
+        let valueFirstPass = 'foo'
+        let valueSecondPass = 'bar'
+        let expected = []
+        class FirstPass { process () { expected.push(valueFirstPass) } }
+        class SecondPass { process () { expected.push(valueSecondPass) } }
+        container.addCompilerPass(new SecondPass(),
+          PassConfig.TYPE_AFTER_REMOVING, 21)
+        container.addCompilerPass(new FirstPass(),
+          PassConfig.TYPE_AFTER_REMOVING, 17)
+
+        // Act.
+        container.compile()
+
+        // Assert.
+        assert.strictEqual(expected[0], valueFirstPass)
+
+        return assert.strictEqual(expected[1], valueSecondPass)
+      })
+
+    it('should add more compiler pass by priority',
+      () => {
+        // Arrange.
+        let fooId = 'service.foo'
+        class Foo {}
+        container.register(fooId, Foo)
+        class FirstPass { process () {} }
+        class SecondPass { process () {} }
+        container.addCompilerPass(new FirstPass(),
+          PassConfig.TYPE_AFTER_REMOVING, 1)
+        container.addCompilerPass(new SecondPass(),
+          PassConfig.TYPE_AFTER_REMOVING, 2)
+
+        // Act.
+        container.compile()
+
+        // Assert.
+        return assert.instanceOf(container.get(fooId), Foo)
+      })
+
     it('should remove private instances if no remove pass config passed',
       () => {
         // Arrange.

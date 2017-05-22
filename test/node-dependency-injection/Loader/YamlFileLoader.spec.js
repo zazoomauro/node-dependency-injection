@@ -11,6 +11,8 @@ import path from 'path'
 import MissingDependencies from '../../Resources/missingDependencies'
 import SyntheticService from '../../Resources/syntheticService'
 import Listener from '../../Resources/listener'
+import DecoratingMailer from '../../Resources/DecoratingMailer'
+import Mailer from '../../Resources/Mailer'
 
 let assert = chai.assert
 
@@ -48,6 +50,7 @@ describe('YamlFileLoader', () => {
       // Act.
       loader.load(
         path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+      container.compile()
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
       let taggedServices = container.findTaggedServiceIds(tagName)
@@ -70,10 +73,12 @@ describe('YamlFileLoader', () => {
         'service_with_dependencies_call')
       let fooWithTrue = container.get('foo_with_true')
       let fooWithFalse = container.get('foo_with_false')
-      let throwException = () => container.get('private_service')
+      let throwPrivateServiceException = () => container.get('private_service')
       let serviceUsingPrivateService = container.get(
         'service_using_private_service')
       let listener = container.get('app.listener')
+      let mailer = container.get('app.mailer')
+      let mailerInner = container.get('app.decorating_mailer.inner')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -102,10 +107,13 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(serviceWithDependenciesCall.optional, FooBar)
       assert.isTrue(fooWithTrue.param)
       assert.isFalse(fooWithFalse.parameter)
-      assert.throws(throwException, Error,
+      assert.throws(throwPrivateServiceException, Error,
         `The service private_service is private`)
       assert.instanceOf(serviceUsingPrivateService.bar, Foo)
       assert.instanceOf(listener, Listener)
+      assert.instanceOf(mailer, DecoratingMailer)
+      assert.instanceOf(mailer.inner, Mailer)
+      assert.instanceOf(mailerInner, Mailer)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })
