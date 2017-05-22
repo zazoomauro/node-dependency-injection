@@ -158,6 +158,29 @@ describe('YamlFileLoader', () => {
     })
   })
 
+  describe('load imports in subfolder', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new YamlFileLoader(container)
+    })
+
+    it('should load multiple service files in subfolder', () => {
+      // Arrange.
+      let barServiceName = 'bar'
+      let bazServiceName = 'baz'
+      let configPath = path.join(__dirname, '/../../Resources/config/fake-import-subfolder.yml')
+
+      // Act.
+      loader.load(configPath)
+      let bar = container.get(barServiceName)
+      let baz = container.get(bazServiceName)
+
+      // Assert.
+      assert.instanceOf(bar, FooBar)
+      return assert.instanceOf(baz, FooBar)
+    })
+  })
+
   describe('old way of loading yaml config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
