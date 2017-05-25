@@ -3,6 +3,7 @@
 # [1.9.1] - 2016-05-25
 ### Changed
 - fixing fs-extra out to date dependency
+- fixing all the dev out to date dependencies
 
 # [1.9.0] - 2016-05-22
 ### Changed
