@@ -1,5 +1,9 @@
 # Change Log
 
+# [1.9.1] - 2016-05-25
+### Changed
+- fixing fs-extra out to date dependency
+
 # [1.9.0] - 2016-05-22
 ### Changed
 - refactoring compile optimization
