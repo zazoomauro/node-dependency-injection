@@ -1,5 +1,10 @@
 # Change Log
 
+# [1.9.2] - 2016-05-25
+### Changed
+- fixing ContainerBuilder code issue `Method '_getInstance' has a complexity of 10.`
+- fixing ContainerBuilder code issue `Similar code found in other locations`  
+
 # [1.9.1] - 2016-05-25
 ### Changed
 - fixing fs-extra out to date dependency
