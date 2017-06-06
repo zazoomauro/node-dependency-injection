@@ -39,7 +39,7 @@ describe('ContainerBuilder', () => {
         const logger = {}
 
         // Act.
-        const actual = () => {container.logger = logger}
+        const actual = () => { container.logger = logger }
 
         // Assert.
         assert.throws(actual, Error,
@@ -385,8 +385,8 @@ describe('ContainerBuilder', () => {
             return this._bar
           }
         }
-        container.register(id, Foo).
-          addArgument(new Reference(referenceId, true))
+        container.register(id, Foo)
+          .addArgument(new Reference(referenceId, true))
 
         // Act.
         let actual = container.get(id)
@@ -423,8 +423,8 @@ describe('ContainerBuilder', () => {
         }
       }
       container.register(reference2Id, FooBar)
-      container.register(reference1Id, Bar).
-        addArgument(new Reference(reference2Id))
+      container.register(reference1Id, Bar)
+        .addArgument(new Reference(reference2Id))
       container.register(id, Foo).addArgument(new Reference(reference1Id))
 
       // Act.
@@ -822,8 +822,8 @@ describe('ContainerBuilder', () => {
         // Arrange.
         FooManager.prototype.fooManagerCalls = 0
         container.register('foo_manager', FooManager)
-        container.register('bar_manager', BarManager).
-          addArgument(new Reference('foo_manager'))
+        container.register('bar_manager', BarManager)
+          .addArgument(new Reference('foo_manager'))
 
         // Act.
         container.compile()
@@ -1122,8 +1122,9 @@ describe('ContainerBuilder', () => {
     it('should throw an exception if the set value is not a valid parameter',
       () => {
         // Arrange.
+        class InvalidParameter {}
         let key = 'foo.bar'
-        let value = {}
+        let value = InvalidParameter
 
         // Act.
         let actual = () => container.setParameter(key, value)

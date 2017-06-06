@@ -81,6 +81,8 @@ describe('YamlFileLoader', () => {
       let listener = container.get('app.listener')
       let mailer = container.get('app.mailer')
       let mailerInner = container.get('app.decorating_mailer.inner')
+      let serviceWithObjectParameter = container.get(
+        'service_with_object_parameter')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -116,6 +118,7 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(mailer, DecoratingMailer)
       assert.instanceOf(mailer.inner, Mailer)
       assert.instanceOf(mailerInner, Mailer)
+      assert.isObject(serviceWithObjectParameter.fooManager)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })

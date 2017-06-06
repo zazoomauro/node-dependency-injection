@@ -51,6 +51,8 @@ describe('JsonFileLoader', () => {
       let taggedServices = container.findTaggedServiceIds(tagName)
       let stringActualParameter = container.getParameter(stringParameterName)
       let arrayActualParameter = container.getParameter(arrayParameterName)
+      let serviceWithObjectParameter = container.get(
+        'service_with_object_parameter')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -64,6 +66,7 @@ describe('JsonFileLoader', () => {
       assert.isArray(arrayActualParameter)
       assert.strictEqual(service.parameter, stringExpectedParameter)
       assert.strictEqual(service.property, stringPropertyExpected)
+      assert.isObject(serviceWithObjectParameter.fooManager)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })

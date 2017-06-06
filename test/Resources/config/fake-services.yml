@@ -3,6 +3,9 @@ parameters:
     barParameter: ['foo', 'bar']
     fooProperty: 'fooProperty'
     param_false: false
+    param_object:
+      foo: 'bar'
+      bar: 'foo'
 
 services:
     foo:
@@ -119,3 +122,7 @@ services:
         decorates: app.mailer
         arguments: ['@app.decorating_mailer.inner']
         public: false
+
+    service_with_object_parameter:
+        class: ./../BarManager
+        arguments: ['%param_object%']
