@@ -233,6 +233,28 @@ describe('Definition', () => {
     })
   })
 
+  describe('shared', () => {
+    it('should set as true', () => {
+      // Arrange not needed.
+
+      // Act.
+      definition.shared = true
+
+      // Assert.
+      assert.isTrue(definition.shared)
+    })
+
+    it('should set as false', () => {
+      // Arrange not needed.
+
+      // Act not needed.
+      definition.shared = false
+
+      // Assert.
+      assert.isFalse(definition.shared)
+    })
+  })
+
   describe('decoratedService', () => {
     it('should set a decorated service', () => {
       // Arrange.

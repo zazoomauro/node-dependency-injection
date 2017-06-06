@@ -77,6 +77,38 @@ describe('ContainerBuilder', () => {
   })
 
   describe('get', () => {
+    it('should retrieve the same instance if is not a shared definition',
+      () => {
+        // Arrange.
+        const id = 'not.shared'
+        class Foo {}
+        const definition = new Definition(Foo)
+        container.setDefinition(id, definition)
+
+        // Act.
+        const actual = container.get(id)
+        const expected = container.get(id)
+
+        // Assert.
+        return assert.strictEqual(actual, expected)
+      })
+
+    it('should retrieve a different instance if is a shared definition', () => {
+      // Arrange.
+      const id = 'shared'
+      class Foo {}
+      const definition = new Definition(Foo)
+      definition.shared = true
+      container.setDefinition(id, definition)
+
+      // Act.
+      const actual = container.get(id)
+      const expected = container.get(id)
+
+      // Assert.
+      return assert.notStrictEqual(actual, expected)
+    })
+
     it('should get a decorated service properly', () => {
       // Arrange.
       class Foo {}
@@ -385,8 +417,8 @@ describe('ContainerBuilder', () => {
             return this._bar
           }
         }
-        container.register(id, Foo)
-          .addArgument(new Reference(referenceId, true))
+        container.register(id, Foo).
+          addArgument(new Reference(referenceId, true))
 
         // Act.
         let actual = container.get(id)
@@ -423,8 +455,8 @@ describe('ContainerBuilder', () => {
         }
       }
       container.register(reference2Id, FooBar)
-      container.register(reference1Id, Bar)
-        .addArgument(new Reference(reference2Id))
+      container.register(reference1Id, Bar).
+        addArgument(new Reference(reference2Id))
       container.register(id, Foo).addArgument(new Reference(reference1Id))
 
       // Act.
@@ -822,8 +854,8 @@ describe('ContainerBuilder', () => {
         // Arrange.
         FooManager.prototype.fooManagerCalls = 0
         container.register('foo_manager', FooManager)
-        container.register('bar_manager', BarManager)
-          .addArgument(new Reference('foo_manager'))
+        container.register('bar_manager', BarManager).
+          addArgument(new Reference('foo_manager'))
 
         // Act.
         container.compile()

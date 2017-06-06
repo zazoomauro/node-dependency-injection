@@ -123,6 +123,20 @@ describe('YamlFileLoader', () => {
       return assert.lengthOf(arrayActualParameter, 2)
     })
 
+    it('should load properly a shared service', () => {
+      // Arrange.
+      let sharedServiceName = 'shared_service'
+
+      // Act.
+      loader.load(
+        path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+      let actual = container.get(sharedServiceName)
+      let expected = container.get(sharedServiceName)
+
+      // Assert.
+      return assert.notStrictEqual(actual, expected)
+    })
+
     it('should load properly synthetic service', () => {
       // Arrange.
       let syntheticServiceName = 'synthetic_service'

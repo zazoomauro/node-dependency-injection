@@ -126,3 +126,7 @@ services:
     service_with_object_parameter:
         class: ./../BarManager
         arguments: ['%param_object%']
+
+    shared_service:
+        class: ./../Mailer
+        shared: true
