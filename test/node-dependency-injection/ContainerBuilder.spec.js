@@ -19,6 +19,34 @@ describe('ContainerBuilder', () => {
     container = new ContainerBuilder()
   })
 
+  describe('logger', () => {
+    it('should set and get the right logger instance implementing warn method',
+      () => {
+        // Arrange.
+        const logger = {warn: () => {}}
+
+        // Act.
+        container.logger = logger
+
+        // Assert.
+        return assert.strictEqual(container.logger, logger)
+      })
+
+    it(
+      'should throw an exception if the logger instance not implements warn method',
+      () => {
+        // Arrange.
+        const logger = {}
+
+        // Act.
+        const actual = () => {container.logger = logger}
+
+        // Assert.
+        assert.throws(actual, Error,
+          'The logger instance does not implements the warn method')
+      })
+  })
+
   describe('register', () => {
     it('should return a definition instance', () => {
       // Arrange.
@@ -357,8 +385,8 @@ describe('ContainerBuilder', () => {
             return this._bar
           }
         }
-        container.register(id, Foo)
-          .addArgument(new Reference(referenceId, true))
+        container.register(id, Foo).
+          addArgument(new Reference(referenceId, true))
 
         // Act.
         let actual = container.get(id)
@@ -395,8 +423,8 @@ describe('ContainerBuilder', () => {
         }
       }
       container.register(reference2Id, FooBar)
-      container.register(reference1Id, Bar)
-        .addArgument(new Reference(reference2Id))
+      container.register(reference1Id, Bar).
+        addArgument(new Reference(reference2Id))
       container.register(id, Foo).addArgument(new Reference(reference1Id))
 
       // Act.
@@ -794,8 +822,8 @@ describe('ContainerBuilder', () => {
         // Arrange.
         FooManager.prototype.fooManagerCalls = 0
         container.register('foo_manager', FooManager)
-        container.register('bar_manager', BarManager)
-          .addArgument(new Reference('foo_manager'))
+        container.register('bar_manager', BarManager).
+          addArgument(new Reference('foo_manager'))
 
         // Act.
         container.compile()

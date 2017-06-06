@@ -13,10 +13,12 @@ let assert = chai.assert
 describe('JsonFileLoader', () => {
   let loader
   let container
+  let logger = {warn: () => {}}
 
   describe('load', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsonFileLoader(container)
     })
 
@@ -70,6 +72,7 @@ describe('JsonFileLoader', () => {
   describe('load multiple imports', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsonFileLoader(container)
     })
 
@@ -90,6 +93,7 @@ describe('JsonFileLoader', () => {
   describe('load imports in subfolder', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsonFileLoader(container)
     })
 
@@ -113,6 +117,7 @@ describe('JsonFileLoader', () => {
   describe('old way of loading json config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsonFileLoader(container,
         path.join(__dirname, '/../../Resources/config/fake-services.json'))
     })

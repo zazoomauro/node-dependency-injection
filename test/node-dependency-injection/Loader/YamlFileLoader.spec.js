@@ -19,10 +19,12 @@ let assert = chai.assert
 describe('YamlFileLoader', () => {
   let loader
   let container
+  let logger = {warn: () => {}}
 
   describe('load', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new YamlFileLoader(container)
     })
 
@@ -137,6 +139,7 @@ describe('YamlFileLoader', () => {
   describe('load multiple imports', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new YamlFileLoader(container)
     })
 
@@ -161,6 +164,7 @@ describe('YamlFileLoader', () => {
   describe('load imports in subfolder', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new YamlFileLoader(container)
     })
 
@@ -168,7 +172,8 @@ describe('YamlFileLoader', () => {
       // Arrange.
       let barServiceName = 'bar'
       let bazServiceName = 'baz'
-      let configPath = path.join(__dirname, '/../../Resources/config/fake-import-subfolder.yml')
+      let configPath = path.join(__dirname,
+        '/../../Resources/config/fake-import-subfolder.yml')
 
       // Act.
       loader.load(configPath)
@@ -184,6 +189,7 @@ describe('YamlFileLoader', () => {
   describe('old way of loading yaml config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new YamlFileLoader(container,
         path.join(__dirname, '/../../Resources/config/fake-services.yml'))
     })
