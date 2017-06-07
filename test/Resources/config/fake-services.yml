@@ -127,6 +127,6 @@ services:
         class: ./../BarManager
         arguments: ['%param_object%']
 
-    shared_service:
+    not_shared_service:
         class: ./../Mailer
-        shared: true
+        shared: false
