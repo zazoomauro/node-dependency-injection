@@ -124,7 +124,7 @@ services:
         public: false
 
     service_with_object_parameter:
-        class: ./../BarManager
+        class: ./../barManager
         arguments: ['%param_object%']
 
     not_shared_service:
