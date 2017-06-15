@@ -13,6 +13,7 @@ import SyntheticService from '../../Resources/syntheticService'
 import Listener from '../../Resources/listener'
 import DecoratingMailer from '../../Resources/DecoratingMailer'
 import Mailer from '../../Resources/Mailer'
+import DecoratingMailerTwo from '../../Resources/DecoratingMailerTwo'
 
 let assert = chai.assert
 
@@ -83,6 +84,7 @@ describe('YamlFileLoader', () => {
       let mailerInner = container.get('app.decorating_mailer.inner')
       let serviceWithObjectParameter = container.get(
         'service_with_object_parameter')
+      let decorateAppMailer = container.get('decorate.app.mailer')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -119,6 +121,7 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(mailer.inner, Mailer)
       assert.instanceOf(mailerInner, Mailer)
       assert.isObject(serviceWithObjectParameter.fooManager)
+      assert.instanceOf(decorateAppMailer.inner, DecoratingMailerTwo)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })

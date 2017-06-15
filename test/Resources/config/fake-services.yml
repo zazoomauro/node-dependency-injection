@@ -130,3 +130,18 @@ services:
     shared_service:
         class: ./../Mailer
         shared: true
+
+    decorate.app.mailer:
+        class: ./../Mailer
+
+    decorate.one:
+        class: ./../DecoratingMailerOne
+        decorates: decorate.app.mailer
+        decoration_priority: 3
+        arguments: ['@decorate.one.inner']
+
+    decorate.two:
+        class: ./../DecoratingMailerTwo
+        decorates: decorate.app.mailer
+        decoration_priority: 1
+        arguments: ['@decorate.two.inner']

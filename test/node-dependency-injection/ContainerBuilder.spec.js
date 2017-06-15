@@ -169,6 +169,48 @@ describe('ContainerBuilder', () => {
       assert.instanceOf(actual.inner, Foo)
     })
 
+    it('should inject the inner service to the decorated service with ' +
+      'decoration priority', () => {
+      // Arrange.
+      const expected = 'decoration_priority'
+      class Foo {
+        get inner () {
+          return false
+        }
+      }
+      class Baz {
+        get inner () {
+          return false
+        }
+      }
+      class Bar {
+        get inner () {
+          return expected
+        }
+      }
+
+      container.register('foo', Foo)
+
+      let definitionBar = container.register('bar', Bar)
+      definitionBar.addArgument(new Reference('bar.inner'))
+      definitionBar.public = false
+      definitionBar.decoratedService = 'foo'
+      definitionBar.decorationPriority = 5
+
+      let definitionBaz = container.register('baz', Baz)
+      definitionBaz.addArgument(new Reference('baz.inner'))
+      definitionBaz.public = false
+      definitionBaz.decoratedService = 'foo'
+      definitionBaz.decorationPriority = 1
+
+      // Act.
+      container.compile()
+      let actual = container.get('foo')
+
+      // Assert.
+      assert.strictEqual(actual.inner, expected)
+    })
+
     it(
       'should not get an synthetic instance cos the definition does not exists',
       () => {
@@ -417,8 +459,8 @@ describe('ContainerBuilder', () => {
             return this._bar
           }
         }
-        container.register(id, Foo).
-          addArgument(new Reference(referenceId, true))
+        container.register(id, Foo)
+          .addArgument(new Reference(referenceId, true))
 
         // Act.
         let actual = container.get(id)
@@ -455,8 +497,8 @@ describe('ContainerBuilder', () => {
         }
       }
       container.register(reference2Id, FooBar)
-      container.register(reference1Id, Bar).
-        addArgument(new Reference(reference2Id))
+      container.register(reference1Id, Bar)
+        .addArgument(new Reference(reference2Id))
       container.register(id, Foo).addArgument(new Reference(reference1Id))
 
       // Act.
@@ -854,8 +896,8 @@ describe('ContainerBuilder', () => {
         // Arrange.
         FooManager.prototype.fooManagerCalls = 0
         container.register('foo_manager', FooManager)
-        container.register('bar_manager', BarManager).
-          addArgument(new Reference('foo_manager'))
+        container.register('bar_manager', BarManager)
+          .addArgument(new Reference('foo_manager'))
 
         // Act.
         container.compile()

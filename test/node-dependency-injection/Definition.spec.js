@@ -276,4 +276,26 @@ describe('Definition', () => {
       assert.isNull(definition.decoratedService)
     })
   })
+
+  describe('decorationPriority', () => {
+    it('should set a decorated priority', () => {
+      // Arrange.
+      let priority = 2
+
+      // Act.
+      definition.decorationPriority = priority
+
+      // Assert.
+      assert.strictEqual(definition.decorationPriority, priority)
+    })
+
+    it('should get null as default decorated service', () => {
+      // No Arrange.
+
+      // No Act.
+
+      // Assert.
+      assert.isNull(definition.decorationPriority)
+    })
+  })
 })
