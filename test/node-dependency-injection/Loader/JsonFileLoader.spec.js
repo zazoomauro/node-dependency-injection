@@ -13,10 +13,12 @@ let assert = chai.assert
 describe('JsonFileLoader', () => {
   let loader
   let container
+  let logger = {warn: () => {}}
 
   describe('load', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsonFileLoader(container)
     })
 
@@ -49,6 +51,8 @@ describe('JsonFileLoader', () => {
       let taggedServices = container.findTaggedServiceIds(tagName)
       let stringActualParameter = container.getParameter(stringParameterName)
       let arrayActualParameter = container.getParameter(arrayParameterName)
+      let serviceWithObjectParameter = container.get(
+        'service_with_object_parameter')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -62,6 +66,7 @@ describe('JsonFileLoader', () => {
       assert.isArray(arrayActualParameter)
       assert.strictEqual(service.parameter, stringExpectedParameter)
       assert.strictEqual(service.property, stringPropertyExpected)
+      assert.isObject(serviceWithObjectParameter.fooManager)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })
@@ -70,6 +75,7 @@ describe('JsonFileLoader', () => {
   describe('load multiple imports', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsonFileLoader(container)
     })
 
@@ -90,6 +96,7 @@ describe('JsonFileLoader', () => {
   describe('load imports in subfolder', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsonFileLoader(container)
     })
 
@@ -113,6 +120,7 @@ describe('JsonFileLoader', () => {
   describe('old way of loading json config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsonFileLoader(container,
         path.join(__dirname, '/../../Resources/config/fake-services.json'))
     })

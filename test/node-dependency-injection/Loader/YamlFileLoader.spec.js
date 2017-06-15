@@ -13,16 +13,19 @@ import SyntheticService from '../../Resources/syntheticService'
 import Listener from '../../Resources/listener'
 import DecoratingMailer from '../../Resources/DecoratingMailer'
 import Mailer from '../../Resources/Mailer'
+import DecoratingMailerTwo from '../../Resources/DecoratingMailerTwo'
 
 let assert = chai.assert
 
 describe('YamlFileLoader', () => {
   let loader
   let container
+  let logger = {warn: () => {}}
 
   describe('load', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new YamlFileLoader(container)
     })
 
@@ -79,6 +82,9 @@ describe('YamlFileLoader', () => {
       let listener = container.get('app.listener')
       let mailer = container.get('app.mailer')
       let mailerInner = container.get('app.decorating_mailer.inner')
+      let serviceWithObjectParameter = container.get(
+        'service_with_object_parameter')
+      let decorateAppMailer = container.get('decorate.app.mailer')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -114,8 +120,24 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(mailer, DecoratingMailer)
       assert.instanceOf(mailer.inner, Mailer)
       assert.instanceOf(mailerInner, Mailer)
+      assert.isObject(serviceWithObjectParameter.fooManager)
+      assert.instanceOf(decorateAppMailer.inner, DecoratingMailerTwo)
 
       return assert.lengthOf(arrayActualParameter, 2)
+    })
+
+    it('should load properly a not shared service', () => {
+      // Arrange.
+      let notSharedServiceName = 'not_shared_service'
+
+      // Act.
+      loader.load(
+        path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+      let actual = container.get(notSharedServiceName)
+      let expected = container.get(notSharedServiceName)
+
+      // Assert.
+      return assert.notStrictEqual(actual, expected)
     })
 
     it('should load properly synthetic service', () => {
@@ -137,6 +159,7 @@ describe('YamlFileLoader', () => {
   describe('load multiple imports', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new YamlFileLoader(container)
     })
 
@@ -161,6 +184,7 @@ describe('YamlFileLoader', () => {
   describe('load imports in subfolder', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new YamlFileLoader(container)
     })
 
@@ -168,7 +192,8 @@ describe('YamlFileLoader', () => {
       // Arrange.
       let barServiceName = 'bar'
       let bazServiceName = 'baz'
-      let configPath = path.join(__dirname, '/../../Resources/config/fake-import-subfolder.yml')
+      let configPath = path.join(__dirname,
+        '/../../Resources/config/fake-import-subfolder.yml')
 
       // Act.
       loader.load(configPath)
@@ -184,6 +209,7 @@ describe('YamlFileLoader', () => {
   describe('old way of loading yaml config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new YamlFileLoader(container,
         path.join(__dirname, '/../../Resources/config/fake-services.yml'))
     })

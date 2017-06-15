@@ -13,10 +13,12 @@ let assert = chai.assert
 describe('JsFileLoader', () => {
   let loader
   let container
+  let logger = {warn: () => {}}
 
   describe('load', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsFileLoader(container)
     })
 
@@ -70,6 +72,7 @@ describe('JsFileLoader', () => {
   describe('load multiple imports', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsFileLoader(container)
     })
 
@@ -90,6 +93,7 @@ describe('JsFileLoader', () => {
   describe('load imports in subfolder', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsFileLoader(container)
     })
 
@@ -97,7 +101,8 @@ describe('JsFileLoader', () => {
       // Arrange.
       let barServiceName = 'bar'
       let bazServiceName = 'baz'
-      let configPath = path.join(__dirname, '/../../Resources/config/fake-import-subfolder.js')
+      let configPath = path.join(__dirname,
+        '/../../Resources/config/fake-import-subfolder.js')
 
       // Act.
       loader.load(configPath)
@@ -113,6 +118,7 @@ describe('JsFileLoader', () => {
   describe('old way of loading js config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      container.logger = logger
       loader = new JsFileLoader(container,
         path.join(__dirname, '/../../Resources/config/fake-services.js'))
     })

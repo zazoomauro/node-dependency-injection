@@ -5,7 +5,11 @@
       "foo",
       "bar"
     ],
-    "fooProperty": "fooProperty"
+    "fooProperty": "fooProperty",
+    "param_object": {
+      "foo": "bar",
+      "bar": "foo"
+    }
   },
   "services": {
     "foo": {
@@ -44,6 +48,12 @@
     "foobar": {
       "class": "./../foobar"
     },
-    "f": "@foo"
+    "f": "@foo",
+    "service_with_object_parameter": {
+      "class": "./../barManager",
+      "arguments": [
+        "%param_object%"
+      ]
+    }
   }
 }

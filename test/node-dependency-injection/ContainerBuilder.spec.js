@@ -19,6 +19,34 @@ describe('ContainerBuilder', () => {
     container = new ContainerBuilder()
   })
 
+  describe('logger', () => {
+    it('should set and get the right logger instance implementing warn method',
+      () => {
+        // Arrange.
+        const logger = {warn: () => {}}
+
+        // Act.
+        container.logger = logger
+
+        // Assert.
+        return assert.strictEqual(container.logger, logger)
+      })
+
+    it(
+      'should throw an exception if the logger instance not implements warn method',
+      () => {
+        // Arrange.
+        const logger = {}
+
+        // Act.
+        const actual = () => { container.logger = logger }
+
+        // Assert.
+        assert.throws(actual, Error,
+          'The logger instance does not implements the warn method')
+      })
+  })
+
   describe('register', () => {
     it('should return a definition instance', () => {
       // Arrange.
@@ -49,6 +77,39 @@ describe('ContainerBuilder', () => {
   })
 
   describe('get', () => {
+    it('should retrieve the same instance if is a shared definition',
+      () => {
+        // Arrange.
+        const id = 'not.shared'
+        class Foo {}
+        const definition = new Definition(Foo)
+        container.setDefinition(id, definition)
+
+        // Act.
+        const actual = container.get(id)
+        const expected = container.get(id)
+
+        // Assert.
+        return assert.strictEqual(actual, expected)
+      })
+
+    it('should retrieve a different instance if is not a shared definition',
+      () => {
+        // Arrange.
+        const id = 'not_shared'
+        class Foo {}
+        const definition = new Definition(Foo)
+        definition.shared = false
+        container.setDefinition(id, definition)
+
+        // Act.
+        const actual = container.get(id)
+        const expected = container.get(id)
+
+        // Assert.
+        return assert.notStrictEqual(actual, expected)
+      })
+
     it('should get a decorated service properly', () => {
       // Arrange.
       class Foo {}
@@ -107,6 +168,48 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       assert.instanceOf(actual.inner, Foo)
+    })
+
+    it('should inject the inner service to the decorated service with ' +
+      'decoration priority', () => {
+      // Arrange.
+      const expected = 'decoration_priority'
+      class Foo {
+        get inner () {
+          return false
+        }
+      }
+      class Baz {
+        get inner () {
+          return false
+        }
+      }
+      class Bar {
+        get inner () {
+          return expected
+        }
+      }
+
+      container.register('foo', Foo)
+
+      let definitionBar = container.register('bar', Bar)
+      definitionBar.addArgument(new Reference('bar.inner'))
+      definitionBar.public = false
+      definitionBar.decoratedService = 'foo'
+      definitionBar.decorationPriority = 5
+
+      let definitionBaz = container.register('baz', Baz)
+      definitionBaz.addArgument(new Reference('baz.inner'))
+      definitionBaz.public = false
+      definitionBaz.decoratedService = 'foo'
+      definitionBaz.decorationPriority = 1
+
+      // Act.
+      container.compile()
+      let actual = container.get('foo')
+
+      // Assert.
+      assert.strictEqual(actual.inner, expected)
     })
 
     it(
@@ -1094,8 +1197,9 @@ describe('ContainerBuilder', () => {
     it('should throw an exception if the set value is not a valid parameter',
       () => {
         // Arrange.
+        class InvalidParameter {}
         let key = 'foo.bar'
-        let value = {}
+        let value = InvalidParameter
 
         // Act.
         let actual = () => container.setParameter(key, value)

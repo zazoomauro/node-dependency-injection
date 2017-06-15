@@ -3,6 +3,9 @@ parameters:
     barParameter: ['foo', 'bar']
     fooProperty: 'fooProperty'
     param_false: false
+    param_object:
+      foo: 'bar'
+      bar: 'foo'
 
 services:
     foo:
@@ -119,3 +122,26 @@ services:
         decorates: app.mailer
         arguments: ['@app.decorating_mailer.inner']
         public: false
+
+    service_with_object_parameter:
+        class: ./../barManager
+        arguments: ['%param_object%']
+
+    not_shared_service:
+        class: ./../Mailer
+        shared: false
+
+    decorate.app.mailer:
+        class: ./../Mailer
+
+    decorate.one:
+        class: ./../DecoratingMailerOne
+        decorates: decorate.app.mailer
+        decoration_priority: 3
+        arguments: ['@decorate.one.inner']
+
+    decorate.two:
+        class: ./../DecoratingMailerTwo
+        decorates: decorate.app.mailer
+        decoration_priority: 1
+        arguments: ['@decorate.two.inner']
