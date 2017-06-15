@@ -77,7 +77,7 @@ describe('ContainerBuilder', () => {
   })
 
   describe('get', () => {
-    it('should retrieve the same instance if is not a shared definition',
+    it('should retrieve the same instance if is a shared definition',
       () => {
         // Arrange.
         const id = 'not.shared'
@@ -93,21 +93,22 @@ describe('ContainerBuilder', () => {
         return assert.strictEqual(actual, expected)
       })
 
-    it('should retrieve a different instance if is a shared definition', () => {
-      // Arrange.
-      const id = 'shared'
-      class Foo {}
-      const definition = new Definition(Foo)
-      definition.shared = true
-      container.setDefinition(id, definition)
+    it('should retrieve a different instance if is not a shared definition',
+      () => {
+        // Arrange.
+        const id = 'not_shared'
+        class Foo {}
+        const definition = new Definition(Foo)
+        definition.shared = false
+        container.setDefinition(id, definition)
 
-      // Act.
-      const actual = container.get(id)
-      const expected = container.get(id)
+        // Act.
+        const actual = container.get(id)
+        const expected = container.get(id)
 
-      // Assert.
-      return assert.notStrictEqual(actual, expected)
-    })
+        // Assert.
+        return assert.notStrictEqual(actual, expected)
+      })
 
     it('should get a decorated service properly', () => {
       // Arrange.
