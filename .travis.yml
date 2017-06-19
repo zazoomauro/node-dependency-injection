@@ -4,6 +4,7 @@ node_js:
   - '7'
   - '6'
   - '5'
+  - '4'
 script:
   - npm run test:standard
   - npm run test:coverage
