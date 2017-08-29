@@ -1,5 +1,10 @@
 # Change Log
 
+# [1.10.2] - 2017-08-16
+### Changed
+- Updating dependencies
+- Updating dev dependencies
+
 # [1.10.1] - 2017-06-19
 ### Changed
 - fixing changelog
