@@ -1,6 +1,10 @@
 # Change Log
 
 # [1.11.0] - 2017-09-08
+### Added
+- append parent arguments to the child service
+- check if the abstract service is well formed
+
 ### Changed
 - serviceCircularReferenceException thrown when container compile fails with RangeError exception
 - moving from .throws to .throw unit testing

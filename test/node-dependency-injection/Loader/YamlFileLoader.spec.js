@@ -14,6 +14,8 @@ import Listener from '../../Resources/listener'
 import DecoratingMailer from '../../Resources/DecoratingMailer'
 import Mailer from '../../Resources/Mailer'
 import DecoratingMailerTwo from '../../Resources/DecoratingMailerTwo'
+import ChildClass from '../../Resources/abstract/ChildClass'
+import Service from '../../Resources/abstract/Service'
 
 let assert = chai.assert
 
@@ -27,6 +29,26 @@ describe('YamlFileLoader', () => {
       container = new ContainerBuilder()
       container.logger = logger
       loader = new YamlFileLoader(container)
+    })
+
+    it('should load an abstract class with dependencies properly', () => {
+      // Arrange not needed.
+
+      // Act.
+      loader.load(path.join(__dirname, '/../../Resources/config/abstract.yml'))
+      const childClass = container.get('app.child_class')
+      const throwAbstractServiceException = () => container.get(
+        'app.base_class')
+      const throwNotAbstractServiceException = () => container.get(
+        'app.failure.child_class')
+
+      // Assert.
+      assert.throw(throwAbstractServiceException, Error,
+        `The service app.base_class is abstract`)
+      assert.instanceOf(childClass, ChildClass)
+      assert.instanceOf(childClass.service, Service)
+      assert.throw(throwNotAbstractServiceException, Error,
+        `The parent service app.failure.base_class is not abstract`)
     })
 
     it('should throw an exception if the yaml file not exists', () => {
