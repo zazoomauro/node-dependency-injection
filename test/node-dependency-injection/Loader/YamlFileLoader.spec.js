@@ -14,6 +14,8 @@ import Listener from '../../Resources/listener'
 import DecoratingMailer from '../../Resources/DecoratingMailer'
 import Mailer from '../../Resources/Mailer'
 import DecoratingMailerTwo from '../../Resources/DecoratingMailerTwo'
+import ChildClass from '../../Resources/abstract/ChildClass'
+import Service from '../../Resources/abstract/Service'
 
 let assert = chai.assert
 
@@ -29,6 +31,26 @@ describe('YamlFileLoader', () => {
       loader = new YamlFileLoader(container)
     })
 
+    it('should load an abstract class with dependencies properly', () => {
+      // Arrange not needed.
+
+      // Act.
+      loader.load(path.join(__dirname, '/../../Resources/config/abstract.yml'))
+      const childClass = container.get('app.child_class')
+      const throwAbstractServiceException = () => container.get(
+        'app.base_class')
+      const throwNotAbstractServiceException = () => container.get(
+        'app.failure.child_class')
+
+      // Assert.
+      assert.throw(throwAbstractServiceException, Error,
+        `The service app.base_class is abstract`)
+      assert.instanceOf(childClass, ChildClass)
+      assert.instanceOf(childClass.service, Service)
+      assert.throw(throwNotAbstractServiceException, Error,
+        `The parent service app.failure.base_class is not abstract`)
+    })
+
     it('should throw an exception if the yaml file not exists', () => {
       // Arrange.
       let file = 'fake-filePath.yml'
@@ -37,7 +59,7 @@ describe('YamlFileLoader', () => {
       let actual = () => loader.load(file)
 
       // Assert.
-      return assert.throws(actual, Error, `The file ${file} not exists`)
+      return assert.throw(actual, Error, `The file ${file} not exists`)
     })
 
     it('should load a simple container', () => {
@@ -113,7 +135,7 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(serviceWithDependenciesCall.optional, FooBar)
       assert.isTrue(fooWithTrue.param)
       assert.isFalse(fooWithFalse.parameter)
-      assert.throws(throwPrivateServiceException, Error,
+      assert.throw(throwPrivateServiceException, Error,
         `The service private_service is private`)
       assert.instanceOf(serviceUsingPrivateService.bar, Foo)
       assert.instanceOf(listener, Listener)
