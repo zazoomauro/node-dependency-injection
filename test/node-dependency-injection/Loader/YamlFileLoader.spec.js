@@ -37,7 +37,7 @@ describe('YamlFileLoader', () => {
       let actual = () => loader.load(file)
 
       // Assert.
-      return assert.throws(actual, Error, `The file ${file} not exists`)
+      return assert.throw(actual, Error, `The file ${file} not exists`)
     })
 
     it('should load a simple container', () => {
@@ -113,7 +113,7 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(serviceWithDependenciesCall.optional, FooBar)
       assert.isTrue(fooWithTrue.param)
       assert.isFalse(fooWithFalse.parameter)
-      assert.throws(throwPrivateServiceException, Error,
+      assert.throw(throwPrivateServiceException, Error,
         `The service private_service is private`)
       assert.instanceOf(serviceUsingPrivateService.bar, Foo)
       assert.instanceOf(listener, Listener)

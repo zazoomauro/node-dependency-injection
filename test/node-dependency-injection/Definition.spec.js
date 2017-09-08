@@ -120,7 +120,7 @@ describe('Definition', () => {
       let actual = () => definition.addTag(tagName, attributes)
 
       // Assert.
-      assert.throws(actual, Error, 'Attributes is not type Map')
+      assert.throw(actual, Error, 'Attributes is not type Map')
     })
   })
 

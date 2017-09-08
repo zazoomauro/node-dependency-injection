@@ -42,7 +42,7 @@ describe('ContainerBuilder', () => {
         const actual = () => { container.logger = logger }
 
         // Assert.
-        assert.throws(actual, Error,
+        assert.throw(actual, Error,
           'The logger instance does not implements the warn method')
       })
   })
@@ -81,7 +81,9 @@ describe('ContainerBuilder', () => {
       () => {
         // Arrange.
         const id = 'not.shared'
+
         class Foo {}
+
         const definition = new Definition(Foo)
         container.setDefinition(id, definition)
 
@@ -97,7 +99,9 @@ describe('ContainerBuilder', () => {
       () => {
         // Arrange.
         const id = 'not_shared'
+
         class Foo {}
+
         const definition = new Definition(Foo)
         definition.shared = false
         container.setDefinition(id, definition)
@@ -113,7 +117,9 @@ describe('ContainerBuilder', () => {
     it('should get a decorated service properly', () => {
       // Arrange.
       class Foo {}
+
       class DecoratingFoo {}
+
       container.register('foo', Foo)
       let decoratingDefinition = container.register('decorating.foo',
         DecoratingFoo)
@@ -130,7 +136,9 @@ describe('ContainerBuilder', () => {
     it('should get the inner service from a decorated service', () => {
       // Arrange.
       class Foo {}
+
       class DecoratingFoo {}
+
       container.register('foo', Foo)
       let decoratingDefinition = container.register('decorating.foo',
         DecoratingFoo)
@@ -147,6 +155,7 @@ describe('ContainerBuilder', () => {
     it('should inject the inner service to the decorated service', () => {
       // Arrange.
       class Foo {}
+
       class DecoratingFoo {
         constructor (inner) {
           this._inner = inner
@@ -156,6 +165,7 @@ describe('ContainerBuilder', () => {
           return this._inner
         }
       }
+
       container.register('foo', Foo)
       let decoratingDefinition = container.register('decorating.foo',
         DecoratingFoo)
@@ -174,16 +184,19 @@ describe('ContainerBuilder', () => {
       'decoration priority', () => {
       // Arrange.
       const expected = 'decoration_priority'
+
       class Foo {
         get inner () {
           return false
         }
       }
+
       class Baz {
         get inner () {
           return false
         }
       }
+
       class Bar {
         get inner () {
           return expected
@@ -217,14 +230,16 @@ describe('ContainerBuilder', () => {
       () => {
         // Arrange.
         let syntheticServiceName = 'foo'
+
         class SyntheticService {}
+
         container.set(syntheticServiceName, new SyntheticService())
 
         // Act.
         let actual = () => container.get(syntheticServiceName)
 
         // Assert.
-        assert.throws(actual, Error,
+        assert.throw(actual, Error,
           `The service ${syntheticServiceName} is not registered`)
       })
 
@@ -236,14 +251,16 @@ describe('ContainerBuilder', () => {
         let definition = new Definition()
         definition.synthetic = false
         container.setDefinition(syntheticServiceName, definition)
+
         class SyntheticService {}
+
         container.set(syntheticServiceName, new SyntheticService())
 
         // Act.
         let actual = () => container.get(syntheticServiceName)
 
         // Assert.
-        assert.throws(actual, Error,
+        assert.throw(actual, Error,
           `The service ${syntheticServiceName} is not registered`)
       })
 
@@ -254,7 +271,9 @@ describe('ContainerBuilder', () => {
           return new Bar()
         }
       }
+
       class Bar {}
+
       let method = 'getFactory'
       let id = 'foo.service'
       let definition = new Definition()
@@ -278,7 +297,9 @@ describe('ContainerBuilder', () => {
             return false
           }
         }
+
         class Bar {}
+
         let method = 'getFactory'
         let id = 'foo.service'
         let definition = new Definition()
@@ -300,7 +321,9 @@ describe('ContainerBuilder', () => {
           return new Bar()
         }
       }
+
       class Bar {}
+
       let method = 'getFactory'
       let id = 'foo.service'
       let factoryId = 'factory.service'
@@ -329,7 +352,9 @@ describe('ContainerBuilder', () => {
             return null
           }
         }
+
         class Bar {}
+
         let method = 'getFactory'
         let id = 'foo.service'
         let factoryId = 'factory.service'
@@ -354,14 +379,16 @@ describe('ContainerBuilder', () => {
       let actual = () => container.get(id)
 
       // Assert.
-      return assert.throws(actual, Error, `The service ${id} is not registered`)
+      return assert.throw(actual, Error, `The service ${id} is not registered`)
     })
 
     it('should return the right service', () => {
       // Arrange.
       let id = 'service.foo'
+
       class Foo {
       }
+
       container.register(id, Foo)
 
       // Act.
@@ -376,6 +403,7 @@ describe('ContainerBuilder', () => {
         // Arrange.
         let id = 'service.foo'
         let param = 'foo bar'
+
         class Foo {
           constructor (param) {
             this._param = param
@@ -385,6 +413,7 @@ describe('ContainerBuilder', () => {
             return this._param
           }
         }
+
         container.register(id, Foo).addArgument(param)
 
         // Act.
@@ -398,8 +427,10 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let id = 'service.foo'
       let referenceId = 'service.bar'
+
       class Bar {
       }
+
       class Foo {
         constructor (bar) {
           this._bar = bar
@@ -409,6 +440,7 @@ describe('ContainerBuilder', () => {
           return this._bar
         }
       }
+
       container.register(referenceId, Bar)
       container.register(id, Foo).addArgument(new Reference(referenceId))
 
@@ -423,8 +455,10 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let id = 'service.foo'
       let referenceId = 'service.bar'
+
       class Bar {
       }
+
       class Foo {
         constructor (bar = null) {
           this._bar = bar
@@ -434,6 +468,7 @@ describe('ContainerBuilder', () => {
           return this._bar
         }
       }
+
       container.register(referenceId, Bar)
       container.register(id, Foo).addArgument(new Reference(referenceId, true))
 
@@ -451,6 +486,7 @@ describe('ContainerBuilder', () => {
         // Arrange.
         let id = 'service.foo'
         let referenceId = 'service.bar'
+
         class Foo {
           constructor (bar = null) {
             this._bar = bar
@@ -460,6 +496,7 @@ describe('ContainerBuilder', () => {
             return this._bar
           }
         }
+
         container.register(id, Foo)
           .addArgument(new Reference(referenceId, true))
 
@@ -477,8 +514,10 @@ describe('ContainerBuilder', () => {
       let id = 'service.foo'
       let reference1Id = 'service.bar'
       let reference2Id = 'service.foo_bar'
+
       class FooBar {
       }
+
       class Bar {
         constructor (fooBar) {
           this._fooBar = fooBar
@@ -488,6 +527,7 @@ describe('ContainerBuilder', () => {
           return this._fooBar
         }
       }
+
       class Foo {
         constructor (bar) {
           this._bar = bar
@@ -497,6 +537,7 @@ describe('ContainerBuilder', () => {
           return this._bar
         }
       }
+
       container.register(reference2Id, FooBar)
       container.register(reference1Id, Bar)
         .addArgument(new Reference(reference2Id))
@@ -514,6 +555,7 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let id = 'service.foo'
       let parameter = 'foobar'
+
       class Foo {
         bar (parameter) {
           this._parameter = parameter
@@ -523,6 +565,7 @@ describe('ContainerBuilder', () => {
           return this._parameter
         }
       }
+
       container.register(id, Foo).addMethodCall('bar', [parameter])
 
       // Act.
@@ -536,14 +579,16 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let id = 'service.foo'
       let method = 'bar'
+
       class Foo {}
+
       container.register(id, Foo).addMethodCall(method)
 
       // Act.
       let actual = () => container.get(id)
 
       // Assert.
-      return assert.throws(actual, Error,
+      return assert.throw(actual, Error,
         `The method ${method} does not exists`)
     })
 
@@ -554,11 +599,13 @@ describe('ContainerBuilder', () => {
         let barId = 'service.bar'
         let fooBarId = 'service.foo_bar'
         let constructorCalls = 0
+
         class FooBar {
           constructor () {
             constructorCalls++
           }
         }
+
         class Bar {
           constructor (fooBar) {
             this._fooBar = fooBar
@@ -568,6 +615,7 @@ describe('ContainerBuilder', () => {
             return this._fooBar
           }
         }
+
         class Foo {
           constructor (fooBar) {
             this._fooBar = fooBar
@@ -577,6 +625,7 @@ describe('ContainerBuilder', () => {
             return this._fooBar
           }
         }
+
         container.register(fooBarId, FooBar)
         container.register(barId, Bar).addArgument(new Reference(fooBarId))
         container.register(fooId, Foo).addArgument(new Reference(fooBarId))
@@ -600,6 +649,7 @@ describe('ContainerBuilder', () => {
           return this._bar
         }
       }
+
       let serviceId = 'foo'
       let propertyKey = 'bar'
       let value = 'foo.bar'
@@ -618,11 +668,13 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let fooId = 'service.foo'
       let constructorCalls = 0
+
       class Foo {
         constructor () {
           constructorCalls++
         }
       }
+
       let definition = new Definition(Foo)
       definition.lazy = true
       container.setDefinition(fooId, definition)
@@ -638,7 +690,9 @@ describe('ContainerBuilder', () => {
     it('should throw an exception if we get a private service', () => {
       // Arrange.
       let fooId = 'service.foo'
+
       class Foo {}
+
       let definition = new Definition(Foo)
       definition.public = false
       container.setDefinition(fooId, definition)
@@ -652,17 +706,38 @@ describe('ContainerBuilder', () => {
   })
 
   describe('compile', () => {
+    it(
+      'should throw an ServiceCircularReferenceException instead of RangeError',
+      () => {
+        // Arrange.
+        container.register('service.a', class A {})
+          .addArgument(new Reference('service.b'))
+        container.register('service.b', class B {})
+          .addArgument(new Reference('service.a'))
+
+        // Act.
+        let actual = () => container.compile()
+
+        // Assert.
+        return assert.throw(actual, 'Circular reference detected')
+      })
+
     it('should call the process method by priority properly',
       () => {
         // Arrange.
         let fooId = 'service.foo'
+
         class Foo {}
+
         container.register(fooId, Foo)
         let valueFirstPass = 'foo'
         let valueSecondPass = 'bar'
         let expected = []
-        class FirstPass { process () { expected.push(valueFirstPass) } }
-        class SecondPass { process () { expected.push(valueSecondPass) } }
+
+        class FirstPass {process () { expected.push(valueFirstPass) }}
+
+        class SecondPass {process () { expected.push(valueSecondPass) }}
+
         container.addCompilerPass(new SecondPass(),
           PassConfig.TYPE_AFTER_REMOVING, 21)
         container.addCompilerPass(new FirstPass(),
@@ -681,10 +756,15 @@ describe('ContainerBuilder', () => {
       () => {
         // Arrange.
         let fooId = 'service.foo'
+
         class Foo {}
+
         container.register(fooId, Foo)
-        class FirstPass { process () {} }
-        class SecondPass { process () {} }
+
+        class FirstPass {process () {}}
+
+        class SecondPass {process () {}}
+
         container.addCompilerPass(new FirstPass(),
           PassConfig.TYPE_AFTER_REMOVING, 1)
         container.addCompilerPass(new SecondPass(),
@@ -701,7 +781,9 @@ describe('ContainerBuilder', () => {
       () => {
         // Arrange.
         let fooId = 'service.foo'
+
         class Foo {}
+
         let definition = new Definition(Foo)
         definition.public = false
         container.setDefinition(fooId, definition)
@@ -717,13 +799,17 @@ describe('ContainerBuilder', () => {
       () => {
         // Arrange.
         let fooId = 'service.foo'
+
         class Foo {}
+
         let definition = new Definition(Foo)
         definition.public = false
         container.setDefinition(fooId, definition)
+
         class FooPass {
           process () {}
         }
+
         container.addCompilerPass(new FooPass(), PassConfig.TYPE_REMOVE)
 
         // Act.
@@ -736,11 +822,13 @@ describe('ContainerBuilder', () => {
     it('should load an extension when compile', () => {
       // Arrange.
       let extensionLoaded = false
+
       class FooExtension {
         load () {
           extensionLoaded = true
         }
       }
+
       container.registerExtension(new FooExtension())
 
       // Act.
@@ -757,6 +845,7 @@ describe('ContainerBuilder', () => {
         class FooPass {
           process () {}
         }
+
         container.addCompilerPass(new FooPass(), PassConfig.TYPE_OPTIMIZE)
 
         // Act.
@@ -780,6 +869,7 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let id = 'service.foo'
       let parameter = 'foobar'
+
       class Foo {
         constructor (parameter) {
           this._parameter = parameter
@@ -789,6 +879,7 @@ describe('ContainerBuilder', () => {
           return this._parameter
         }
       }
+
       container.register(id, Foo).addArgument(parameter)
 
       // Act.
@@ -808,7 +899,7 @@ describe('ContainerBuilder', () => {
         let actual = () => container.register('bar', class Bar {})
 
         // Assert.
-        return assert.throws(actual, Error,
+        return assert.throw(actual, Error,
           'You cannot register more services when the container is frozen')
       })
 
@@ -817,11 +908,13 @@ describe('ContainerBuilder', () => {
       () => {
         let fooId = 'service.foo'
         let constructorCalls = 0
+
         class Foo {
           constructor () {
             constructorCalls++
           }
         }
+
         container.register(fooId, Foo)
         container.get(fooId)
 
@@ -838,12 +931,14 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let processedPass = false
       let expectedContainer = null
+
       class FooPass {
         process (container) {
           processedPass = true
           expectedContainer = container
         }
       }
+
       container.addCompilerPass(new FooPass())
 
       // Act.
@@ -865,6 +960,7 @@ describe('ContainerBuilder', () => {
             actualCompilations++
           }
         }
+
         container.addCompilerPass(new FooPass())
 
         // Act.
@@ -918,6 +1014,7 @@ describe('ContainerBuilder', () => {
           return this._bar
         }
       }
+
       let serviceId = 'foo'
       let propertyKey = 'bar'
       let value = 'foo.bar'
@@ -936,11 +1033,13 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let fooId = 'service.foo'
       let constructorCalls = 0
+
       class Foo {
         constructor () {
           constructorCalls++
         }
       }
+
       let definition = new Definition(Foo)
       definition.lazy = true
       container.setDefinition(fooId, definition)
@@ -964,7 +1063,7 @@ describe('ContainerBuilder', () => {
         let actual = () => container.addCompilerPass(new FooPass())
 
         // Assert.
-        return assert.throws(actual, Error,
+        return assert.throw(actual, Error,
           'Your compiler pass does not have the process method')
       })
 
@@ -1003,6 +1102,7 @@ describe('ContainerBuilder', () => {
     it('should throw an exception if the pass config type is wrong', () => {
       // Arrange.
       let type = 'foo'
+
       class FooPass {
         process () {}
       }
@@ -1011,7 +1111,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.addCompilerPass(new FooPass(), type)
 
       // Assert.
-      return assert.throws(actual, Error,
+      return assert.throw(actual, Error,
         `${type} is a wrong compiler pass config type`)
     })
   })
@@ -1021,7 +1121,9 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let fooId = 'service.foo'
       let aliasId = 'foo'
+
       class Foo {}
+
       container.register(fooId, Foo)
 
       // Act.
@@ -1036,7 +1138,9 @@ describe('ContainerBuilder', () => {
       // Arrange.
       let fooId = 'service.foo'
       let aliasId = 'foo'
+
       class Foo {}
+
       container.register(fooId, Foo)
       container.setAlias(aliasId, fooId)
       let expected = container.get(fooId)
@@ -1060,7 +1164,7 @@ describe('ContainerBuilder', () => {
         let actual = () => container.setDefinition('bar', definition)
 
         // Assert.
-        return assert.throws(actual, Error,
+        return assert.throw(actual, Error,
           'You cannot register not valid definition')
       })
 
@@ -1068,6 +1172,7 @@ describe('ContainerBuilder', () => {
       () => {
         // Arrange.
         class Foo {}
+
         let definition = new Definition(Foo)
         let id = 'foo'
 
@@ -1087,6 +1192,7 @@ describe('ContainerBuilder', () => {
             this.string = string
           }
         }
+
         let id = 'foo'
         let stringValue = 'foo'
         let definition = new Definition(Foo, [stringValue])
@@ -1104,6 +1210,7 @@ describe('ContainerBuilder', () => {
     it('should return an array with tagged services', () => {
       // Arrange.
       class Foo {}
+
       let id = 'foo'
       let tag = 'fooTag'
       let definition = new Definition(Foo)
@@ -1120,6 +1227,7 @@ describe('ContainerBuilder', () => {
     it('should return an array with multiple tagged services', () => {
       // Arrange.
       class Foo {}
+
       let id = 'foo'
       let fooTag = 'fooTag'
       let barTag = 'barTag'
@@ -1198,6 +1306,7 @@ describe('ContainerBuilder', () => {
       () => {
         // Arrange.
         class InvalidParameter {}
+
         let key = 'foo.bar'
         let value = InvalidParameter
 
@@ -1205,7 +1314,7 @@ describe('ContainerBuilder', () => {
         let actual = () => container.setParameter(key, value)
 
         // Assert.
-        return assert.throws(actual, TypeError)
+        return assert.throw(actual, TypeError)
       })
   })
 
@@ -1253,6 +1362,7 @@ describe('ContainerBuilder', () => {
     it('should return true if the definition was properly set', () => {
       // Arrange.
       class Foo {}
+
       let key = 'foo'
       let definition = new Definition(Foo)
       container.setDefinition(key, definition)
@@ -1278,6 +1388,7 @@ describe('ContainerBuilder', () => {
     it('should return false if we are looking for an alias definition', () => {
       // Arrange.
       class Foo {}
+
       let key = 'foo'
       let keyAlias = 'f'
       let definition = new Definition(Foo)
@@ -1296,6 +1407,7 @@ describe('ContainerBuilder', () => {
     it('should return true if an alias was properly set', () => {
       // Arrange.
       class Foo {}
+
       let key = 'foo'
       let keyAlias = 'f'
       let definition = new Definition(Foo)
@@ -1337,6 +1449,7 @@ describe('ContainerBuilder', () => {
     it('should return the set definition', () => {
       // Arrange.
       class Foo {}
+
       let key = 'foo'
       let definition = new Definition(Foo)
       container.setDefinition(key, definition)
@@ -1351,6 +1464,7 @@ describe('ContainerBuilder', () => {
     it('should throw an exception if the definition alias was not set', () => {
       // Arrange.
       class Foo {}
+
       let key = 'foo'
       let keyAlias = 'f'
       let definition = new Definition(Foo)
@@ -1361,7 +1475,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.getDefinition(keyAlias)
 
       // Assert.
-      return assert.throws(actual, Error, `${keyAlias} definition not found`)
+      return assert.throw(actual, Error, `${keyAlias} definition not found`)
     })
 
     it('should throw an exception if the definition was not set', () => {
@@ -1372,7 +1486,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.getDefinition(key)
 
       // Assert.
-      return assert.throws(actual, Error, `${key} definition not found`)
+      return assert.throw(actual, Error, `${key} definition not found`)
     })
   })
 
@@ -1380,6 +1494,7 @@ describe('ContainerBuilder', () => {
     it('should return a definition if an alias was properly set', () => {
       // Arrange.
       class Foo {}
+
       let key = 'foo'
       let keyAlias = 'f'
       let definition = new Definition(Foo)
@@ -1401,7 +1516,7 @@ describe('ContainerBuilder', () => {
       let actual = () => container.findDefinition(key)
 
       // Assert.
-      return assert.throws(actual, Error, `${key} definition not found`)
+      return assert.throw(actual, Error, `${key} definition not found`)
     })
   })
 
@@ -1409,7 +1524,9 @@ describe('ContainerBuilder', () => {
     it('should remove an already registered definition', () => {
       // Arrange.
       let key = 'foo'
+
       class Foo {}
+
       let definition = new Definition(Foo)
       container.setDefinition(key, definition)
 
@@ -1429,7 +1546,7 @@ describe('ContainerBuilder', () => {
         let actual = () => container.removeDefinition(key)
 
         // Assert.
-        return assert.throws(actual, Error, `${key} definition not found`)
+        return assert.throw(actual, Error, `${key} definition not found`)
       })
   })
 
@@ -1444,7 +1561,7 @@ describe('ContainerBuilder', () => {
         let actual = () => container.registerExtension(new FooExtension())
 
         // Assert.
-        assert.throws(actual, Error,
+        assert.throw(actual, Error,
           'Your extension does not have the load method')
       })
 
@@ -1464,6 +1581,7 @@ describe('ContainerBuilder', () => {
     it('should set directly an instance in to the container', () => {
       // Arrange.
       let syntheticServiceName = 'foo'
+
       class SyntheticService {}
 
       // Act.

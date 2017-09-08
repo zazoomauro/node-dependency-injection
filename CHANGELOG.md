@@ -1,5 +1,11 @@
 # Change Log
 
+# [1.11.0] - 2017-09-08
+### Changed
+- serviceCircularReferenceException thrown when container compile fails with RangeError exception
+- moving from .throws to .throw unit testing
+- updating package with newer compatible dependencies
+
 # [1.10.2] - 2017-08-16
 ### Changed
 - Updating dependencies
