@@ -1,6 +1,10 @@
 Node Dependency Injection
 =========================
 
+<p align="center">
+    <img src="http://res.cloudinary.com/dnx6qczcc/image/upload/v1506432251/logo_coo0zk.jpg">
+</p>
+
 #### A special thanks to [Symfony](http://symfony.com) which was a great inspiration and example for this project.
 
 The Node Dependency Injection component allows you to standardize and centralize the way objects are constructed in your application.
