@@ -1,7 +1,7 @@
 /* global describe, beforeEach, it */
 
 import chai from 'chai'
-import Definition from '../../lib/Definition'
+import Definition from '../../../lib/Definition'
 
 let assert = chai.assert
 
@@ -46,7 +46,7 @@ describe('Definition', () => {
       let actual = () => { definition.addMethodCall(method) }
 
       // Assert.
-      assert.throw(actual, Error, 'Method name cannot be empty.')
+      assert.throw(actual, Error, 'Method name cannot be empty')
     })
 
     it('should add one method to the calls array', () => {

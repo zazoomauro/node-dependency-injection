@@ -1,21 +1,21 @@
 /* global describe, beforeEach, it */
 
 import chai from 'chai'
-import YamlFileLoader from '../../../lib/Loader/YamlFileLoader'
-import ContainerBuilder from '../../../lib/ContainerBuilder'
-import Foo from '../../Resources/foo'
-import FooManager from '../../Resources/fooManager'
-import Bar from '../../Resources/bar'
-import FooBar from '../../Resources/foobar'
+import YamlFileLoader from '../../../../lib/Loader/YamlFileLoader'
+import ContainerBuilder from '../../../../lib/ContainerBuilder'
+import Foo from '../../../Resources/foo'
+import FooManager from '../../../Resources/fooManager'
+import Bar from '../../../Resources/bar'
+import FooBar from '../../../Resources/foobar'
 import path from 'path'
-import MissingDependencies from '../../Resources/missingDependencies'
-import SyntheticService from '../../Resources/syntheticService'
-import Listener from '../../Resources/listener'
-import DecoratingMailer from '../../Resources/DecoratingMailer'
-import Mailer from '../../Resources/Mailer'
-import DecoratingMailerTwo from '../../Resources/DecoratingMailerTwo'
-import ChildClass from '../../Resources/abstract/ChildClass'
-import Service from '../../Resources/abstract/Service'
+import MissingDependencies from '../../../Resources/missingDependencies'
+import SyntheticService from '../../../Resources/syntheticService'
+import Listener from '../../../Resources/listener'
+import DecoratingMailer from '../../../Resources/DecoratingMailer'
+import Mailer from '../../../Resources/Mailer'
+import DecoratingMailerTwo from '../../../Resources/DecoratingMailerTwo'
+import ChildClass from '../../../Resources/abstract/ChildClass'
+import Service from '../../../Resources/abstract/Service'
 
 let assert = chai.assert
 
@@ -35,7 +35,8 @@ describe('YamlFileLoader', () => {
       // Arrange not needed.
 
       // Act.
-      loader.load(path.join(__dirname, '/../../Resources/config/abstract.yml'))
+      loader.load(
+        path.join(__dirname, '/../../../Resources/config/abstract.yml'))
       const childClass = container.get('app.child_class')
       const throwAbstractServiceException = () => container.get(
         'app.base_class')
@@ -74,7 +75,7 @@ describe('YamlFileLoader', () => {
 
       // Act.
       loader.load(
-        path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+        path.join(__dirname, '/../../../Resources/config/fake-services.yml'))
       container.compile()
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
@@ -154,7 +155,7 @@ describe('YamlFileLoader', () => {
 
       // Act.
       loader.load(
-        path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+        path.join(__dirname, '/../../../Resources/config/fake-services.yml'))
       let actual = container.get(notSharedServiceName)
       let expected = container.get(notSharedServiceName)
 
@@ -170,7 +171,7 @@ describe('YamlFileLoader', () => {
 
       // Act.
       loader.load(
-        path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+        path.join(__dirname, '/../../../Resources/config/fake-services.yml'))
       let syntheticService = container.get(syntheticServiceName)
 
       // Assert.
@@ -192,7 +193,7 @@ describe('YamlFileLoader', () => {
 
       // Act.
       loader.load(
-        path.join(__dirname, '/../../Resources/config/fake-imports.yml'))
+        path.join(__dirname, '/../../../Resources/config/fake-imports.yml'))
       let service1 = container.get(serviceName1)
       let service2 = container.get(serviceName2)
 
@@ -215,7 +216,7 @@ describe('YamlFileLoader', () => {
       let barServiceName = 'bar'
       let bazServiceName = 'baz'
       let configPath = path.join(__dirname,
-        '/../../Resources/config/fake-import-subfolder.yml')
+        '/../../../Resources/config/fake-import-subfolder.yml')
 
       // Act.
       loader.load(configPath)
@@ -233,7 +234,7 @@ describe('YamlFileLoader', () => {
       container = new ContainerBuilder()
       container.logger = logger
       loader = new YamlFileLoader(container,
-        path.join(__dirname, '/../../Resources/config/fake-services.yml'))
+        path.join(__dirname, '/../../../Resources/config/fake-services.yml'))
     })
 
     it('should load multiple service files', () => {

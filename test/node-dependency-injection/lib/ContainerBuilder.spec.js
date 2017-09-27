@@ -1,14 +1,14 @@
 /* global describe, beforeEach, it */
 
 import chai from 'chai'
-import ContainerBuilder from '../../lib/ContainerBuilder'
-import Definition from '../../lib/Definition'
-import Reference from '../../lib/Reference'
-import YamlFileLoader from '../../lib/Loader/YamlFileLoader'
-import PassConfig from '../../lib/PassConfig'
+import ContainerBuilder from '../../../lib/ContainerBuilder'
+import Definition from '../../../lib/Definition'
+import Reference from '../../../lib/Reference'
+import YamlFileLoader from '../../../lib/Loader/YamlFileLoader'
+import PassConfig from '../../../lib/PassConfig'
 import path from 'path'
-import FooManager from './../Resources/fooManager'
-import BarManager from './../Resources/barManager'
+import FooManager from './../../Resources/fooManager'
+import BarManager from './../../Resources/barManager'
 
 let assert = chai.assert
 
@@ -978,7 +978,7 @@ describe('ContainerBuilder', () => {
         FooManager.prototype.fooManagerCalls = 0
         let loader = new YamlFileLoader(container)
         loader.load(
-          path.join(__dirname, '../Resources/config/fake-services-2.yml'))
+          path.join(__dirname, '../../Resources/config/fake-services-2.yml'))
 
         // Act.
         container.compile()
@@ -1064,7 +1064,7 @@ describe('ContainerBuilder', () => {
 
         // Assert.
         return assert.throw(actual, Error,
-          'Your compiler pass does not have the process method')
+          'The compiler pass FooPass does not have the process method')
       })
 
     it('should register properly a compiler pass if has the process method',
@@ -1562,7 +1562,7 @@ describe('ContainerBuilder', () => {
 
         // Assert.
         assert.throw(actual, Error,
-          'Your extension does not have the load method')
+          'The extension FooExtension does not have the load method')
       })
 
     it('should register the extension properly', () => {

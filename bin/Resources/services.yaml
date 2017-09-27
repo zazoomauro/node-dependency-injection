@@ -1,0 +1,22 @@
+services:
+  ndi.file.js_adapter:
+    class: ./../Services/File/JsAdapter
+
+  ndi.file.yaml_adapter:
+    class: ./../Services/File/YamlAdapter
+    arguments: ['%js-yaml']
+
+  ndi.file.json_adapter:
+    class: ./../Services/File/JsonAdapter
+
+  ndi.file.file_manager.yaml:
+    class: ./../Services/File/FileManager
+    arguments: ['@ndi.file.yaml_adapter', '%fs-extra', '%path']
+
+  ndi.file.file_manager.js:
+    class: ./../Services/File/FileManager
+    arguments: ['@ndi.file.js_adapter', '%fs-extra', '%path']
+
+  ndi.file.file_manager.json:
+    class: ./../Services/File/FileManager
+    arguments: ['@ndi.file.json_adapter', '%fs-extra', '%path']
