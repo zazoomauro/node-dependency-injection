@@ -1,5 +1,15 @@
 # Change Log
 
+# [1.11.2] - 2018-01-03
+### Changed
+- ContainerBuilder refactor 
+- FileLoader refactor 
+
+# [1.11.1] - 2017-12-27
+### Changed
+- Updating dependencies
+- Updating dev dependencies
+
 # [1.11.0] - 2017-09-08
 ### Added
 - append parent arguments to the child service

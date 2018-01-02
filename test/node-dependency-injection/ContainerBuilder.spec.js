@@ -1064,7 +1064,7 @@ describe('ContainerBuilder', () => {
 
         // Assert.
         return assert.throw(actual, Error,
-          'Your compiler pass does not have the process method')
+          'Your compiler pass must implement the process method')
       })
 
     it('should register properly a compiler pass if has the process method',
