@@ -706,6 +706,23 @@ describe('ContainerBuilder', () => {
   })
 
   describe('compile', () => {
+    it('should not instance an abstract definition on compile', () => {
+      // Arrange.
+      let expected = true
+
+      class Foo {constructor () { expected = false }}
+
+      let definition = new Definition(Foo)
+      definition.abstract = true
+      container.setDefinition('foo', definition)
+
+      // Act.
+      container.compile()
+
+      // Assert.
+      return assert.isTrue(expected)
+    })
+
     it(
       'should throw an ServiceCircularReferenceException instead of RangeError',
       () => {
