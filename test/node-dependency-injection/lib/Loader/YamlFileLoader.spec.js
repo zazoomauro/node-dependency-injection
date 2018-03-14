@@ -60,7 +60,7 @@ describe('YamlFileLoader', () => {
       let actual = () => loader.load(file)
 
       // Assert.
-      return assert.throw(actual, Error, `The file ${file} not exists`)
+      return assert.throw(actual, Error, `Service file ${file} not found`)
     })
 
     it('should load a simple container', () => {

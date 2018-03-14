@@ -9,8 +9,7 @@ import JsAdapter from './Services/File/JsAdapter'
 import JsonAdapter from './Services/File/JsonAdapter'
 import JsFileLoader from '../lib/Loader/JsFileLoader'
 import JsonFileLoader from '../lib/Loader/JsonFileLoader'
-import Reference from '../lib/Reference'
-import PackageReference from '../lib/PackageReference'
+import 'console.table'
 
 program.arguments('<path> <service>').action((dir, service) => {
   const container = new ContainerBuilder()
@@ -28,59 +27,90 @@ program.arguments('<path> <service>').action((dir, service) => {
       loader = new YamlFileLoader(container)
   }
 
-  console.info(chalk.blue(
-    `Checking ${dir}...
-`))
+  console.info(chalk.blue(`Checking ${dir}...\n`))
 
   try {
     loader.load(dir)
   } catch (e) {
-    console.info(chalk.bold.red(`
-
-ERROR!
-Exception name: ${e.name}
-Exception message: ${e.message}
-
-`))
+    console.info(chalk.bold.red(`ERROR! ${e.message}`))
     process.exit(1)
   }
 
   const def = container.definitions.get(service)
   if (!def) {
     console.info(chalk.bold.red(`Service \`${service}\` not found`))
-
     process.exit(1)
   }
 
   let argumentText = ''
   for (const argument of def.args) {
-    if (argument instanceof Reference || argument instanceof PackageReference) {
-      argumentText += `* ${chalk.green(argument.id)}\n`
-    }
+    argumentText += `\n\t- ${(argument.constructor.name)}:\t${chalk.green(argument.id)}`
   }
 
-  console.info(chalk.green(`
-${chalk.bold.green('Key:')}                      ${service}
-${chalk.bold.green('Class Name:')}               ${def.Object.name}
-${chalk.bold.green('Arguments:')}
-${argumentText}
-${chalk.bold.green('Public:')}                   ${def.public.toString()}
-${chalk.bold.green('Calls:')}                    ${def.calls.length > 0
-    ? util.inspect(def.calls, false, null) : '[]'}
-${chalk.bold.green('Tags:')}                     ${def.tags.length > 0
-    ? util.inspect(def.tags, false, null) : '[]'}
-${chalk.bold.green('Properties:')}               ${def.properties.size > 0
-    ? util.inspect(def.properties, false, null) : '[]'}
-${chalk.bold.green('Laziness:')}                 ${def.lazy.toString()}
-${chalk.bold.green('Deprecated:')}               ${def.deprecated}
-${chalk.bold.green('Factory:')}                  ${util.inspect(def.factory)}
-${chalk.bold.green('Synthetic:')}                ${def.synthetic.toString()}
-${chalk.bold.green('Decoration:')}
-  ${chalk.bold.green('Service:')}                ${def.decoratedService}
-  ${chalk.bold.green('Priority:')}               ${def.decorationPriority}
-${chalk.bold.green('Shared:')}                   ${def.shared.toString()}
-${chalk.bold.green('Parent:')}                   ${def.parent}
-`))
+  console.table([
+    {
+      Attribute: 'Key',
+      Value: service
+    },
+    {
+      Attribute: 'Class Name',
+      Value: def.Object.name
+    },
+    {
+      Attribute: 'Arguments',
+      Value: argumentText
+    },
+    {
+      Attribute: 'Public',
+      Value: def.public.toString()
+    },
+    {
+      Attribute: 'Calls',
+      Value: def.calls.length > 0 ? util.inspect(def.calls, false, null) : '[]'
+    },
+    {
+      Attribute: 'Tags',
+      Value: def.tags.length > 0 ? util.inspect(def.tags, false, null) : '[]'
+    },
+    {
+      Attribute: 'Properties',
+      Value: def.properties.size > 0 ? util.inspect(def.properties, false, null) : '[]'
+    },
+    {
+      Attribute: 'Laziness',
+      Value: def.lazy.toString()
+    },
+    {
+      Attribute: 'Deprecated Message',
+      Value: def.deprecated
+    },
+    {
+      Attribute: 'Factory',
+      Value: util.inspect(def.factory)
+    },
+    {
+      Attribute: 'Synthetic',
+      Value: def.synthetic.toString()
+    },
+    {
+      Attribute: 'Decoration',
+      Value: (def.decoratedService) ? `${def.decoratedService} ${def.decorationPriority}` : 'null'
+    },
+    {
+      Attribute: 'Shared',
+      Value: def.shared
+    },
+    {
+      Attribute: 'Parent',
+      Value: def.parent
+    }
+  ])
 
   process.exit(0)
 }).parse(process.argv)
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp((helpText) => {
+    return chalk.bold.red(helpText)
+  })
+}

@@ -25,21 +25,20 @@ program.arguments('<path>').action((dir) => {
       loader = new YamlFileLoader(container)
   }
 
-  console.info(chalk.blue(`
-Checking ${dir}...
-`))
+  console.info(chalk.blue(`Checking ${dir}...\n`))
 
   try {
     loader.load(dir)
-    console.info(chalk.bold.green('SUCCESS! Your configuration file is fine'))
-
+    console.info(chalk.green(`Configuration file ${dir} is valid`))
     process.exit(0)
   } catch (e) {
-    console.info(chalk.bold.red(`
-ERROR!
-Exception name: ${e.name}
-Exception message: ${e.message}
-`))
+    console.info(chalk.bold.red(`ERROR! ${e.message}`))
     process.exit(1)
   }
 }).parse(process.argv)
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp((helpText) => {
+    return chalk.bold.red(helpText)
+  })
+}

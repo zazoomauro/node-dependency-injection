@@ -200,6 +200,7 @@ describe('Definition', () => {
     it('should store the factory with object and method', () => {
       // Arrange.
       class Foo {}
+
       let method = 'getFactory'
 
       // Act.
