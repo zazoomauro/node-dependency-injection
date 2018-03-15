@@ -117,25 +117,4 @@ describe('JsonFileLoader', () => {
       return assert.instanceOf(baz, FooBar)
     })
   })
-
-  describe('old way of loading json config file', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new JsonFileLoader(container,
-        path.join(__dirname, '/../../../Resources/config/fake-services.json'))
-    })
-
-    it('should load multiple service files', () => {
-      // Arrange.
-      let serviceName = 'foo'
-
-      // Act.
-      loader.load()
-      let service = container.get(serviceName)
-
-      // Assert.
-      return assert.instanceOf(service, Foo)
-    })
-  })
 })
