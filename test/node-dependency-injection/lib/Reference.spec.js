@@ -1,7 +1,7 @@
 /* global describe, it */
 
 import chai from 'chai'
-import Reference from '../../lib/Reference'
+import Reference from '../../../lib/Reference'
 
 let assert = chai.assert
 

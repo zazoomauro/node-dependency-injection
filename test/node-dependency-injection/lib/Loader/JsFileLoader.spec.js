@@ -1,16 +1,16 @@
 /* global describe, beforeEach, it */
 
 import chai from 'chai'
-import JsonFileLoader from '../../../lib/Loader/JsonFileLoader'
-import ContainerBuilder from '../../../lib/ContainerBuilder'
-import Foo from '../../Resources/foo'
-import Bar from '../../Resources/bar'
-import FooBar from '../../Resources/foobar'
+import JsFileLoader from '../../../../lib/Loader/JsFileLoader'
+import ContainerBuilder from '../../../../lib/ContainerBuilder'
+import Foo from '../../../Resources/foo'
+import Bar from '../../../Resources/bar'
+import FooBar from '../../../Resources/foobar'
 import path from 'path'
 
 let assert = chai.assert
 
-describe('JsonFileLoader', () => {
+describe('JsFileLoader', () => {
   let loader
   let container
   let logger = {warn: () => {}}
@@ -19,18 +19,18 @@ describe('JsonFileLoader', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
       container.logger = logger
-      loader = new JsonFileLoader(container)
+      loader = new JsFileLoader(container)
     })
 
-    it('should throw an exception if the json file not exists', () => {
+    it('should throw an exception if the js file not exists', () => {
       // Arrange.
-      let file = 'fake-filePath.json'
+      let file = 'fake-filePath.js'
 
       // Act.
       let actual = () => loader.load(file)
 
       // Assert.
-      return assert.throw(actual, Error, `The file ${file} not exists`)
+      return assert.throw(actual, Error, `File ${file} not found`)
     })
 
     it('should load a simple container', () => {
@@ -45,14 +45,12 @@ describe('JsonFileLoader', () => {
 
       // Act.
       loader.load(
-        path.join(__dirname, '/../../Resources/config/fake-services.json'))
+        path.join(__dirname, '/../../../Resources/config/fake-services.js'))
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
       let taggedServices = container.findTaggedServiceIds(tagName)
       let stringActualParameter = container.getParameter(stringParameterName)
       let arrayActualParameter = container.getParameter(arrayParameterName)
-      let serviceWithObjectParameter = container.get(
-        'service_with_object_parameter')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -66,7 +64,6 @@ describe('JsonFileLoader', () => {
       assert.isArray(arrayActualParameter)
       assert.strictEqual(service.parameter, stringExpectedParameter)
       assert.strictEqual(service.property, stringPropertyExpected)
-      assert.isObject(serviceWithObjectParameter.fooManager)
 
       return assert.lengthOf(arrayActualParameter, 2)
     })
@@ -76,7 +73,7 @@ describe('JsonFileLoader', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
       container.logger = logger
-      loader = new JsonFileLoader(container)
+      loader = new JsFileLoader(container)
     })
 
     it('should load multiple service files', () => {
@@ -85,7 +82,7 @@ describe('JsonFileLoader', () => {
 
       // Act.
       loader.load(
-        path.join(__dirname, '/../../Resources/config/fake-services.json'))
+        path.join(__dirname, '/../../../Resources/config/fake-imports.js'))
       let service = container.get(serviceName)
 
       // Assert.
@@ -97,14 +94,15 @@ describe('JsonFileLoader', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
       container.logger = logger
-      loader = new JsonFileLoader(container)
+      loader = new JsFileLoader(container)
     })
 
     it('should load multiple service files in subfolder', () => {
       // Arrange.
       let barServiceName = 'bar'
       let bazServiceName = 'baz'
-      let configPath = path.join(__dirname, '/../../Resources/config/fake-import-subfolder.json')
+      let configPath = path.join(__dirname,
+        '/../../../Resources/config/fake-import-subfolder.js')
 
       // Act.
       loader.load(configPath)
@@ -117,12 +115,12 @@ describe('JsonFileLoader', () => {
     })
   })
 
-  describe('old way of loading json config file', () => {
+  describe('old way of loading js config file', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
       container.logger = logger
-      loader = new JsonFileLoader(container,
-        path.join(__dirname, '/../../Resources/config/fake-services.json'))
+      loader = new JsFileLoader(container,
+        path.join(__dirname, '/../../../Resources/config/fake-services.js'))
     })
 
     it('should load multiple service files', () => {
