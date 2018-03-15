@@ -1,9 +1,7 @@
 Node Dependency Injection
 =========================
 
-<p align="center">
-    <img src="https://image.ibb.co/ejH8FH/logojoy.png">
-</p>
+![NDI Logo](https://image.ibb.co/ejH8FH/logojoy.png)
 
 #### A special thanks to [Symfony](http://symfony.com) which was a great inspiration and example for this project.
 
