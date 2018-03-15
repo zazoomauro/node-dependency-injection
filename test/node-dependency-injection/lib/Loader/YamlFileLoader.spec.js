@@ -228,25 +228,4 @@ describe('YamlFileLoader', () => {
       return assert.instanceOf(baz, FooBar)
     })
   })
-
-  describe('old way of loading yaml config file', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new YamlFileLoader(container,
-        path.join(__dirname, '/../../../Resources/config/fake-services.yml'))
-    })
-
-    it('should load multiple service files', () => {
-      // Arrange.
-      let serviceName = 'foo'
-
-      // Act.
-      loader.load()
-      let service = container.get(serviceName)
-
-      // Assert.
-      return assert.instanceOf(service, Foo)
-    })
-  })
 })
