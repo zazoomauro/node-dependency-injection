@@ -2,18 +2,24 @@
   "name": "node-dependency-injection",
   "version": "1.11.3",
   "description": "The NodeDependencyInjection component allows you to standardize and centralize the way objects are constructed in your application.",
-  "main": "dist/index.js",
+  "main": "dist/lib/index.js",
   "directories": {
     "test": "test"
+  },
+  "preferGlobal": true,
+  "bin": {
+    "ndi": "dist/bin/ndi.js"
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha",
     "test:coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text mocha",
     "test:standard": "standard",
     "test:standard:fix": "standard --fix",
-    "build": "rm -rf dist/* && babel lib -d dist",
+    "build:lib": "rm -rf dist/lib/* && babel lib -d dist/lib -D",
+    "build:bin": "rm -rf dist/bin/* && babel bin -d dist/bin -D",
+    "build": "npm run build:lib && npm run build:bin",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "preversion": "npm run test:standard:fix && npm test",
+    "preversion": "npm run test:standard && npm test",
     "version": "npm run build",
     "postversion": "git push && git push --tags && npm publish"
   },
@@ -26,7 +32,10 @@
     "dependency",
     "injection",
     "service",
-    "container"
+    "container",
+    "console",
+    "inversion-of-control",
+    "service-locator"
   ],
   "author": "Mauro Gadaleta <mggadaleta@gmail.com>",
   "license": "MIT",
@@ -35,30 +44,28 @@
   },
   "homepage": "https://github.com/zazoomauro/node-dependency-injection#readme",
   "dependencies": {
+    "chalk": "^2.1.0",
     "collections": "^5.0.7",
+    "commander": "^2.11.0",
+    "console.table": "^0.10.0",
     "fs-extra": "^5.0.0",
-    "js-yaml": "^3.9.1"
+    "js-yaml": "^3.10.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-plugin-istanbul": "^4.1.4",
+    "babel-plugin-istanbul": "^4.1.5",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
     "codecov": "^4.0.0-0",
     "cross-env": "^5.0.5",
-    "eslint": "^4.4.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-config-standard-jsx": "^5.0.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-react": "^7.3.0",
-    "eslint-plugin-standard": "^3.0.1",
     "istanbul": "^0.4.5",
     "mocha": "^5.0.1",
     "nodemon": "^1.12.0",
     "nyc": "^11.2.1",
     "path": "^0.12.7",
-    "standard": "^11.0.0"
+    "sinon": "^4.0.0",
+    "standard": "^11.0.1"
   },
   "babel": {
     "presets": [

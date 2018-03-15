@@ -1,11 +1,11 @@
 /* global describe, beforeEach, it */
 
 import chai from 'chai'
-import JsFileLoader from '../../../lib/Loader/JsFileLoader'
-import ContainerBuilder from '../../../lib/ContainerBuilder'
-import Foo from '../../Resources/foo'
-import Bar from '../../Resources/bar'
-import FooBar from '../../Resources/foobar'
+import JsFileLoader from '../../../../lib/Loader/JsFileLoader'
+import ContainerBuilder from '../../../../lib/ContainerBuilder'
+import Foo from '../../../Resources/foo'
+import Bar from '../../../Resources/bar'
+import FooBar from '../../../Resources/foobar'
 import path from 'path'
 
 let assert = chai.assert
@@ -30,7 +30,7 @@ describe('JsFileLoader', () => {
       let actual = () => loader.load(file)
 
       // Assert.
-      return assert.throw(actual, Error, `The file ${file} not exists`)
+      return assert.throw(actual, Error, `File ${file} not found`)
     })
 
     it('should load a simple container', () => {
@@ -45,7 +45,7 @@ describe('JsFileLoader', () => {
 
       // Act.
       loader.load(
-        path.join(__dirname, '/../../Resources/config/fake-services.js'))
+        path.join(__dirname, '/../../../Resources/config/fake-services.js'))
       let service = container.get(serviceName)
       let aliasService = container.get(aliasName)
       let taggedServices = container.findTaggedServiceIds(tagName)
@@ -82,7 +82,7 @@ describe('JsFileLoader', () => {
 
       // Act.
       loader.load(
-        path.join(__dirname, '/../../Resources/config/fake-imports.js'))
+        path.join(__dirname, '/../../../Resources/config/fake-imports.js'))
       let service = container.get(serviceName)
 
       // Assert.
@@ -102,7 +102,7 @@ describe('JsFileLoader', () => {
       let barServiceName = 'bar'
       let bazServiceName = 'baz'
       let configPath = path.join(__dirname,
-        '/../../Resources/config/fake-import-subfolder.js')
+        '/../../../Resources/config/fake-import-subfolder.js')
 
       // Act.
       loader.load(configPath)
@@ -112,27 +112,6 @@ describe('JsFileLoader', () => {
       // Assert.
       assert.instanceOf(bar, FooBar)
       return assert.instanceOf(baz, FooBar)
-    })
-  })
-
-  describe('old way of loading js config file', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new JsFileLoader(container,
-        path.join(__dirname, '/../../Resources/config/fake-services.js'))
-    })
-
-    it('should load multiple service files', () => {
-      // Arrange.
-      let serviceName = 'foo'
-
-      // Act.
-      loader.load()
-      let service = container.get(serviceName)
-
-      // Assert.
-      return assert.instanceOf(service, Foo)
     })
   })
 })
