@@ -1,7 +1,7 @@
 Node Dependency Injection
 =========================
 
-![NDI Logo](https://image.ibb.co/ejH8FH/logojoy.png)
+![NDI Logo](http://image.ibb.co/iGnCUn/logojoy.png)
 
 #### A special thanks to [Symfony](http://symfony.com) which was a great inspiration and example for this project.
 
