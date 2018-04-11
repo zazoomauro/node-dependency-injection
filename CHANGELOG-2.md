@@ -1,6 +1,10 @@
 # Change Log
 
-# [2.0] - 2017-09-26
+# [2.0.1] - 2018-04-11
+### Changed
+- fixing bug injecting private npm modules from configuration files (yml, js or json)
+
+# [2.0.0] - 2017-09-26
 ### Changed
 - updating production and developers dependencies 
 ### Added
