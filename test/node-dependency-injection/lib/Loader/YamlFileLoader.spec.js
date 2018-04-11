@@ -31,6 +31,18 @@ describe('YamlFileLoader', () => {
       loader = new YamlFileLoader(container)
     })
 
+    it('should load a container with a private npm package', () => {
+      // Arrange.
+
+      // Act.
+      loader.load(
+        path.join(__dirname, '/../../../Resources/config/private.yml'))
+      const actual = () => container.get('foo')
+
+      // Assert.
+      return assert.throw(actual, 'Cannot find module \'@company/repository\'')
+    })
+
     it('should load an abstract class with dependencies properly', () => {
       // Arrange not needed.
 
