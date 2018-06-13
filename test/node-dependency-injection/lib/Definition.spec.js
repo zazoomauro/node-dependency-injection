@@ -37,6 +37,20 @@ describe('Definition', () => {
     })
   })
 
+  describe('set', () => {
+    it('should set to param properly an argument', () => {
+      // Arrange.
+      const param = 'fake'
+      const argument = 'foo'
+
+      // Act.
+      definition.set(param, argument)
+
+      // Assert.
+      return assert.lengthOf(definition.setters, 1)
+    })
+  })
+
   describe('addMethodCall', () => {
     it('should throw an exception if the method name is empty', () => {
       // Arrange.

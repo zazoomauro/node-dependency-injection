@@ -145,3 +145,9 @@ services:
         decorates: decorate.app.mailer
         decoration_priority: 1
         arguments: ['@decorate.two.inner']
+
+    set.service:
+        class: ./../SetService
+        set:
+            - {param: 'foo', argument: '@foo'}
+            - {param: 'bar', argument: 'foo-bar'}

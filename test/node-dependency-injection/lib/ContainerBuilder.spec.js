@@ -292,7 +292,9 @@ describe('ContainerBuilder', () => {
         // Arrange.
         class Foo {
           static getFactory (value = false) {
-            if (value) return new Bar()
+            if (value) {
+              return new Bar()
+            }
 
             return false
           }
@@ -589,6 +591,46 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.throw(actual, Error, `Method ${method} not found`)
+    })
+
+    it('should throw an exception if the setter param does not exists', () => {
+      // Arrange.
+      const id = 'service.foo'
+      const param = 'bar'
+      const argument = 'argument-foo'
+
+      class Foo {}
+
+      container.register(id, Foo).set(param, argument)
+
+      // Act.
+      const actual = () => container.get(id)
+
+      // Assert.
+      return assert.throw(actual, Error, `Setter param not found`)
+    })
+
+    it('should set an argument to param', () => {
+      // Arrange.
+      const id = 'service.foo'
+      const param = 'bar'
+      const argument = 'argument-foo'
+
+      class Foo {
+        constructor () { this._bar = null }
+
+        set bar (value) { this._bar = value }
+
+        get bar () { return this._bar }
+      }
+
+      container.register(id, Foo).set(param, argument)
+
+      // Act.
+      const actual = container.get(id)
+
+      // Assert.
+      return assert.equal(actual.bar, argument)
     })
 
     it(
