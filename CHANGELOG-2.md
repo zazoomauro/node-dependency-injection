@@ -1,5 +1,10 @@
 # Change Log
 
+# [2.1.0] - 2018-06-13
+### Changed
+- add express middleware link and minimal documentation
+- update dependencies for production and development
+
 # [2.0.1] - 2018-04-11
 ### Changed
 - fixing bug injecting private npm modules from configuration files (yml, js or json)
