@@ -239,6 +239,27 @@ definition = new Definition(NewsletterManager)
 definition.addProperty('mailer', new Reference('mailer'))
 ```
 
+ExpressJS Usage 
+----------------
+
+A Node Dependency Injection Middleware for Express
+
+```bash
+npm install --save node-dependency-injection-express-middleware
+```
+
+```javascript
+import NDIMiddleware from 'node-dependency-injection-express-middleware'
+import express from 'express'
+
+const app = express()
+
+const options = {serviceFilePath: 'some/path/to/config.yml'}
+app.use(new NDIMiddleware(options).middleware())
+```
+
+> [Express Middleware Documentation](https://github.com/zazoomauro/node-dependency-injection-express-middleware)
+
 Resources
 ---------
 
