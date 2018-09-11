@@ -14,9 +14,11 @@ let assert = chai.assert
 
 describe('ContainerBuilder', () => {
   let container
+  let container2
 
   beforeEach(() => {
     container = new ContainerBuilder()
+    container2 = new ContainerBuilder(true)
   })
 
   describe('logger', () => {
@@ -701,6 +703,11 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.throw(actual, Error, `The service ${fooId} is private`)
+    })
+
+    it('should return container instance if ContainerBuilder constructor param is true', () => {
+      // Assert.
+      return assert.strictEqual(container2, container2.get('service_container'), `Container can be get.`)
     })
   })
 
