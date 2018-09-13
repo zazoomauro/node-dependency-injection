@@ -14,11 +14,23 @@ let assert = chai.assert
 
 describe('ContainerBuilder', () => {
   let container
-  let container2
 
   beforeEach(() => {
     container = new ContainerBuilder()
-    container2 = new ContainerBuilder(true)
+  })
+
+  describe('containerReferenceAsService', () => {
+    it('should return containerReferenceAsService boolean properly', () => {
+      // Arrange.
+      const containerReferenceAsService = true
+      const container = new ContainerBuilder(containerReferenceAsService)
+
+      // Act.
+      const actual = container.containerReferenceAsService
+
+      // Assert.
+      return assert.isTrue(actual)
+    })
   })
 
   describe('logger', () => {
@@ -294,7 +306,9 @@ describe('ContainerBuilder', () => {
         // Arrange.
         class Foo {
           static getFactory (value = false) {
-            if (value) return new Bar()
+            if (value) {
+              return new Bar()
+            }
 
             return false
           }
@@ -705,9 +719,28 @@ describe('ContainerBuilder', () => {
       return assert.throw(actual, Error, `The service ${fooId} is private`)
     })
 
-    it('should return container instance if ContainerBuilder constructor param is true', () => {
+    it('should return container instance if ContainerBuilder constructor ' +
+      'param is true', () => {
+      // Arrange.
+      const container = new ContainerBuilder(true)
+
+      // Act.
+      const actual = container.get('service_container')
+
       // Assert.
-      return assert.strictEqual(container2, container2.get('service_container'), `Container can be get.`)
+      return assert.strictEqual(container, actual)
+    })
+
+    it('should throw a service not found exception if param constructor ' +
+      'is not provided', () => {
+      // Arrange not needed.
+
+      // Act.
+      const actual = () => container.get('service_container')
+
+      // Assert.
+      assert.throw(actual, Error,
+        `The service service_container is not registered`)
     })
   })
 
