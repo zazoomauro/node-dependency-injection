@@ -19,6 +19,20 @@ describe('ContainerBuilder', () => {
     container = new ContainerBuilder()
   })
 
+  describe('containerReferenceAsService', () => {
+    it('should return containerReferenceAsService boolean properly', () => {
+      // Arrange.
+      const containerReferenceAsService = true
+      const container = new ContainerBuilder(containerReferenceAsService)
+
+      // Act.
+      const actual = container.containerReferenceAsService
+
+      // Assert.
+      return assert.isTrue(actual)
+    })
+  })
+
   describe('logger', () => {
     it('should set and get the right logger instance implementing warn method',
       () => {
@@ -292,7 +306,9 @@ describe('ContainerBuilder', () => {
         // Arrange.
         class Foo {
           static getFactory (value = false) {
-            if (value) return new Bar()
+            if (value) {
+              return new Bar()
+            }
 
             return false
           }
@@ -701,6 +717,30 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       return assert.throw(actual, Error, `The service ${fooId} is private`)
+    })
+
+    it('should return container instance if ContainerBuilder constructor ' +
+      'param is true', () => {
+      // Arrange.
+      const container = new ContainerBuilder(true)
+
+      // Act.
+      const actual = container.get('service_container')
+
+      // Assert.
+      return assert.strictEqual(container, actual)
+    })
+
+    it('should throw a service not found exception if param constructor ' +
+      'is not provided', () => {
+      // Arrange not needed.
+
+      // Act.
+      const actual = () => container.get('service_container')
+
+      // Assert.
+      assert.throw(actual, Error,
+        `The service service_container is not registered`)
     })
   })
 

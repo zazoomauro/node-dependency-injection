@@ -21,14 +21,43 @@ let assert = chai.assert
 
 describe('YamlFileLoader', () => {
   let loader
+  let loaderSelfReference
   let container
+  let containerSelfReference
   let logger = {warn: () => {}}
 
   describe('load', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
+      containerSelfReference = new ContainerBuilder(true)
       container.logger = logger
       loader = new YamlFileLoader(container)
+      loaderSelfReference = new YamlFileLoader(containerSelfReference)
+    })
+
+    it('should inject the service container properly', () => {
+      // Arrange.
+      loaderSelfReference.load(path.join(__dirname,
+        '/../../../Resources/config/container-self-reference.yml'))
+
+      // Act.
+      const actual = containerSelfReference.get('some_manager_with_container')
+
+      // Assert.
+      assert.instanceOf(actual.container, ContainerBuilder)
+    })
+
+    it('should throw an exception if service container ', () => {
+      // Arrange.
+      loader.load(path.join(__dirname,
+        '/../../../Resources/config/container-self-reference.yml'))
+
+      // Act.
+      const actual = () => container.get('some_manager_with_container')
+
+      // Assert.
+      return assert.throw(actual,
+        'The service service_container is not registered')
     })
 
     it('should load a container with a private npm package', () => {
