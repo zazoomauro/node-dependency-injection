@@ -104,6 +104,16 @@ describe('YamlFileLoader', () => {
       return assert.throw(actual, Error, `Service file ${file} not found`)
     })
 
+    it('should throw an exception if the yaml file had invalid syntax', () => {
+      let actual = () => {
+        loader.load(
+          path.join(__dirname, '/../../../Resources/config/invalid-yaml-syntax.yml')
+        )
+      }
+
+      return assert.throw(actual, Error, /^Service file could not be loaded\. /)
+    })
+
     it('should load a simple container', () => {
       // Arrange.
       let serviceName = 'foo'
