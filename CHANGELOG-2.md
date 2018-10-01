@@ -1,5 +1,15 @@
 # Change Log
 
+# [2.2.1] - 2018-10-01
+### Changed
+- Do not report file error on yaml syntax errors
+
+# [2.2.0] - 2018-09-13
+### Changed
+* Added control to register container as a service and can recover
+* Added control to retrieve container instance as service.
+* container reference as service
+
 # [2.1.1] - 2018-08-22
 ### Changed
 - package dependencies update
