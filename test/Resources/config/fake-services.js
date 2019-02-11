@@ -9,7 +9,7 @@ module.exports = {
       class: './../foo',
       arguments: ['@bar', '%fs-extra', 'foo-bar', '%fooParameter%'],
       tags: [
-        {name: 'fooTag'}
+        { name: 'fooTag' }
       ],
       properties: {
         property: '%fooProperty%'
@@ -18,13 +18,13 @@ module.exports = {
     bar: {
       class: './../bar',
       calls: [
-        {method: 'setFooBar', arguments: ['@foobar']}
+        { method: 'setFooBar', arguments: ['@foobar'] }
       ],
       tags: [
-        {name: 'fooTag'}
+        { name: 'fooTag' }
       ]
     },
-    foobar: {class: './../foobar'},
+    foobar: { class: './../foobar' },
     f: '@foo'
   }
 }

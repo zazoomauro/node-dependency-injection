@@ -13,7 +13,7 @@ let assert = chai.assert
 describe('JsonFileLoader', () => {
   let loader
   let container
-  let logger = {warn: () => {}}
+  let logger = { warn: () => {} }
 
   describe('load', () => {
     beforeEach(() => {

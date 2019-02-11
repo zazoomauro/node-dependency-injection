@@ -24,7 +24,7 @@ describe('YamlFileLoader', () => {
   let loaderSelfReference
   let container
   let containerSelfReference
-  let logger = {warn: () => {}}
+  let logger = { warn: () => {} }
 
   describe('load', () => {
     beforeEach(() => {

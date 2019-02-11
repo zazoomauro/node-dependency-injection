@@ -1,6 +1,6 @@
 module.exports = {
   imports: [
-    {resource: './foo/bar.js'},
-    {resource: './foo/baz.js'}
+    { resource: './foo/bar.js' },
+    { resource: './foo/baz.js' }
   ]
 }

@@ -37,7 +37,7 @@ describe('ContainerBuilder', () => {
     it('should set and get the right logger instance implementing warn method',
       () => {
         // Arrange.
-        const logger = {warn: () => {}}
+        const logger = { warn: () => {} }
 
         // Act.
         container.logger = logger

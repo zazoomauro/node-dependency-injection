@@ -9,7 +9,7 @@ export default class BaseAdapter {
         'some.parameter.bar': 'bar'
       },
       imports: [
-        {resource: `/path/to/another-file.${this.constructor.FORMAT}`}
+        { resource: `/path/to/another-file.${this.constructor.FORMAT}` }
       ],
       services: {
         'some.service.key': {

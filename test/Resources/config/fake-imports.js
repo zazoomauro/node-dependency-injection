@@ -1,5 +1,5 @@
 module.exports = {
   imports: [
-    {resource: './fake-services.js'}
+    { resource: './fake-services.js' }
   ]
 }

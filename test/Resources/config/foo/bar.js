@@ -1,5 +1,5 @@
 module.exports = {
   services: {
-    bar: {class: './../../foobar'}
+    bar: { class: './../../foobar' }
   }
 }
