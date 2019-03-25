@@ -1,6 +1,12 @@
 # Change Log
 
-# [2.2.1] - 2018-10-01
+# [2.3.0] - 2019-03-25
+### Changed
+- add default directory
+- removing path library
+- improving README file
+
+[2.2.1] - 2018-10-01
 ### Changed
 - Do not report file error on yaml syntax errors
 
