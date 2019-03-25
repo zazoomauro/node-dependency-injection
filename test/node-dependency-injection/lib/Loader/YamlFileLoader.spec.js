@@ -107,7 +107,8 @@ describe('YamlFileLoader', () => {
     it('should throw an exception if the yaml file had invalid syntax', () => {
       let actual = () => {
         loader.load(
-          path.join(__dirname, '/../../../Resources/config/invalid-yaml-syntax.yml')
+          path.join(__dirname,
+            '/../../../Resources/config/invalid-yaml-syntax.yml')
         )
       }
 
@@ -277,6 +278,32 @@ describe('YamlFileLoader', () => {
       // Assert.
       assert.instanceOf(bar, FooBar)
       return assert.instanceOf(baz, FooBar)
+    })
+  })
+
+  describe('load with default directory', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder(false,
+        path.join(__dirname, '..', '..', '..'))
+      loader = new YamlFileLoader(container)
+      container.compile()
+    })
+
+    it('should load instance of service properly', () => {
+      // Arrange.
+      let configPath = path.join(__dirname,
+        '/../../../Resources/config/defaultdir.yaml')
+
+      // Act.
+      loader.load(configPath)
+      let mailer = container.get('mailer')
+      let service = container.get('app.service')
+      let child = container.get('app.child_class')
+
+      // Assert.
+      assert.instanceOf(child, ChildClass)
+      assert.instanceOf(service, Service)
+      return assert.instanceOf(mailer, Mailer)
     })
   })
 })

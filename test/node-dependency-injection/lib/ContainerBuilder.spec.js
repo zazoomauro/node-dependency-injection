@@ -19,6 +19,20 @@ describe('ContainerBuilder', () => {
     container = new ContainerBuilder()
   })
 
+  describe('default directory', () => {
+    it('should return default dir', () => {
+      // Arrange.
+      const dir = 'foo/bar'
+      const container = new ContainerBuilder(false, dir)
+
+      // Act.
+      const actual = container.defaultDir
+
+      // Assert.
+      return assert.strictEqual(actual, dir)
+    })
+  })
+
   describe('containerReferenceAsService', () => {
     it('should return containerReferenceAsService boolean properly', () => {
       // Arrange.
