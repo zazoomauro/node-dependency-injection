@@ -34,9 +34,14 @@ Imagine you have a `Mailer` class like this:
 // services/Mailer.js
 
 export default class Mailer {
+  /**
+   * @param {ExampleService} exampleService
+   */
   constructor(exampleService) {
-    ...
+    this._exampleService = exampleService;
   }
+
+  ...
 }
 ```
 
@@ -45,10 +50,13 @@ You can register this in the container as a service:
 ```js
 import {ContainerBuilder} from 'node-dependency-injection'
 import Mailer from './services/Mailer'
-import Mailer from './services/Example'
+import ExampleService from './services/ExampleService'
 
 let container = new ContainerBuilder()
-container.register('service.example', ExampleService)
+
+container
+  .register('service.example', ExampleService)
+
 container
   .register('service.mailer', Mailer)
   .addArgument('service.example')
@@ -70,7 +78,7 @@ You can also use configuration files to improve your service configuration
 # /path/to/file.yml
 services:
   service.example:
-    class: 'services/Example'
+    class: 'services/ExampleService'
 
   service.mailer:
     class: 'services/Mailer'
@@ -85,7 +93,7 @@ let loader = new YamlFileLoader(container)
 loader.load('/path/to/file.yml')
 ```
 
-And get services from your container
+And get services from your container easily
 
 ```js
 ...
@@ -95,10 +103,10 @@ const mailer = container.get('service.mailer')
 List of features
 ------------
 
-* Configuration files with JS, YAML or JSON.
-  - Imports inside configuration files
+- Configuration files with JS, YAML or JSON.
+- Multiple configuration files
 - Custom relative service directory
-* Compiling container
+- Compiling container
   - Custom compiler pass
   - Change definition behaviour
 - Using a factory to create services
@@ -121,7 +129,9 @@ List of features
 ExpressJS Usage
 ----------------
 
-A Node Dependency Injection Middleware for Express
+If you are using expressJS and you like Node Dependency Injection Framework then I strongly recommend
+you to use the `node-dependency-injection-express-middleware` package.
+That gives you the possibility to retrieve the container from the request.
 
 ```bash
 npm install --save node-dependency-injection-express-middleware
