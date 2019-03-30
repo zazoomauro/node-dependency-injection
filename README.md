@@ -45,10 +45,10 @@ You can register this in the container as a service:
 ```js
 import {ContainerBuilder} from 'node-dependency-injection'
 import Mailer from './services/Mailer'
-import Mailer from './services/Example'
+import Example from './services/Example'
 
 let container = new ContainerBuilder()
-container.register('service.example', ExampleService)
+container.register('service.example', Example)
 container
   .register('service.mailer', Mailer)
   .addArgument('service.example')
