@@ -37,7 +37,7 @@
     "inversion-of-control",
     "service-locator"
   ],
-  "types": "lib/types/index.d.ts",
+  "types": "dist/lib/types/index.d.ts",
   "author": "Mauro Gadaleta <mggadaleta@gmail.com>",
   "license": "MIT",
   "bugs": {
