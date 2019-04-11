@@ -149,6 +149,29 @@ app.use(new NDIMiddleware(options).middleware())
 
 > [Express Middleware Documentation](https://github.com/zazoomauro/node-dependency-injection-express-middleware)
 
+TypeScript Usage
+----------------
+
+If you are using typescript and you like Node Dependency Injection Framework then typing are now provided at `node-dependency-injection` so 
+you do not have to create custom typing anymore.
+
+```bash
+npm install --save node-dependency-injection
+```
+
+```typescript
+import { ContainerBuilder } from 'node-dependency-injection'
+import MongoClient from './services/MongoClient'
+import { Env } from './EnvType'
+
+export async function boot(container = new ContainerBuilder(), env: Env) {
+    container.register('Service.MongoClient', MongoClient).addArgument({
+        host: env.HOST,
+        port: env.PORT,
+    })
+}
+```
+
 Resources
 ---------
 
