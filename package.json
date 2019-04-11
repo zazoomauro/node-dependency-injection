@@ -1,6 +1,6 @@
 {
   "name": "node-dependency-injection",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "The NodeDependencyInjection component allows you to standardize and centralize the way objects are constructed in your application.",
   "main": "dist/lib/index.js",
   "directories": {
@@ -50,7 +50,7 @@
     "commander": "^2.19.0",
     "console.table": "^0.10.0",
     "fs-extra": "^7.0.1",
-    "js-yaml": "^3.13.0"
+    "js-yaml": "^3.13.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
