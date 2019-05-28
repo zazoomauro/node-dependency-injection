@@ -46,7 +46,6 @@
   "homepage": "https://github.com/zazoomauro/node-dependency-injection#readme",
   "dependencies": {
     "chalk": "^2.4.1",
-    "collections": "^5.1.5",
     "commander": "^2.19.0",
     "console.table": "^0.10.0",
     "fs-extra": "^7.0.1",

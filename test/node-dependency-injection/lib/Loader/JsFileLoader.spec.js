@@ -59,7 +59,7 @@ describe('JsFileLoader', () => {
       assert.isFunction(service.fs.copy)
       assert.strictEqual(service.param, 'foo-bar')
       assert.strictEqual(aliasService, service)
-      assert.lengthOf(taggedServices.toArray(), 2)
+      assert.lengthOf(taggedServices, 2)
       assert.strictEqual(stringActualParameter, stringExpectedParameter)
       assert.isArray(arrayActualParameter)
       assert.strictEqual(service.parameter, stringExpectedParameter)

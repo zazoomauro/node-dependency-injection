@@ -1291,7 +1291,7 @@ describe('ContainerBuilder', () => {
       let actual = container.findTaggedServiceIds(tag)
 
       // Assert.
-      return assert.lengthOf(actual.toArray(), 1)
+      return assert.lengthOf(actual, 1)
     })
 
     it('should return an array with multiple tagged services', () => {
@@ -1309,7 +1309,7 @@ describe('ContainerBuilder', () => {
       let actual = container.findTaggedServiceIds(barTag)
 
       // Assert.
-      return assert.lengthOf(actual.toArray(), 1)
+      return assert.lengthOf(actual, 1)
     })
 
     it('should return a map of attributes', () => {

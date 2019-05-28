@@ -1,5 +1,21 @@
 # Change Log
 
+# [2.3.4] - 2019-05-28
+### Changed
+- Avoid collections lib usage
+
+# [2.3.3] - 2019-04-11
+### Changed
+- Fix tstypes path
+
+# [2.3.2] - 2019-04-11
+### Added
+- add typescript types
+
+# [2.3.1] - 2019-04-02
+### Changed
+- package.json & package-lock.json to reduce vulnerabilities
+
 # [2.3.0] - 2019-03-25
 ### Changed
 - add default directory
