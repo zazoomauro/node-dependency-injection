@@ -1,5 +1,4 @@
-/* global describe, it, beforeEach, afterEach */
-
+import { describe, it, beforeEach, afterEach } from 'mocha'
 import chai from 'chai'
 import path from 'path'
 import sinon from 'sinon'

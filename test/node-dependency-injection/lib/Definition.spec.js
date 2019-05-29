@@ -1,5 +1,4 @@
-/* global describe, beforeEach, it */
-
+import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
 import Definition from '../../../lib/Definition'
 

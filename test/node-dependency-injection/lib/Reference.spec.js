@@ -1,5 +1,4 @@
-/* global describe, it */
-
+import { describe, it } from 'mocha'
 import chai from 'chai'
 import Reference from '../../../lib/Reference'
 

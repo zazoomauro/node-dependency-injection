@@ -1,4 +1,2 @@
---reporter spec
---ui tdd
 --recursive
 --require babel-register
