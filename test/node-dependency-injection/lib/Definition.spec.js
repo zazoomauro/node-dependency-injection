@@ -2,7 +2,7 @@ import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
 import Definition from '../../../lib/Definition'
 
-let assert = chai.assert
+const assert = chai.assert
 
 describe('Definition', () => {
   let definition
@@ -14,7 +14,7 @@ describe('Definition', () => {
   describe('addArgument', () => {
     it('should add one element to arguments array', () => {
       // Arrange.
-      let argument = 'foobar'
+      const argument = 'foobar'
 
       // Act.
       definition.addArgument(argument)
@@ -25,8 +25,8 @@ describe('Definition', () => {
 
     it('should add more than one argument to arguments', () => {
       // Arrange.
-      let argument1 = 'foobar'
-      let argument2 = 'barfoo'
+      const argument1 = 'foobar'
+      const argument2 = 'barfoo'
 
       // Act.
       definition.addArgument(argument1).addArgument(argument2)
@@ -39,10 +39,10 @@ describe('Definition', () => {
   describe('addMethodCall', () => {
     it('should throw an exception if the method name is empty', () => {
       // Arrange.
-      let method = ''
+      const method = ''
 
       // Act.
-      let actual = () => { definition.addMethodCall(method) }
+      const actual = () => { definition.addMethodCall(method) }
 
       // Assert.
       assert.throw(actual, Error, 'Method name cannot be empty')
@@ -50,7 +50,7 @@ describe('Definition', () => {
 
     it('should add one method to the calls array', () => {
       // Arrange.
-      let method = 'foo'
+      const method = 'foo'
 
       // Act.
       definition.addMethodCall(method)
@@ -62,8 +62,8 @@ describe('Definition', () => {
 
     it('should add one method to the calls array with arguments', () => {
       // Arrange.
-      let method = 'foo'
-      let args = ['bar', 'foo']
+      const method = 'foo'
+      const args = ['bar', 'foo']
 
       // Act.
       definition.addMethodCall(method, args)
@@ -76,7 +76,7 @@ describe('Definition', () => {
   describe('set args', () => {
     it('should override the entire arguments collection', () => {
       // Arrange.
-      let args = ['foo', 'bar', 'foobar']
+      const args = ['foo', 'bar', 'foobar']
 
       // Act.
       definition.args = args
@@ -89,7 +89,7 @@ describe('Definition', () => {
   describe('addTag', () => {
     it('should add a new tag', () => {
       // Arrange.
-      let tagName = 'foo'
+      const tagName = 'foo'
 
       // Act.
       definition.addTag(tagName)
@@ -100,8 +100,8 @@ describe('Definition', () => {
 
     it('should add a new tag with attributes', () => {
       // Arrange.
-      let tagName = 'foo'
-      let attributes = new Map()
+      const tagName = 'foo'
+      const attributes = new Map()
 
       // Act.
       definition.addTag(tagName, attributes)
@@ -112,11 +112,11 @@ describe('Definition', () => {
 
     it('should throw an exception if attributes is an exception', () => {
       // Arrange.
-      let tagName = 'foo'
-      let attributes = {}
+      const tagName = 'foo'
+      const attributes = {}
 
       // Act.
-      let actual = () => definition.addTag(tagName, attributes)
+      const actual = () => definition.addTag(tagName, attributes)
 
       // Assert.
       assert.throw(actual, Error, 'Attributes is not type Map')
@@ -126,8 +126,8 @@ describe('Definition', () => {
   describe('addProperty', () => {
     it('should add a new property', () => {
       // Arrange.
-      let key = 'foo'
-      let value = 'bar'
+      const key = 'foo'
+      const value = 'bar'
 
       // Act.
       definition.addProperty(key, value)
@@ -200,7 +200,7 @@ describe('Definition', () => {
       // Arrange.
       class Foo {}
 
-      let method = 'getFactory'
+      const method = 'getFactory'
 
       // Act.
       definition.setFactory(Foo, method)
@@ -258,7 +258,7 @@ describe('Definition', () => {
   describe('decoratedService', () => {
     it('should set a decorated service', () => {
       // Arrange.
-      let service = 'bar'
+      const service = 'bar'
 
       // Act.
       definition.decoratedService = service
@@ -280,7 +280,7 @@ describe('Definition', () => {
   describe('decorationPriority', () => {
     it('should set a decorated priority', () => {
       // Arrange.
-      let priority = 2
+      const priority = 2
 
       // Act.
       definition.decorationPriority = priority

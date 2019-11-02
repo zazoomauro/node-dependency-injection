@@ -9,7 +9,7 @@ import FileManager from '../../../../bin/Services/File/FileManager'
 import JsonAdapter from '../../../../bin/Services/File/JsonAdapter'
 import JsAdapter from '../../../../bin/Services/File/JsAdapter'
 
-let assert = chai.assert
+const assert = chai.assert
 
 describe('FileManager', () => {
   describe('createConfiguration', () => {

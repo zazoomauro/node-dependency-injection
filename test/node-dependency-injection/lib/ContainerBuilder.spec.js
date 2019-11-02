@@ -9,7 +9,7 @@ import path from 'path'
 import FooManager from './../../Resources/fooManager'
 import BarManager from './../../Resources/barManager'
 
-let assert = chai.assert
+const assert = chai.assert
 
 describe('ContainerBuilder', () => {
   let container
@@ -77,11 +77,11 @@ describe('ContainerBuilder', () => {
   describe('register', () => {
     it('should return a definition instance', () => {
       // Arrange.
-      let id = 'foo'
-      let className = 'bar'
+      const id = 'foo'
+      const className = 'bar'
 
       // Act.
-      let actual = container.register(id, className)
+      const actual = container.register(id, className)
 
       // Assert.
       return assert.instanceOf(actual, Definition)
@@ -91,10 +91,10 @@ describe('ContainerBuilder', () => {
       'should return a synthetic definition if do not send the second argument',
       () => {
         // Arrange.
-        let id = 'synthetic.foo'
+        const id = 'synthetic.foo'
 
         // Act.
-        let actual = container.register(id)
+        const actual = container.register(id)
 
         // Assert.
         assert.isTrue(actual.synthetic)
@@ -148,13 +148,13 @@ describe('ContainerBuilder', () => {
       class DecoratingFoo {}
 
       container.register('foo', Foo)
-      let decoratingDefinition = container.register('decorating.foo',
+      const decoratingDefinition = container.register('decorating.foo',
         DecoratingFoo)
       decoratingDefinition.decoratedService = 'foo'
 
       // Act.
       container.compile()
-      let actual = container.get('foo')
+      const actual = container.get('foo')
 
       // Assert.
       assert.instanceOf(actual, DecoratingFoo)
@@ -167,13 +167,13 @@ describe('ContainerBuilder', () => {
       class DecoratingFoo {}
 
       container.register('foo', Foo)
-      let decoratingDefinition = container.register('decorating.foo',
+      const decoratingDefinition = container.register('decorating.foo',
         DecoratingFoo)
       decoratingDefinition.decoratedService = 'foo'
 
       // Act.
       container.compile()
-      let actual = container.get('decorating.foo.inner')
+      const actual = container.get('decorating.foo.inner')
 
       // Assert.
       assert.instanceOf(actual, Foo)
@@ -194,14 +194,14 @@ describe('ContainerBuilder', () => {
       }
 
       container.register('foo', Foo)
-      let decoratingDefinition = container.register('decorating.foo',
+      const decoratingDefinition = container.register('decorating.foo',
         DecoratingFoo)
       decoratingDefinition.decoratedService = 'foo'
       decoratingDefinition.args = [new Reference('decorating.foo.inner')]
 
       // Act.
       container.compile()
-      let actual = container.get('foo')
+      const actual = container.get('foo')
 
       // Assert.
       assert.instanceOf(actual.inner, Foo)
@@ -232,13 +232,13 @@ describe('ContainerBuilder', () => {
 
       container.register('foo', Foo)
 
-      let definitionBar = container.register('bar', Bar)
+      const definitionBar = container.register('bar', Bar)
       definitionBar.addArgument(new Reference('bar.inner'))
       definitionBar.public = false
       definitionBar.decoratedService = 'foo'
       definitionBar.decorationPriority = 5
 
-      let definitionBaz = container.register('baz', Baz)
+      const definitionBaz = container.register('baz', Baz)
       definitionBaz.addArgument(new Reference('baz.inner'))
       definitionBaz.public = false
       definitionBaz.decoratedService = 'foo'
@@ -246,7 +246,7 @@ describe('ContainerBuilder', () => {
 
       // Act.
       container.compile()
-      let actual = container.get('foo')
+      const actual = container.get('foo')
 
       // Assert.
       assert.strictEqual(actual.inner, expected)
@@ -256,14 +256,14 @@ describe('ContainerBuilder', () => {
       'should not get an synthetic instance cos the definition does not exists',
       () => {
         // Arrange.
-        let syntheticServiceName = 'foo'
+        const syntheticServiceName = 'foo'
 
         class SyntheticService {}
 
         container.set(syntheticServiceName, new SyntheticService())
 
         // Act.
-        let actual = () => container.get(syntheticServiceName)
+        const actual = () => container.get(syntheticServiceName)
 
         // Assert.
         assert.throw(actual, Error,
@@ -274,8 +274,8 @@ describe('ContainerBuilder', () => {
       'should not get an synthetic instance cos the definition is not synthetic',
       () => {
         // Arrange.
-        let syntheticServiceName = 'foo'
-        let definition = new Definition()
+        const syntheticServiceName = 'foo'
+        const definition = new Definition()
         definition.synthetic = false
         container.setDefinition(syntheticServiceName, definition)
 
@@ -284,7 +284,7 @@ describe('ContainerBuilder', () => {
         container.set(syntheticServiceName, new SyntheticService())
 
         // Act.
-        let actual = () => container.get(syntheticServiceName)
+        const actual = () => container.get(syntheticServiceName)
 
         // Assert.
         assert.throw(actual, Error,
@@ -301,14 +301,14 @@ describe('ContainerBuilder', () => {
 
       class Bar {}
 
-      let method = 'getFactory'
-      let id = 'foo.service'
-      let definition = new Definition()
+      const method = 'getFactory'
+      const id = 'foo.service'
+      const definition = new Definition()
       definition.setFactory(Foo, method)
       container.setDefinition(id, definition)
 
       // Act.
-      let actual = container.get(id)
+      const actual = container.get(id)
 
       // Assert.
       assert.instanceOf(actual, Bar)
@@ -329,15 +329,15 @@ describe('ContainerBuilder', () => {
 
         class Bar {}
 
-        let method = 'getFactory'
-        let id = 'foo.service'
-        let definition = new Definition()
+        const method = 'getFactory'
+        const id = 'foo.service'
+        const definition = new Definition()
         definition.args = [true]
         definition.setFactory(Foo, method)
         container.setDefinition(id, definition)
 
         // Act.
-        let actual = container.get(id)
+        const actual = container.get(id)
 
         // Assert.
         assert.instanceOf(actual, Bar)
@@ -353,16 +353,16 @@ describe('ContainerBuilder', () => {
 
       class Bar {}
 
-      let method = 'getFactory'
-      let id = 'foo.service'
-      let factoryId = 'factory.service'
+      const method = 'getFactory'
+      const id = 'foo.service'
+      const factoryId = 'factory.service'
       container.register(factoryId, Foo)
-      let definition = new Definition()
+      const definition = new Definition()
       definition.setFactory(new Reference(factoryId), method)
       container.setDefinition(id, definition)
 
       // Act.
-      let actual = container.get(id)
+      const actual = container.get(id)
 
       // Assert.
       assert.instanceOf(actual, Bar)
@@ -384,17 +384,17 @@ describe('ContainerBuilder', () => {
 
         class Bar {}
 
-        let method = 'getFactory'
-        let id = 'foo.service'
-        let factoryId = 'factory.service'
+        const method = 'getFactory'
+        const id = 'foo.service'
+        const factoryId = 'factory.service'
         container.register(factoryId, Foo)
-        let definition = new Definition()
+        const definition = new Definition()
         definition.args = ['ok']
         definition.setFactory(new Reference(factoryId), method)
         container.setDefinition(id, definition)
 
         // Act.
-        let actual = container.get(id)
+        const actual = container.get(id)
 
         // Assert.
         assert.instanceOf(actual, Bar)
@@ -402,10 +402,10 @@ describe('ContainerBuilder', () => {
 
     it('should throw an exception if the service not exists', () => {
       // Arrange.
-      let id = 'service._foo_bar'
+      const id = 'service._foo_bar'
 
       // Act.
-      let actual = () => container.get(id)
+      const actual = () => container.get(id)
 
       // Assert.
       return assert.throw(actual, Error, `The service ${id} is not registered`)
@@ -413,7 +413,7 @@ describe('ContainerBuilder', () => {
 
     it('should return the right service', () => {
       // Arrange.
-      let id = 'service.foo'
+      const id = 'service.foo'
 
       class Foo {
       }
@@ -421,7 +421,7 @@ describe('ContainerBuilder', () => {
       container.register(id, Foo)
 
       // Act.
-      let actual = container.get(id)
+      const actual = container.get(id)
 
       // Assert.
       return assert.instanceOf(actual, Foo)
@@ -430,8 +430,8 @@ describe('ContainerBuilder', () => {
     it('should return the right service with argument in the constructor',
       () => {
         // Arrange.
-        let id = 'service.foo'
-        let param = 'foo bar'
+        const id = 'service.foo'
+        const param = 'foo bar'
 
         class Foo {
           constructor (param) {
@@ -446,7 +446,7 @@ describe('ContainerBuilder', () => {
         container.register(id, Foo).addArgument(param)
 
         // Act.
-        let actual = container.get(id)
+        const actual = container.get(id)
 
         // Assert.
         return assert.strictEqual(actual.param, param)
@@ -454,8 +454,8 @@ describe('ContainerBuilder', () => {
 
     it('should return the right service with reference argument', () => {
       // Arrange.
-      let id = 'service.foo'
-      let referenceId = 'service.bar'
+      const id = 'service.foo'
+      const referenceId = 'service.bar'
 
       class Bar {
       }
@@ -474,7 +474,7 @@ describe('ContainerBuilder', () => {
       container.register(id, Foo).addArgument(new Reference(referenceId))
 
       // Act.
-      let actual = container.get(id)
+      const actual = container.get(id)
 
       // Assert.
       return assert.instanceOf(actual.bar, Bar)
@@ -482,8 +482,8 @@ describe('ContainerBuilder', () => {
 
     it('should return the right service with reference argument', () => {
       // Arrange.
-      let id = 'service.foo'
-      let referenceId = 'service.bar'
+      const id = 'service.foo'
+      const referenceId = 'service.bar'
 
       class Bar {
       }
@@ -502,7 +502,7 @@ describe('ContainerBuilder', () => {
       container.register(id, Foo).addArgument(new Reference(referenceId, true))
 
       // Act.
-      let actual = container.get(id)
+      const actual = container.get(id)
 
       // Assert.
       assert.instanceOf(actual.bar, Bar)
@@ -513,8 +513,8 @@ describe('ContainerBuilder', () => {
     it('should return the right service with reference argument nullable',
       () => {
         // Arrange.
-        let id = 'service.foo'
-        let referenceId = 'service.bar'
+        const id = 'service.foo'
+        const referenceId = 'service.bar'
 
         class Foo {
           constructor (bar = null) {
@@ -530,7 +530,7 @@ describe('ContainerBuilder', () => {
           .addArgument(new Reference(referenceId, true))
 
         // Act.
-        let actual = container.get(id)
+        const actual = container.get(id)
 
         // Assert.
         assert.isNull(actual.bar)
@@ -540,9 +540,9 @@ describe('ContainerBuilder', () => {
 
     it('should return the right service with reference argument', () => {
       // Arrange.
-      let id = 'service.foo'
-      let reference1Id = 'service.bar'
-      let reference2Id = 'service.foo_bar'
+      const id = 'service.foo'
+      const reference1Id = 'service.bar'
+      const reference2Id = 'service.foo_bar'
 
       class FooBar {
       }
@@ -573,7 +573,7 @@ describe('ContainerBuilder', () => {
       container.register(id, Foo).addArgument(new Reference(reference1Id))
 
       // Act.
-      let actual = container.get(id)
+      const actual = container.get(id)
 
       // Assert.
       assert.instanceOf(actual.bar, Bar)
@@ -582,8 +582,8 @@ describe('ContainerBuilder', () => {
 
     it('should call the method without any argument', () => {
       // Arrange.
-      let id = 'service.foo'
-      let parameter = 'foobar'
+      const id = 'service.foo'
+      const parameter = 'foobar'
 
       class Foo {
         bar (parameter) {
@@ -598,7 +598,7 @@ describe('ContainerBuilder', () => {
       container.register(id, Foo).addMethodCall('bar', [parameter])
 
       // Act.
-      let foo = container.get(id)
+      const foo = container.get(id)
 
       // Assert.
       return assert.strictEqual(foo.parameter, parameter)
@@ -606,15 +606,15 @@ describe('ContainerBuilder', () => {
 
     it('should throw an exception if the method call does not exists', () => {
       // Arrange.
-      let id = 'service.foo'
-      let method = 'bar'
+      const id = 'service.foo'
+      const method = 'bar'
 
       class Foo {}
 
       container.register(id, Foo).addMethodCall(method)
 
       // Act.
-      let actual = () => container.get(id)
+      const actual = () => container.get(id)
 
       // Assert.
       return assert.throw(actual, Error, `Method ${method} not found`)
@@ -623,9 +623,9 @@ describe('ContainerBuilder', () => {
     it(
       'should get the service instance and instantiate ones multiple service dependency',
       () => {
-        let fooId = 'service.foo'
-        let barId = 'service.bar'
-        let fooBarId = 'service.foo_bar'
+        const fooId = 'service.foo'
+        const barId = 'service.bar'
+        const fooBarId = 'service.foo_bar'
         let constructorCalls = 0
 
         class FooBar {
@@ -678,15 +678,15 @@ describe('ContainerBuilder', () => {
         }
       }
 
-      let serviceId = 'foo'
-      let propertyKey = 'bar'
-      let value = 'foo.bar'
-      let definition = new Definition(Foo)
+      const serviceId = 'foo'
+      const propertyKey = 'bar'
+      const value = 'foo.bar'
+      const definition = new Definition(Foo)
       definition.addProperty(propertyKey, value)
       container.setDefinition(serviceId, definition)
 
       // Act.
-      let actual = container.get(serviceId)
+      const actual = container.get(serviceId)
 
       // Assert.
       return assert.strictEqual(actual.bar, value)
@@ -694,7 +694,7 @@ describe('ContainerBuilder', () => {
 
     it('should instantiate a lazy service only when get the service', () => {
       // Arrange.
-      let fooId = 'service.foo'
+      const fooId = 'service.foo'
       let constructorCalls = 0
 
       class Foo {
@@ -703,7 +703,7 @@ describe('ContainerBuilder', () => {
         }
       }
 
-      let definition = new Definition(Foo)
+      const definition = new Definition(Foo)
       definition.lazy = true
       container.setDefinition(fooId, definition)
       container.compile()
@@ -717,16 +717,16 @@ describe('ContainerBuilder', () => {
 
     it('should throw an exception if we get a private service', () => {
       // Arrange.
-      let fooId = 'service.foo'
+      const fooId = 'service.foo'
 
       class Foo {}
 
-      let definition = new Definition(Foo)
+      const definition = new Definition(Foo)
       definition.public = false
       container.setDefinition(fooId, definition)
 
       // Act.
-      let actual = () => container.get(fooId)
+      const actual = () => container.get(fooId)
 
       // Assert.
       return assert.throw(actual, Error, `The service ${fooId} is private`)
@@ -753,7 +753,7 @@ describe('ContainerBuilder', () => {
 
       // Assert.
       assert.throw(actual, Error,
-        `The service service_container is not registered`)
+        'The service service_container is not registered')
     })
   })
 
@@ -764,7 +764,7 @@ describe('ContainerBuilder', () => {
 
       class Foo {constructor () { expected = false }}
 
-      let definition = new Definition(Foo)
+      const definition = new Definition(Foo)
       definition.abstract = true
       container.setDefinition('foo', definition)
 
@@ -785,7 +785,7 @@ describe('ContainerBuilder', () => {
           .addArgument(new Reference('service.a'))
 
         // Act.
-        let actual = () => container.compile()
+        const actual = () => container.compile()
 
         // Assert.
         return assert.throw(actual, 'Circular reference detected')
@@ -794,14 +794,14 @@ describe('ContainerBuilder', () => {
     it('should call the process method by priority properly',
       () => {
         // Arrange.
-        let fooId = 'service.foo'
+        const fooId = 'service.foo'
 
         class Foo {}
 
         container.register(fooId, Foo)
-        let valueFirstPass = 'foo'
-        let valueSecondPass = 'bar'
-        let expected = []
+        const valueFirstPass = 'foo'
+        const valueSecondPass = 'bar'
+        const expected = []
 
         class FirstPass {process () { expected.push(valueFirstPass) }}
 
@@ -824,7 +824,7 @@ describe('ContainerBuilder', () => {
     it('should add more compiler pass by priority',
       () => {
         // Arrange.
-        let fooId = 'service.foo'
+        const fooId = 'service.foo'
 
         class Foo {}
 
@@ -849,11 +849,11 @@ describe('ContainerBuilder', () => {
     it('should remove private instances if no remove pass config passed',
       () => {
         // Arrange.
-        let fooId = 'service.foo'
+        const fooId = 'service.foo'
 
         class Foo {}
 
-        let definition = new Definition(Foo)
+        const definition = new Definition(Foo)
         definition.public = false
         container.setDefinition(fooId, definition)
 
@@ -867,11 +867,11 @@ describe('ContainerBuilder', () => {
     it('should not remove private instances if remove pass config passed',
       () => {
         // Arrange.
-        let fooId = 'service.foo'
+        const fooId = 'service.foo'
 
         class Foo {}
 
-        let definition = new Definition(Foo)
+        const definition = new Definition(Foo)
         definition.public = false
         container.setDefinition(fooId, definition)
 
@@ -936,8 +936,8 @@ describe('ContainerBuilder', () => {
 
     it('should compile the container and return a service', () => {
       // Arrange.
-      let id = 'service.foo'
-      let parameter = 'foobar'
+      const id = 'service.foo'
+      const parameter = 'foobar'
 
       class Foo {
         constructor (parameter) {
@@ -965,7 +965,7 @@ describe('ContainerBuilder', () => {
 
         // Act.
         container.compile()
-        let actual = () => container.register('bar', class Bar {})
+        const actual = () => container.register('bar', class Bar {})
 
         // Assert.
         return assert.throw(actual, Error,
@@ -975,7 +975,7 @@ describe('ContainerBuilder', () => {
     it(
       'should prevent instantiate class again if we get a service and then compile',
       () => {
-        let fooId = 'service.foo'
+        const fooId = 'service.foo'
         let constructorCalls = 0
 
         class Foo {
@@ -989,7 +989,7 @@ describe('ContainerBuilder', () => {
 
         // Act.
         container.compile()
-        let foo = container.get(fooId)
+        const foo = container.get(fooId)
 
         // Assert.
         assert.strictEqual(constructorCalls, 1)
@@ -1045,7 +1045,7 @@ describe('ContainerBuilder', () => {
       () => {
         // Arrange.
         FooManager.prototype.fooManagerCalls = 0
-        let loader = new YamlFileLoader(container)
+        const loader = new YamlFileLoader(container)
         loader.load(
           path.join(__dirname, '../../Resources/config/fake-services-2.yml'))
 
@@ -1084,10 +1084,10 @@ describe('ContainerBuilder', () => {
         }
       }
 
-      let serviceId = 'foo'
-      let propertyKey = 'bar'
-      let value = 'foo.bar'
-      let definition = new Definition(Foo)
+      const serviceId = 'foo'
+      const propertyKey = 'bar'
+      const value = 'foo.bar'
+      const definition = new Definition(Foo)
       definition.addProperty(propertyKey, value)
       container.setDefinition(serviceId, definition)
 
@@ -1100,7 +1100,7 @@ describe('ContainerBuilder', () => {
 
     it('should not instantiate a lazy service on compile', () => {
       // Arrange.
-      let fooId = 'service.foo'
+      const fooId = 'service.foo'
       let constructorCalls = 0
 
       class Foo {
@@ -1109,7 +1109,7 @@ describe('ContainerBuilder', () => {
         }
       }
 
-      let definition = new Definition(Foo)
+      const definition = new Definition(Foo)
       definition.lazy = true
       container.setDefinition(fooId, definition)
 
@@ -1129,7 +1129,7 @@ describe('ContainerBuilder', () => {
         class FooPass {}
 
         // Act.
-        let actual = () => container.addCompilerPass(new FooPass())
+        const actual = () => container.addCompilerPass(new FooPass())
 
         // Assert.
         return assert.throw(actual, Error,
@@ -1170,14 +1170,14 @@ describe('ContainerBuilder', () => {
 
     it('should throw an exception if the pass config type is wrong', () => {
       // Arrange.
-      let type = 'foo'
+      const type = 'foo'
 
       class FooPass {
         process () {}
       }
 
       // Act.
-      let actual = () => container.addCompilerPass(new FooPass(), type)
+      const actual = () => container.addCompilerPass(new FooPass(), type)
 
       // Assert.
       return assert.throw(actual, Error,
@@ -1188,8 +1188,8 @@ describe('ContainerBuilder', () => {
   describe('setAlias', () => {
     it('should return the same service type using aliasing', () => {
       // Arrange.
-      let fooId = 'service.foo'
-      let aliasId = 'foo'
+      const fooId = 'service.foo'
+      const aliasId = 'foo'
 
       class Foo {}
 
@@ -1197,7 +1197,7 @@ describe('ContainerBuilder', () => {
 
       // Act.
       container.setAlias(aliasId, fooId)
-      let actual = container.get(aliasId)
+      const actual = container.get(aliasId)
 
       // Assert.
       return assert.instanceOf(actual, Foo)
@@ -1205,17 +1205,17 @@ describe('ContainerBuilder', () => {
 
     it('should return the same service instance using aliasing', () => {
       // Arrange.
-      let fooId = 'service.foo'
-      let aliasId = 'foo'
+      const fooId = 'service.foo'
+      const aliasId = 'foo'
 
       class Foo {}
 
       container.register(fooId, Foo)
       container.setAlias(aliasId, fooId)
-      let expected = container.get(fooId)
+      const expected = container.get(fooId)
 
       // Act.
-      let actual = container.get(aliasId)
+      const actual = container.get(aliasId)
 
       // Assert.
       return assert.strictEqual(actual, expected)
@@ -1227,10 +1227,10 @@ describe('ContainerBuilder', () => {
       'should throw an exception if the sent definition argument is not a Definition',
       () => {
         // Arrange.
-        let definition = 'foo'
+        const definition = 'foo'
 
         // Act.
-        let actual = () => container.setDefinition('bar', definition)
+        const actual = () => container.setDefinition('bar', definition)
 
         // Assert.
         return assert.throw(actual, Error,
@@ -1242,8 +1242,8 @@ describe('ContainerBuilder', () => {
         // Arrange.
         class Foo {}
 
-        let definition = new Definition(Foo)
-        let id = 'foo'
+        const definition = new Definition(Foo)
+        const id = 'foo'
 
         // Act.
         container.setDefinition(id, definition)
@@ -1262,13 +1262,13 @@ describe('ContainerBuilder', () => {
           }
         }
 
-        let id = 'foo'
-        let stringValue = 'foo'
-        let definition = new Definition(Foo, [stringValue])
+        const id = 'foo'
+        const stringValue = 'foo'
+        const definition = new Definition(Foo, [stringValue])
 
         // Act.
         container.setDefinition(id, definition)
-        let actual = container.get(id).string
+        const actual = container.get(id).string
 
         // Assert.
         return assert.strictEqual(actual, stringValue)
@@ -1280,14 +1280,14 @@ describe('ContainerBuilder', () => {
       // Arrange.
       class Foo {}
 
-      let id = 'foo'
-      let tag = 'fooTag'
-      let definition = new Definition(Foo)
+      const id = 'foo'
+      const tag = 'fooTag'
+      const definition = new Definition(Foo)
       definition.addTag(tag)
       container.setDefinition(id, definition)
 
       // Act.
-      let actual = container.findTaggedServiceIds(tag)
+      const actual = container.findTaggedServiceIds(tag)
 
       // Assert.
       return assert.lengthOf(actual, 1)
@@ -1297,15 +1297,15 @@ describe('ContainerBuilder', () => {
       // Arrange.
       class Foo {}
 
-      let id = 'foo'
-      let fooTag = 'fooTag'
-      let barTag = 'barTag'
-      let definition = new Definition(Foo)
+      const id = 'foo'
+      const fooTag = 'fooTag'
+      const barTag = 'barTag'
+      const definition = new Definition(Foo)
       definition.addTag(fooTag).addTag(barTag)
       container.setDefinition(id, definition)
 
       // Act.
-      let actual = container.findTaggedServiceIds(barTag)
+      const actual = container.findTaggedServiceIds(barTag)
 
       // Assert.
       return assert.lengthOf(actual, 1)
@@ -1316,18 +1316,18 @@ describe('ContainerBuilder', () => {
       const tagName = 'listener'
       const eventName = 'event'
       const eventValue = 'prePersist'
-      let definition = new Definition(class Foo {})
-      let attributes = new Map()
+      const definition = new Definition(class Foo {})
+      const attributes = new Map()
       attributes.set(eventName, eventValue)
       definition.addTag(tagName, attributes)
       container.setDefinition('app.listener', definition)
 
       // Act.
-      let actual = container.findTaggedServiceIds(tagName)
+      const actual = container.findTaggedServiceIds(tagName)
 
       // Assert.
-      for (let definition of actual.values()) {
-        for (let tag of definition.tags) {
+      for (const definition of actual.values()) {
+        for (const tag of definition.tags) {
           assert.strictEqual(eventValue, tag.attributes.get(eventName))
         }
       }
@@ -1337,8 +1337,8 @@ describe('ContainerBuilder', () => {
   describe('setParameter', () => {
     it('should set a boolean parameter properly', () => {
       // Arrange.
-      let key = 'foo.bar'
-      let value = true
+      const key = 'foo.bar'
+      const value = true
 
       // Act.
       container.setParameter(key, value)
@@ -1349,8 +1349,8 @@ describe('ContainerBuilder', () => {
 
     it('should set a string parameter properly', () => {
       // Arrange.
-      let key = 'foo.bar'
-      let value = 'foobar'
+      const key = 'foo.bar'
+      const value = 'foobar'
 
       // Act.
       container.setParameter(key, value)
@@ -1361,8 +1361,8 @@ describe('ContainerBuilder', () => {
 
     it('should set an array parameter properly', () => {
       // Arrange.
-      let key = 'foo.bar'
-      let value = ['foo', 'bar']
+      const key = 'foo.bar'
+      const value = ['foo', 'bar']
 
       // Act.
       container.setParameter(key, value)
@@ -1376,11 +1376,11 @@ describe('ContainerBuilder', () => {
         // Arrange.
         class InvalidParameter {}
 
-        let key = 'foo.bar'
-        let value = InvalidParameter
+        const key = 'foo.bar'
+        const value = InvalidParameter
 
         // Act.
-        let actual = () => container.setParameter(key, value)
+        const actual = () => container.setParameter(key, value)
 
         // Assert.
         return assert.throw(actual, TypeError)
@@ -1390,12 +1390,12 @@ describe('ContainerBuilder', () => {
   describe('getParameter', () => {
     it('should get a parameter properly', () => {
       // Arrange.
-      let key = 'foo.bar'
-      let value = 'foobar'
+      const key = 'foo.bar'
+      const value = 'foobar'
       container.setParameter(key, value)
 
       // Act.
-      let actual = container.getParameter(key)
+      const actual = container.getParameter(key)
 
       // Assert.
       assert.strictEqual(actual, value)
@@ -1405,12 +1405,12 @@ describe('ContainerBuilder', () => {
   describe('hasParameter', () => {
     it('should return true if the parameters was previously set', () => {
       // Arrange.
-      let key = 'foo.bar'
-      let value = 'foobar'
+      const key = 'foo.bar'
+      const value = 'foobar'
       container.setParameter(key, value)
 
       // Act.
-      let actual = container.hasParameter(key)
+      const actual = container.hasParameter(key)
 
       // Assert.
       assert.isTrue(actual)
@@ -1420,7 +1420,7 @@ describe('ContainerBuilder', () => {
       // Arrange not needed.
 
       // Act.
-      let actual = container.hasParameter('foo')
+      const actual = container.hasParameter('foo')
 
       // Assert.
       assert.isFalse(actual)
@@ -1432,12 +1432,12 @@ describe('ContainerBuilder', () => {
       // Arrange.
       class Foo {}
 
-      let key = 'foo'
-      let definition = new Definition(Foo)
+      const key = 'foo'
+      const definition = new Definition(Foo)
       container.setDefinition(key, definition)
 
       // Act.
-      let actual = container.hasDefinition(key)
+      const actual = container.hasDefinition(key)
 
       // Assert.
       return assert.isTrue(actual)
@@ -1445,10 +1445,10 @@ describe('ContainerBuilder', () => {
 
     it('should return false if the definition if was not properly set', () => {
       // Arrange.
-      let key = 'foo'
+      const key = 'foo'
 
       // Act.
-      let actual = container.hasDefinition(key)
+      const actual = container.hasDefinition(key)
 
       // Assert.
       return assert.isFalse(actual)
@@ -1458,14 +1458,14 @@ describe('ContainerBuilder', () => {
       // Arrange.
       class Foo {}
 
-      let key = 'foo'
-      let keyAlias = 'f'
-      let definition = new Definition(Foo)
+      const key = 'foo'
+      const keyAlias = 'f'
+      const definition = new Definition(Foo)
       container.setDefinition(key, definition)
       container.setAlias(keyAlias, key)
 
       // Act.
-      let actual = container.hasDefinition(keyAlias)
+      const actual = container.hasDefinition(keyAlias)
 
       // Assert.
       return assert.isFalse(actual)
@@ -1477,14 +1477,14 @@ describe('ContainerBuilder', () => {
       // Arrange.
       class Foo {}
 
-      let key = 'foo'
-      let keyAlias = 'f'
-      let definition = new Definition(Foo)
+      const key = 'foo'
+      const keyAlias = 'f'
+      const definition = new Definition(Foo)
       container.setDefinition(key, definition)
       container.setAlias(keyAlias, key)
 
       // Act.
-      let actual = container.has(keyAlias)
+      const actual = container.has(keyAlias)
 
       // Assert.
       return assert.isTrue(actual)
@@ -1492,11 +1492,11 @@ describe('ContainerBuilder', () => {
 
     it('should return true if a parameter was properly set', () => {
       // Arrange.
-      let key = 'foo'
+      const key = 'foo'
       container.setParameter(key, 'bar')
 
       // Act.
-      let actual = container.has(key)
+      const actual = container.has(key)
 
       // Assert.
       return assert.isTrue(actual)
@@ -1504,10 +1504,10 @@ describe('ContainerBuilder', () => {
 
     it('should return true if a parameter was properly set', () => {
       // Arrange.
-      let key = 'foo'
+      const key = 'foo'
 
       // Act.
-      let actual = container.has(key)
+      const actual = container.has(key)
 
       // Assert.
       return assert.isFalse(actual)
@@ -1519,12 +1519,12 @@ describe('ContainerBuilder', () => {
       // Arrange.
       class Foo {}
 
-      let key = 'foo'
-      let definition = new Definition(Foo)
+      const key = 'foo'
+      const definition = new Definition(Foo)
       container.setDefinition(key, definition)
 
       // Act.
-      let actual = container.getDefinition(key)
+      const actual = container.getDefinition(key)
 
       // Assert.
       return assert.instanceOf(actual, Definition)
@@ -1534,14 +1534,14 @@ describe('ContainerBuilder', () => {
       // Arrange.
       class Foo {}
 
-      let key = 'foo'
-      let keyAlias = 'f'
-      let definition = new Definition(Foo)
+      const key = 'foo'
+      const keyAlias = 'f'
+      const definition = new Definition(Foo)
       container.setDefinition(key, definition)
       container.setAlias(keyAlias, key)
 
       // Act.
-      let actual = () => container.getDefinition(keyAlias)
+      const actual = () => container.getDefinition(keyAlias)
 
       // Assert.
       return assert.throw(actual, Error, `${keyAlias} definition not found`)
@@ -1549,10 +1549,10 @@ describe('ContainerBuilder', () => {
 
     it('should throw an exception if the definition was not set', () => {
       // Arrange.
-      let key = 'foo'
+      const key = 'foo'
 
       // Act.
-      let actual = () => container.getDefinition(key)
+      const actual = () => container.getDefinition(key)
 
       // Assert.
       return assert.throw(actual, Error, `${key} definition not found`)
@@ -1564,14 +1564,14 @@ describe('ContainerBuilder', () => {
       // Arrange.
       class Foo {}
 
-      let key = 'foo'
-      let keyAlias = 'f'
-      let definition = new Definition(Foo)
+      const key = 'foo'
+      const keyAlias = 'f'
+      const definition = new Definition(Foo)
       container.setDefinition(key, definition)
       container.setAlias(keyAlias, key)
 
       // Act.
-      let actual = container.findDefinition(keyAlias)
+      const actual = container.findDefinition(keyAlias)
 
       // Assert.
       return assert.instanceOf(actual, Definition)
@@ -1579,10 +1579,10 @@ describe('ContainerBuilder', () => {
 
     it('should throw an exception if a definition was not set properly', () => {
       // Arrange.
-      let key = 'foo'
+      const key = 'foo'
 
       // Act.
-      let actual = () => container.findDefinition(key)
+      const actual = () => container.findDefinition(key)
 
       // Assert.
       return assert.throw(actual, Error, `${key} definition not found`)
@@ -1592,11 +1592,11 @@ describe('ContainerBuilder', () => {
   describe('removeDefinition', () => {
     it('should remove an already registered definition', () => {
       // Arrange.
-      let key = 'foo'
+      const key = 'foo'
 
       class Foo {}
 
-      let definition = new Definition(Foo)
+      const definition = new Definition(Foo)
       container.setDefinition(key, definition)
 
       // Act.
@@ -1609,10 +1609,10 @@ describe('ContainerBuilder', () => {
     it('should throw an exception if we try to remove an undefined definition',
       () => {
         // Arrange.
-        let key = 'foo'
+        const key = 'foo'
 
         // Act.
-        let actual = () => container.removeDefinition(key)
+        const actual = () => container.removeDefinition(key)
 
         // Assert.
         return assert.throw(actual, Error, `${key} definition not found`)
@@ -1627,7 +1627,7 @@ describe('ContainerBuilder', () => {
         class FooExtension {}
 
         // Act.
-        let actual = () => container.registerExtension(new FooExtension())
+        const actual = () => container.registerExtension(new FooExtension())
 
         // Assert.
         assert.throw(actual, Error,
@@ -1649,7 +1649,7 @@ describe('ContainerBuilder', () => {
   describe('set', () => {
     it('should set directly an instance in to the container', () => {
       // Arrange.
-      let syntheticServiceName = 'foo'
+      const syntheticServiceName = 'foo'
 
       class SyntheticService {}
 

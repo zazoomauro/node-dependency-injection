@@ -7,12 +7,12 @@ import Bar from '../../../Resources/bar'
 import FooBar from '../../../Resources/foobar'
 import path from 'path'
 
-let assert = chai.assert
+const assert = chai.assert
 
 describe('JsFileLoader', () => {
   let loader
   let container
-  let logger = { warn: () => {} }
+  const logger = { warn: () => {} }
 
   describe('load', () => {
     beforeEach(() => {
@@ -23,10 +23,10 @@ describe('JsFileLoader', () => {
 
     it('should throw an exception if the js file not exists', () => {
       // Arrange.
-      let file = 'fake-filePath.js'
+      const file = 'fake-filePath.js'
 
       // Act.
-      let actual = () => loader.load(file)
+      const actual = () => loader.load(file)
 
       // Assert.
       return assert.throw(actual, Error, `File ${file} not found`)
@@ -34,22 +34,22 @@ describe('JsFileLoader', () => {
 
     it('should load a simple container', () => {
       // Arrange.
-      let serviceName = 'foo'
-      let aliasName = 'f'
-      let tagName = 'fooTag'
-      let stringParameterName = 'fooParameter'
-      let stringExpectedParameter = 'barValue'
-      let arrayParameterName = 'barParameter'
-      let stringPropertyExpected = 'fooProperty'
+      const serviceName = 'foo'
+      const aliasName = 'f'
+      const tagName = 'fooTag'
+      const stringParameterName = 'fooParameter'
+      const stringExpectedParameter = 'barValue'
+      const arrayParameterName = 'barParameter'
+      const stringPropertyExpected = 'fooProperty'
 
       // Act.
       loader.load(
         path.join(__dirname, '/../../../Resources/config/fake-services.js'))
-      let service = container.get(serviceName)
-      let aliasService = container.get(aliasName)
-      let taggedServices = container.findTaggedServiceIds(tagName)
-      let stringActualParameter = container.getParameter(stringParameterName)
-      let arrayActualParameter = container.getParameter(arrayParameterName)
+      const service = container.get(serviceName)
+      const aliasService = container.get(aliasName)
+      const taggedServices = container.findTaggedServiceIds(tagName)
+      const stringActualParameter = container.getParameter(stringParameterName)
+      const arrayActualParameter = container.getParameter(arrayParameterName)
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -77,12 +77,12 @@ describe('JsFileLoader', () => {
 
     it('should load multiple service files', () => {
       // Arrange.
-      let serviceName = 'foo'
+      const serviceName = 'foo'
 
       // Act.
       loader.load(
         path.join(__dirname, '/../../../Resources/config/fake-imports.js'))
-      let service = container.get(serviceName)
+      const service = container.get(serviceName)
 
       // Assert.
       return assert.instanceOf(service, Foo)
@@ -98,15 +98,15 @@ describe('JsFileLoader', () => {
 
     it('should load multiple service files in subfolder', () => {
       // Arrange.
-      let barServiceName = 'bar'
-      let bazServiceName = 'baz'
-      let configPath = path.join(__dirname,
+      const barServiceName = 'bar'
+      const bazServiceName = 'baz'
+      const configPath = path.join(__dirname,
         '/../../../Resources/config/fake-import-subfolder.js')
 
       // Act.
       loader.load(configPath)
-      let bar = container.get(barServiceName)
-      let baz = container.get(bazServiceName)
+      const bar = container.get(barServiceName)
+      const baz = container.get(bazServiceName)
 
       // Assert.
       assert.instanceOf(bar, FooBar)

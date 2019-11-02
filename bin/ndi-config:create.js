@@ -33,7 +33,7 @@ File format: ${chalk.green(program.format)}
     if (fileManager.createConfiguration(dir, program.name)) {
       console.log(chalk.bold.green('Configuration file created successfully!'))
     } else {
-      console.error(chalk.bold.red(`Wait! Error creating configuration file!`))
+      console.error(chalk.bold.red('Wait! Error creating configuration file!'))
     }
   })
   .parse(process.argv)

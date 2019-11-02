@@ -2,16 +2,16 @@ import { describe, it } from 'mocha'
 import chai from 'chai'
 import Reference from '../../../lib/Reference'
 
-let assert = chai.assert
+const assert = chai.assert
 
 describe('Reference', () => {
   describe('id', () => {
     it('should get the right constructor id', () => {
       // Arrange.
-      let id = 'foobar'
+      const id = 'foobar'
 
       // Act.
-      let actual = new Reference(id)
+      const actual = new Reference(id)
 
       // Assert.
       assert.strictEqual(actual.id, id)
@@ -21,10 +21,10 @@ describe('Reference', () => {
   describe('nullable', () => {
     it('should get the right constructor id', () => {
       // Arrange.
-      let nullable = true
+      const nullable = true
 
       // Act.
-      let actual = new Reference('foo', nullable)
+      const actual = new Reference('foo', nullable)
 
       // Assert.
       assert.isTrue(actual.nullable)

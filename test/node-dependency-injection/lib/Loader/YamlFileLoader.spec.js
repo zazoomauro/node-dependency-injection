@@ -16,14 +16,14 @@ import DecoratingMailerTwo from '../../../Resources/DecoratingMailerTwo'
 import ChildClass from '../../../Resources/abstract/ChildClass'
 import Service from '../../../Resources/abstract/Service'
 
-let assert = chai.assert
+const assert = chai.assert
 
 describe('YamlFileLoader', () => {
   let loader
   let loaderSelfReference
   let container
   let containerSelfReference
-  let logger = { warn: () => {} }
+  const logger = { warn: () => {} }
 
   describe('load', () => {
     beforeEach(() => {
@@ -85,26 +85,26 @@ describe('YamlFileLoader', () => {
 
       // Assert.
       assert.throw(throwAbstractServiceException, Error,
-        `The service app.base_class is abstract`)
+        'The service app.base_class is abstract')
       assert.instanceOf(childClass, ChildClass)
       assert.instanceOf(childClass.service, Service)
       assert.throw(throwNotAbstractServiceException, Error,
-        `The parent service app.failure.base_class is not abstract`)
+        'The parent service app.failure.base_class is not abstract')
     })
 
     it('should throw an exception if the yaml file not exists', () => {
       // Arrange.
-      let file = 'fake-filePath.yml'
+      const file = 'fake-filePath.yml'
 
       // Act.
-      let actual = () => loader.load(file)
+      const actual = () => loader.load(file)
 
       // Assert.
       return assert.throw(actual, Error, `Service file ${file} not found`)
     })
 
     it('should throw an exception if the yaml file had invalid syntax', () => {
-      let actual = () => {
+      const actual = () => {
         loader.load(
           path.join(__dirname,
             '/../../../Resources/config/invalid-yaml-syntax.yml')
@@ -116,49 +116,49 @@ describe('YamlFileLoader', () => {
 
     it('should load a simple container', () => {
       // Arrange.
-      let serviceName = 'foo'
-      let aliasName = 'f'
-      let tagName = 'fooTag'
-      let stringParameterName = 'fooParameter'
-      let stringExpectedParameter = 'barValue'
-      let arrayParameterName = 'barParameter'
-      let stringPropertyExpected = 'fooProperty'
+      const serviceName = 'foo'
+      const aliasName = 'f'
+      const tagName = 'fooTag'
+      const stringParameterName = 'fooParameter'
+      const stringExpectedParameter = 'barValue'
+      const arrayParameterName = 'barParameter'
+      const stringPropertyExpected = 'fooProperty'
 
       // Act.
       loader.load(
         path.join(__dirname, '/../../../Resources/config/fake-services.yml'))
       container.compile()
-      let service = container.get(serviceName)
-      let aliasService = container.get(aliasName)
-      let taggedServices = container.findTaggedServiceIds(tagName)
-      let stringActualParameter = container.getParameter(stringParameterName)
-      let arrayActualParameter = container.getParameter(arrayParameterName)
-      let fromFactoryWithoutArgs = container.get('from_factory_without_args')
-      let fromFactoryWithArgs = container.get('from_factory_with_args')
-      let fromFactoryWithReferenceWithoutArgs = container.get(
+      const service = container.get(serviceName)
+      const aliasService = container.get(aliasName)
+      const taggedServices = container.findTaggedServiceIds(tagName)
+      const stringActualParameter = container.getParameter(stringParameterName)
+      const arrayActualParameter = container.getParameter(arrayParameterName)
+      const fromFactoryWithoutArgs = container.get('from_factory_without_args')
+      const fromFactoryWithArgs = container.get('from_factory_with_args')
+      const fromFactoryWithReferenceWithoutArgs = container.get(
         'from_factory_with_reference_without_args')
-      let fromFactoryWithReferenceWithArgs = container.get(
+      const fromFactoryWithReferenceWithArgs = container.get(
         'from_factory_with_reference_with_args')
-      let fromFactoryWithReferenceWithServiceArg = container.get(
+      const fromFactoryWithReferenceWithServiceArg = container.get(
         'from_factory_with_reference_with_service_arg')
-      let serviceMissingDependencies = container.get(
+      const serviceMissingDependencies = container.get(
         'service_missing_dependencies')
-      let serviceWithDependencies = container.get('service_with_dependencies')
-      let serviceMissingDependenciesCall = container.get(
+      const serviceWithDependencies = container.get('service_with_dependencies')
+      const serviceMissingDependenciesCall = container.get(
         'service_missing_dependencies_call')
-      let serviceWithDependenciesCall = container.get(
+      const serviceWithDependenciesCall = container.get(
         'service_with_dependencies_call')
-      let fooWithTrue = container.get('foo_with_true')
-      let fooWithFalse = container.get('foo_with_false')
-      let throwPrivateServiceException = () => container.get('private_service')
-      let serviceUsingPrivateService = container.get(
+      const fooWithTrue = container.get('foo_with_true')
+      const fooWithFalse = container.get('foo_with_false')
+      const throwPrivateServiceException = () => container.get('private_service')
+      const serviceUsingPrivateService = container.get(
         'service_using_private_service')
-      let listener = container.get('app.listener')
-      let mailer = container.get('app.mailer')
-      let mailerInner = container.get('app.decorating_mailer.inner')
-      let serviceWithObjectParameter = container.get(
+      const listener = container.get('app.listener')
+      const mailer = container.get('app.mailer')
+      const mailerInner = container.get('app.decorating_mailer.inner')
+      const serviceWithObjectParameter = container.get(
         'service_with_object_parameter')
-      let decorateAppMailer = container.get('decorate.app.mailer')
+      const decorateAppMailer = container.get('decorate.app.mailer')
 
       // Assert.
       assert.instanceOf(service, Foo)
@@ -188,7 +188,7 @@ describe('YamlFileLoader', () => {
       assert.isTrue(fooWithTrue.param)
       assert.isFalse(fooWithFalse.parameter)
       assert.throw(throwPrivateServiceException, Error,
-        `The service private_service is private`)
+        'The service private_service is private')
       assert.instanceOf(serviceUsingPrivateService.bar, Foo)
       assert.instanceOf(listener, Listener)
       assert.instanceOf(mailer, DecoratingMailer)
@@ -202,13 +202,13 @@ describe('YamlFileLoader', () => {
 
     it('should load properly a not shared service', () => {
       // Arrange.
-      let notSharedServiceName = 'not_shared_service'
+      const notSharedServiceName = 'not_shared_service'
 
       // Act.
       loader.load(
         path.join(__dirname, '/../../../Resources/config/fake-services.yml'))
-      let actual = container.get(notSharedServiceName)
-      let expected = container.get(notSharedServiceName)
+      const actual = container.get(notSharedServiceName)
+      const expected = container.get(notSharedServiceName)
 
       // Assert.
       return assert.notStrictEqual(actual, expected)
@@ -216,14 +216,14 @@ describe('YamlFileLoader', () => {
 
     it('should load properly synthetic service', () => {
       // Arrange.
-      let syntheticServiceName = 'synthetic_service'
-      let syntheticInstance = new SyntheticService()
+      const syntheticServiceName = 'synthetic_service'
+      const syntheticInstance = new SyntheticService()
       container.set(syntheticServiceName, syntheticInstance)
 
       // Act.
       loader.load(
         path.join(__dirname, '/../../../Resources/config/fake-services.yml'))
-      let syntheticService = container.get(syntheticServiceName)
+      const syntheticService = container.get(syntheticServiceName)
 
       // Assert.
       return assert.instanceOf(syntheticService, SyntheticService)
@@ -239,14 +239,14 @@ describe('YamlFileLoader', () => {
 
     it('should load multiple service files', () => {
       // Arrange.
-      let serviceName1 = 'foo'
-      let serviceName2 = 'foo_manager'
+      const serviceName1 = 'foo'
+      const serviceName2 = 'foo_manager'
 
       // Act.
       loader.load(
         path.join(__dirname, '/../../../Resources/config/fake-imports.yml'))
-      let service1 = container.get(serviceName1)
-      let service2 = container.get(serviceName2)
+      const service1 = container.get(serviceName1)
+      const service2 = container.get(serviceName2)
 
       // Assert.
       assert.instanceOf(service1, Foo)
@@ -264,15 +264,15 @@ describe('YamlFileLoader', () => {
 
     it('should load multiple service files in subfolder', () => {
       // Arrange.
-      let barServiceName = 'bar'
-      let bazServiceName = 'baz'
-      let configPath = path.join(__dirname,
+      const barServiceName = 'bar'
+      const bazServiceName = 'baz'
+      const configPath = path.join(__dirname,
         '/../../../Resources/config/fake-import-subfolder.yml')
 
       // Act.
       loader.load(configPath)
-      let bar = container.get(barServiceName)
-      let baz = container.get(bazServiceName)
+      const bar = container.get(barServiceName)
+      const baz = container.get(bazServiceName)
 
       // Assert.
       assert.instanceOf(bar, FooBar)
@@ -290,14 +290,14 @@ describe('YamlFileLoader', () => {
 
     it('should load instance of service properly', () => {
       // Arrange.
-      let configPath = path.join(__dirname,
+      const configPath = path.join(__dirname,
         '/../../../Resources/config/defaultdir.yaml')
 
       // Act.
       loader.load(configPath)
-      let mailer = container.get('mailer')
-      let service = container.get('app.service')
-      let child = container.get('app.child_class')
+      const mailer = container.get('mailer')
+      const service = container.get('app.service')
+      const child = container.get('app.child_class')
 
       // Assert.
       assert.instanceOf(child, ChildClass)
