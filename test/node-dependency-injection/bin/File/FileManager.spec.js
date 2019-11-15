@@ -2,7 +2,7 @@ import { describe, it, beforeEach, afterEach } from 'mocha'
 import chai from 'chai'
 import path from 'path'
 import sinon from 'sinon'
-import fsExtra from 'fs-extra'
+import fs from 'fs'
 import jsYaml from 'js-yaml'
 import YamlAdapter from '../../../../bin/Services/File/YamlAdapter'
 import FileManager from '../../../../bin/Services/File/FileManager'
@@ -16,7 +16,7 @@ describe('FileManager', () => {
     let fsStub
 
     beforeEach(() => {
-      fsStub = sinon.stub(fsExtra, 'writeFileSync')
+      fsStub = sinon.stub(fs, 'writeFileSync')
     })
 
     afterEach(() => {
@@ -27,7 +27,7 @@ describe('FileManager', () => {
       // Arrange.
       fsStub.returns(undefined)
       const adapter = new YamlAdapter(jsYaml)
-      const fileManager = new FileManager(adapter, fsExtra, path)
+      const fileManager = new FileManager(adapter, fs, path)
       const dir = '/foo/bar'
       const name = 'foobar'
 
@@ -42,7 +42,7 @@ describe('FileManager', () => {
       // Arrange.
       fsStub.throws(new Error())
       const adapter = new YamlAdapter(jsYaml)
-      const fileManager = new FileManager(adapter, fsExtra, path)
+      const fileManager = new FileManager(adapter, fs, path)
       const dir = '/foo/bar'
       const name = 'foobar'
 
@@ -57,7 +57,7 @@ describe('FileManager', () => {
       // Arrange.
       fsStub.returns(undefined)
       const adapter = new JsonAdapter()
-      const fileManager = new FileManager(adapter, fsExtra, path)
+      const fileManager = new FileManager(adapter, fs, path)
       const dir = '/foo/bar'
       const name = 'foobar'
 
@@ -72,7 +72,7 @@ describe('FileManager', () => {
       // Arrange.
       fsStub.throws(new Error())
       const adapter = new JsonAdapter()
-      const fileManager = new FileManager(adapter, fsExtra, path)
+      const fileManager = new FileManager(adapter, fs, path)
       const dir = '/foo/bar'
       const name = 'foobar'
 
@@ -87,7 +87,7 @@ describe('FileManager', () => {
       // Arrange.
       fsStub.returns(undefined)
       const adapter = new JsAdapter()
-      const fileManager = new FileManager(adapter, fsExtra, path)
+      const fileManager = new FileManager(adapter, fs, path)
       const dir = '/foo/bar'
       const name = 'foobar'
 
@@ -102,7 +102,7 @@ describe('FileManager', () => {
       // Arrange.
       fsStub.throws(new Error())
       const adapter = new JsAdapter()
-      const fileManager = new FileManager(adapter, fsExtra, path)
+      const fileManager = new FileManager(adapter, fs, path)
       const dir = '/foo/bar'
       const name = 'foobar'
 
@@ -118,7 +118,7 @@ describe('FileManager', () => {
       // Arrange.
       fsStub.returns(undefined)
       const adapter = new JsAdapter()
-      const fileManager = new FileManager(adapter, fsExtra, path)
+      const fileManager = new FileManager(adapter, fs, path)
       const dir = '/foo/bar'
 
       // Act.

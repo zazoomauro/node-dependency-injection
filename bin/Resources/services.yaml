@@ -11,12 +11,12 @@ services:
 
   ndi.file.file_manager.yaml:
     class: ./../Services/File/FileManager
-    arguments: ['@ndi.file.yaml_adapter', '%fs-extra', '%path']
+    arguments: ['@ndi.file.yaml_adapter', '%fs', '%path']
 
   ndi.file.file_manager.js:
     class: ./../Services/File/FileManager
-    arguments: ['@ndi.file.js_adapter', '%fs-extra', '%path']
+    arguments: ['@ndi.file.js_adapter', '%fs', '%path']
 
   ndi.file.file_manager.json:
     class: ./../Services/File/FileManager
-    arguments: ['@ndi.file.json_adapter', '%fs-extra', '%path']
+    arguments: ['@ndi.file.json_adapter', '%fs', '%path']

@@ -57,7 +57,7 @@ describe('JsonFileLoader', () => {
       assert.instanceOf(service, Foo)
       assert.instanceOf(service.bar, Bar)
       assert.instanceOf(service.bar.barMethod, FooBar)
-      assert.isFunction(service.fs.copy)
+      assert.isFunction(service.fs.writeFileSync)
       assert.strictEqual(service.param, 'foo-bar')
       assert.strictEqual(aliasService, service)
       assert.lengthOf(taggedServices, 2)

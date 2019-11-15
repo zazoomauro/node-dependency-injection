@@ -10,7 +10,7 @@ parameters:
 services:
     foo:
         class: ./../foo
-        arguments: ['@bar', '%fs-extra', 'foo-bar', '%fooParameter%']
+        arguments: ['@bar', '%fs', 'foo-bar', '%fooParameter%']
         tags:
             - {name: 'fooTag'}
         properties:
@@ -91,15 +91,15 @@ services:
 
     foo_with_true:
         class: ./../foo
-        arguments: ['@bar', '%fs-extra', true, '%true%']
+        arguments: ['@bar', '%fs', true, '%true%']
 
     foo_with_false:
         class: ./../foo
-        arguments: ['@bar', '%fs-extra%', 'not', '%param_false%']
+        arguments: ['@bar', '%fs%', 'not', '%param_false%']
 
     private_service:
         class: ./../foo
-        arguments: ['@bar', '%fs-extra%']
+        arguments: ['@bar', '%fs%']
         public: false
 
     service_using_private_service:

@@ -16,7 +16,7 @@
       "class": "./../foo",
       "arguments": [
         "@bar",
-        "%fs-extra",
+        "%fs",
         "foo-bar",
         "%fooParameter%"
       ],

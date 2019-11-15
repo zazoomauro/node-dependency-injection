@@ -48,7 +48,7 @@
     "chalk": "^3.0.0",
     "commander": "^4.0.0-1",
     "console.table": "^0.10.0",
-    "fs-extra": "^8.1.0",
+    "fs": "^0.0.2",
     "js-yaml": "^3.13.1"
   },
   "devDependencies": {
