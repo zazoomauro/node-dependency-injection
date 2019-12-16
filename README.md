@@ -121,6 +121,7 @@ List of features
 - Synthetic Services
 - Non Shared Services
 - Parent and Abstract Services
+- Services from named and default exports
 - Custom Logger
 - Container as Service
 
