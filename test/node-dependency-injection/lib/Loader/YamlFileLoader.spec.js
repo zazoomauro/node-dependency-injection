@@ -314,7 +314,7 @@ describe('YamlFileLoader', () => {
       container.compile()
     })
 
-    it.only('should load instance of service properly', () => {
+    it('should load instance of service properly', () => {
       // Arrange.
       const configPath = path.join(
         __dirname,
