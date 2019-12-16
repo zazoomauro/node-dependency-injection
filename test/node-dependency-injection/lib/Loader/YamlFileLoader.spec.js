@@ -16,6 +16,7 @@ import DecoratingMailerTwo from '../../../Resources/DecoratingMailerTwo'
 import ChildClass from '../../../Resources/abstract/ChildClass'
 import Service from '../../../Resources/abstract/Service'
 import { ClassOne, ClassTwo } from '../../../Resources/multipleExports'
+import { NamedService } from '../../../Resources/NamedService'
 
 const assert = chai.assert
 
@@ -228,6 +229,19 @@ describe('YamlFileLoader', () => {
 
       // Assert.
       return assert.instanceOf(syntheticService, SyntheticService)
+    })
+
+    it('should load properly service without default export', () => {
+      // Arrange.
+      const serviceName = 'named'
+
+      // Act.
+      loader.load(
+        path.join(__dirname, '/../../../Resources/config/named-service.yml'))
+      const service = container.get(serviceName)
+
+      // Assert.
+      return assert.instanceOf(service, NamedService)
     })
   })
 
