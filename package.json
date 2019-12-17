@@ -1,6 +1,6 @@
 {
   "name": "node-dependency-injection",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "description": "The NodeDependencyInjection component allows you to standardize and centralize the way objects are constructed in your application.",
   "main": "dist/lib/index.js",
   "directories": {
