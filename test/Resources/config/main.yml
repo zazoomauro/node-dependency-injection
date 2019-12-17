@@ -1,0 +1,7 @@
+services:
+  one:
+    class: ./../multipleExports
+    main: ClassOne
+  two:
+    class: ./../multipleExports
+    main: ClassTwo

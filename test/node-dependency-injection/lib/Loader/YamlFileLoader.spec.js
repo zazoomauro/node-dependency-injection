@@ -15,6 +15,8 @@ import Mailer from '../../../Resources/Mailer'
 import DecoratingMailerTwo from '../../../Resources/DecoratingMailerTwo'
 import ChildClass from '../../../Resources/abstract/ChildClass'
 import Service from '../../../Resources/abstract/Service'
+import { ClassOne, ClassTwo } from '../../../Resources/multipleExports'
+import { NamedService } from '../../../Resources/NamedService'
 
 const assert = chai.assert
 
@@ -23,7 +25,7 @@ describe('YamlFileLoader', () => {
   let loaderSelfReference
   let container
   let containerSelfReference
-  const logger = { warn: () => {} }
+  const logger = { warn: () => { } }
 
   describe('load', () => {
     beforeEach(() => {
@@ -228,6 +230,19 @@ describe('YamlFileLoader', () => {
       // Assert.
       return assert.instanceOf(syntheticService, SyntheticService)
     })
+
+    it('should load properly service without default export', () => {
+      // Arrange.
+      const serviceName = 'named'
+
+      // Act.
+      loader.load(
+        path.join(__dirname, '/../../../Resources/config/named-service.yml'))
+      const service = container.get(serviceName)
+
+      // Assert.
+      return assert.instanceOf(service, NamedService)
+    })
   })
 
   describe('load multiple imports', () => {
@@ -303,6 +318,31 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(child, ChildClass)
       assert.instanceOf(service, Service)
       return assert.instanceOf(mailer, Mailer)
+    })
+  })
+
+  describe('load with main', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new YamlFileLoader(container)
+      container.compile()
+    })
+
+    it('should load instance of service properly', () => {
+      // Arrange.
+      const configPath = path.join(
+        __dirname,
+        '/../../../Resources/config/main.yml'
+      )
+
+      // Act.
+      loader.load(configPath)
+      const one = container.get('one')
+      const two = container.get('two')
+
+      // Assert.
+      assert.instanceOf(one, ClassOne)
+      return assert.instanceOf(two, ClassTwo)
     })
   })
 })
