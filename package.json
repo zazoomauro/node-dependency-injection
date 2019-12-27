@@ -46,24 +46,24 @@
   "homepage": "https://github.com/zazoomauro/node-dependency-injection#readme",
   "dependencies": {
     "chalk": "^3.0.0",
-    "commander": "^4.0.0-1",
+    "commander": "^4.0.1",
     "console.table": "^0.10.0",
     "fs": "^0.0.2",
     "js-yaml": "^3.13.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.4",
-    "@babel/core": "^7.6.4",
-    "@babel/preset-env": "^7.6.3",
-    "@babel/register": "^7.6.2",
-    "babel-plugin-istanbul": "^5.2.0",
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/register": "^7.7.7",
+    "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
     "codecov": "^4.0.0-0",
     "cross-env": "^6.0.3",
     "istanbul": "^0.4.5",
     "mocha": "^6.2.2",
-    "nyc": "^14.1.1",
-    "sinon": "^7.5.0",
+    "nyc": "^15.0.0",
+    "sinon": "^8.0.1",
     "standard": "^14.3.1"
   },
   "babel": {
