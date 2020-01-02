@@ -17,6 +17,9 @@ import ChildClass from '../../../Resources/abstract/ChildClass'
 import Service from '../../../Resources/abstract/Service'
 import { ClassOne, ClassTwo } from '../../../Resources/multipleExports'
 import { NamedService } from '../../../Resources/NamedService'
+import RepositoryManager from '../../../Resources/RepositoryManager'
+import RepositoryFoo from '../../../Resources/RepositoryFoo'
+import RepositoryBar from '../../../Resources/RepositoryBar'
 
 const assert = chai.assert
 
@@ -343,6 +346,34 @@ describe('YamlFileLoader', () => {
       // Assert.
       assert.instanceOf(one, ClassOne)
       return assert.instanceOf(two, ClassTwo)
+    })
+  })
+
+  describe('load with tags', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new YamlFileLoader(container)
+      container.compile()
+    })
+
+    it('should load instance of service with tagged arguments', () => {
+      // Arrange.
+      const configPath = path.join(
+        __dirname,
+        '/../../../Resources/config/tagged-arguments.yml'
+      )
+
+      // Act.
+      loader.load(configPath)
+      const repositoryManager = container.get('repository-manager')
+      const repositoryFoo = container.get('repository-foo')
+      const repositoryBar = container.get('repository-bar')
+
+      // Assert.
+      assert.instanceOf(repositoryManager, RepositoryManager)
+      assert.instanceOf(repositoryFoo, RepositoryFoo)
+      assert.instanceOf(repositoryBar, RepositoryBar)
+      assert.equal(repositoryManager.repositories.length, 2)
     })
   })
 })

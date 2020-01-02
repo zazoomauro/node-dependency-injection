@@ -6,6 +6,9 @@ import Foo from '../../../Resources/foo'
 import Bar from '../../../Resources/bar'
 import FooBar from '../../../Resources/foobar'
 import path from 'path'
+import RepositoryManager from '../../../Resources/RepositoryManager'
+import RepositoryFoo from '../../../Resources/RepositoryFoo'
+import RepositoryBar from '../../../Resources/RepositoryBar'
 
 const assert = chai.assert
 
@@ -114,6 +117,34 @@ describe('JsonFileLoader', () => {
       // Assert.
       assert.instanceOf(bar, FooBar)
       return assert.instanceOf(baz, FooBar)
+    })
+  })
+
+  describe('load with tags', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new JsonFileLoader(container)
+      container.compile()
+    })
+
+    it('should load instance of service with tagged arguments', () => {
+      // Arrange.
+      const configPath = path.join(
+        __dirname,
+        '/../../../Resources/config/tagged-arguments.json'
+      )
+
+      // Act.
+      loader.load(configPath)
+      const repositoryManager = container.get('repository-manager')
+      const repositoryFoo = container.get('repository-foo')
+      const repositoryBar = container.get('repository-bar')
+
+      // Assert.
+      assert.instanceOf(repositoryManager, RepositoryManager)
+      assert.instanceOf(repositoryFoo, RepositoryFoo)
+      assert.instanceOf(repositoryBar, RepositoryBar)
+      assert.equal(repositoryManager.repositories.length, 2)
     })
   })
 })
