@@ -1,5 +1,2 @@
-recursive: false
 require: '@babel/register'
-check-leaks: true
-color: true
 spec: test/node-dependency-injection/**/*.spec.js
