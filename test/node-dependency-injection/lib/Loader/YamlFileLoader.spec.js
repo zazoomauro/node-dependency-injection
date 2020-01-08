@@ -125,6 +125,7 @@ describe('YamlFileLoader', () => {
       const stringExpectedParameter = 'barValue'
       const arrayParameterName = 'barParameter'
       const stringPropertyExpected = 'fooProperty'
+      const envVariableExpected = 'test'
 
       // Act.
       loader.load(
@@ -172,6 +173,7 @@ describe('YamlFileLoader', () => {
       assert.lengthOf(taggedServices, 2)
       assert.strictEqual(stringActualParameter, stringExpectedParameter)
       assert.isArray(arrayActualParameter)
+      assert.strictEqual(service.env, envVariableExpected)
       assert.strictEqual(service.parameter, stringExpectedParameter)
       assert.strictEqual(service.property, stringPropertyExpected)
       assert.instanceOf(fromFactoryWithoutArgs, FooBar)
