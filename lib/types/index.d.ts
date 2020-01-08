@@ -1,98 +1,130 @@
 declare module 'node-dependency-injection' {
-    export class ContainerBuilder {
-        constructor ();
+    // Only for typings exports
 
-        addCompilerPass (compilerPass: any, ...args: any[]): void;
+    export type PassConfigHook = 'beforeOptimization'|'optimize'|'beforeRemoving'|'remove'|'afterRemoving';
+
+    export type Parameter = string|boolean|object|any[];
+
+    export type Argument = Reference|PackageReference|any;
+
+    export interface Extension {
+        load: Function;
+    }
+
+    interface Logger {
+        warn(message?: any, ...optionalParams: any[]): void;
+    }
+
+    export class InstanceManager {
+        constructor (containerBuilder: ContainerBuilder, definitions: Map<string, Definition>, alias: Map<string, string>);
+
+        getInstance (id: string, bypassPublic?: boolean): any;
+
+        getInstanceFromDefinition (definition: Definition): any;
+    }
+
+    // Package exports
+    export class ContainerBuilder {
+        constructor (containerReferenceAsService?: boolean, defaultDir?: string|null);
+
+        readonly defaultDir: string;
+        readonly containerReferenceAsService: boolean;
+        readonly definitions: Map<string, Definition>;
+        readonly instanceManager: InstanceManager;
+        readonly extensions: Extension[];
+        readonly services: Map<string, any>;
+        frozen: boolean;
+        logger: Logger;
+
+        addCompilerPass (compilerPass: any, type?: PassConfigHook, priority?: number): void;
 
         compile (): void;
 
-        findDefinition (key: any): any;
+        findDefinition (key: string): Definition;
 
-        findTaggedServiceIds (name: any): any;
+        findTaggedServiceIds (name: string): Map<any, any>;
 
-        get (id: any): any;
+        get<T = any> (id: string): T;
 
-        getDefinition (key: any): any;
+        getDefinition (key: string): Definition;
 
-        getParameter (key: any): any;
+        getParameter<T extends Parameter> (key: string): T;
 
-        has (key: any): any;
+        has (key: string): boolean;
 
-        hasDefinition (key: any): any;
+        hasDefinition (key: string): boolean;
 
-        hasParameter (key: any): any;
+        hasParameter (key: string): boolean;
 
-        isSet (id: any): any;
+        isSet (id: string): boolean;
 
-        register (id: any, ...args: any[]): any;
+        register (id: string, object: any, args: Argument[]): Definition;
 
-        registerExtension (extension: any): void;
+        registerExtension (extension: Extension): void;
 
-        remove (id: any): void;
+        remove (id: string): void;
 
-        removeDefinition (key: any): any;
+        removeDefinition (key: string): boolean;
 
-        set (id: any, instance: any): void;
+        set (id: string, instance: any): void;
 
-        setAlias (alias: any, id: any): void;
+        setAlias (alias: string, id: string): void;
 
-        setDefinition (id: any, definition: any): any;
+        setDefinition (id: string, definition: Definition): Definition;
 
-        setParameter (key: any, value: any): void;
+        setParameter (key: string, value: Parameter): void;
 
     }
 
     export class Definition {
-        constructor (...args: any[]);
+        constructor (object: any, args: Argument[]);
 
-        addArgument (argument: any): any;
+        addArgument (argument: Argument): Definition;
 
-        addMethodCall (method: any, ...args: any[]): any;
+        addMethodCall (method: string, args: any[]): Definition;
 
-        addProperty (key: any, value: any): any;
+        addProperty (key: string, value: any): Definition;
 
-        addTag (name: any, ...args: any[]): any;
+        addTag (name: string, attributes: Map<any, any>): Definition;
 
-        isPublic (...args: any[]): any;
+        isPublic (bypassPublic?: boolean): boolean;
 
-        setFactory (Object: any, method: any): void;
-
-    }
-
-    export class JsFileLoader {
-        constructor (...args: any[]);
-
-        load (...args: any[]): void;
+        setFactory (Object: Reference|Object, method: string): void;
 
     }
 
     export class PackageReference {
-        constructor (id: any);
+        constructor (id: string);
 
-        static prototype: {
-            id: any;
-        }
-
+        readonly id: string;
     }
 
     export class Reference {
-        constructor (id: any, ...args: any[]);
+        constructor (id: string, nullable?: boolean);
 
-        static prototype: {
-            id: any;
-            nullable: any;
-        }
-
+        readonly id: string;
+        readonly nullable: boolean;
     }
 
-    export class YamlFileLoader {
-        constructor (...args: any[]);
+    export class PassConfig {
+        static readonly TYPE_BEFORE_OPTIMIZATION: PassConfigHook;
+        static readonly TYPE_OPTIMIZE: PassConfigHook;
+        static readonly TYPE_BEFORE_REMOVING: PassConfigHook;
+        static readonly TYPE_REMOVE: PassConfigHook;
+        static readonly TYPE_AFTER_REMOVING: PassConfigHook;
 
-        load (...args: any[]): void;
-
+        static isValidType (type: string): boolean;
     }
 
-    export function JsonFileLoader (...args: any[]): any;
+    export class FileLoader {
+        constructor(container: ContainerBuilder);
 
-    export function PassConfig (): void;
+        load(file: string|null): void;
+    }
+
+    export class YamlFileLoader extends FileLoader {}
+
+    export class JsFileLoader extends FileLoader {}
+
+    export class JsonFileLoader extends JsFileLoader {}
 }
