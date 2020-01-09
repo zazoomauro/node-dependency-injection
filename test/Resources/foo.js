@@ -1,9 +1,10 @@
 class Foo {
-  constructor (bar, fs, param, parameter) {
+  constructor (bar, fs, param, parameter, env) {
     this._bar = bar
     this._fs = fs
     this._param = param
     this._parameter = parameter
+    this._env = env
   }
 
   get bar () {
@@ -20,6 +21,10 @@ class Foo {
 
   get parameter () {
     return this._parameter
+  }
+
+  get env () {
+    return this._env
   }
 
   set property (value) {

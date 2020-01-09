@@ -1,5 +1,9 @@
 # Change Log
 
+# [2.4.8] - 2020-01-09
+### Changed
+- Add process.env variables support to services arguments using %env(ENV_VAR)% syntax
+
 # [2.3.4] - 2019-05-28
 ### Changed
 - Avoid collections lib usage

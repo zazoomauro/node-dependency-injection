@@ -7,7 +7,7 @@ module.exports = {
   services: {
     foo: {
       class: './../foo',
-      arguments: ['@bar', '%fs', 'foo-bar', '%fooParameter%'],
+      arguments: ['@bar', '%fs', 'foo-bar', '%fooParameter%', '%env(NODE_ENV)%'],
       tags: [
         { name: 'fooTag' }
       ],

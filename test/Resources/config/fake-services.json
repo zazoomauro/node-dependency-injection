@@ -18,7 +18,8 @@
         "@bar",
         "%fs",
         "foo-bar",
-        "%fooParameter%"
+        "%fooParameter%",
+        "%env(NODE_ENV)%"
       ],
       "tags": [
         {
