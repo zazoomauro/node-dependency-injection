@@ -15,8 +15,11 @@ import Mailer from '../../../Resources/Mailer'
 import DecoratingMailerTwo from '../../../Resources/DecoratingMailerTwo'
 import ChildClass from '../../../Resources/abstract/ChildClass'
 import Service from '../../../Resources/abstract/Service'
-import { ClassOne, ClassTwo } from '../../../Resources/multipleExports'
+import ClassThree, { ClassOne, ClassTwo } from '../../../Resources/MultipleExports'
 import { NamedService } from '../../../Resources/NamedService'
+import RepositoryManager from '../../../Resources/RepositoryManager'
+import RepositoryFoo from '../../../Resources/RepositoryFoo'
+import RepositoryBar from '../../../Resources/RepositoryBar'
 
 const assert = chai.assert
 
@@ -125,6 +128,7 @@ describe('YamlFileLoader', () => {
       const stringExpectedParameter = 'barValue'
       const arrayParameterName = 'barParameter'
       const stringPropertyExpected = 'fooProperty'
+      const envVariableExpected = 'test'
 
       // Act.
       loader.load(
@@ -172,6 +176,7 @@ describe('YamlFileLoader', () => {
       assert.lengthOf(taggedServices, 2)
       assert.strictEqual(stringActualParameter, stringExpectedParameter)
       assert.isArray(arrayActualParameter)
+      assert.strictEqual(service.env, envVariableExpected)
       assert.strictEqual(service.parameter, stringExpectedParameter)
       assert.strictEqual(service.property, stringPropertyExpected)
       assert.instanceOf(fromFactoryWithoutArgs, FooBar)
@@ -339,10 +344,40 @@ describe('YamlFileLoader', () => {
       loader.load(configPath)
       const one = container.get('one')
       const two = container.get('two')
+      const three = container.get('three')
 
       // Assert.
       assert.instanceOf(one, ClassOne)
-      return assert.instanceOf(two, ClassTwo)
+      assert.instanceOf(two, ClassTwo)
+      return assert.instanceOf(three, ClassThree)
+    })
+  })
+
+  describe('load with tags', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new YamlFileLoader(container)
+      container.compile()
+    })
+
+    it('should load instance of service with tagged arguments', () => {
+      // Arrange.
+      const configPath = path.join(
+        __dirname,
+        '/../../../Resources/config/tagged-arguments.yml'
+      )
+
+      // Act.
+      loader.load(configPath)
+      const repositoryManager = container.get('repository-manager')
+      const repositoryFoo = container.get('repository-foo')
+      const repositoryBar = container.get('repository-bar')
+
+      // Assert.
+      assert.instanceOf(repositoryManager, RepositoryManager)
+      assert.instanceOf(repositoryFoo, RepositoryFoo)
+      assert.instanceOf(repositoryBar, RepositoryBar)
+      assert.equal(repositoryManager.repositories.length, 2)
     })
   })
 })

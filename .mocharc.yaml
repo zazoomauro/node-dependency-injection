@@ -1,0 +1,2 @@
+require: '@babel/register'
+spec: test/node-dependency-injection/**/*.spec.js
