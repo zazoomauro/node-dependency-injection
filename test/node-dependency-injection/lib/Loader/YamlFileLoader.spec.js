@@ -15,7 +15,8 @@ import Mailer from '../../../Resources/Mailer'
 import DecoratingMailerTwo from '../../../Resources/DecoratingMailerTwo'
 import ChildClass from '../../../Resources/abstract/ChildClass'
 import Service from '../../../Resources/abstract/Service'
-import { ClassOne, ClassTwo } from '../../../Resources/multipleExports'
+import { MultipleExports, ClassOne, ClassTwo } from '../../../Resources/MultipleExports'
+import DefaultClass from '../../../Resources/MultipleExportsWithDefault'
 import { NamedService } from '../../../Resources/NamedService'
 import RepositoryManager from '../../../Resources/RepositoryManager'
 import RepositoryFoo from '../../../Resources/RepositoryFoo'
@@ -342,12 +343,16 @@ describe('YamlFileLoader', () => {
 
       // Act.
       loader.load(configPath)
-      const one = container.get('one')
-      const two = container.get('two')
+      const one = container.get('classOne')
+      const two = container.get('classTwo')
+      const multipleExports = container.get('multipleExports')
+      const defaultClass = container.get('defaultClass')
 
       // Assert.
       assert.instanceOf(one, ClassOne)
-      return assert.instanceOf(two, ClassTwo)
+      assert.instanceOf(two, ClassTwo)
+      assert.instanceOf(defaultClass, DefaultClass)
+      return assert.instanceOf(multipleExports, MultipleExports)
     })
   })
 
