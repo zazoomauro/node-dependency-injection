@@ -1,9 +1,11 @@
 services:
-  one:
+  classOne:
     class: ./../MultipleExports
     main: ClassOne
-  two:
+  classTwo:
     class: ./../MultipleExports
     main: ClassTwo
-  three:
+  multipleExports:
     class: ./../MultipleExports
+  defaultClass:
+    class: ./../MultipleExportsWithDefault

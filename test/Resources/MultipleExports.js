@@ -1,5 +1,5 @@
-export class ClassOne { }
+export class ClassOne {}
 
-export class ClassTwo { }
+export class ClassTwo {}
 
-export default class ClassThree {}
+export class MultipleExports {}
