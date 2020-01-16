@@ -1,4 +1,5 @@
 import {
+  Call,
   CompilerPass,
   ContainerBuilder,
   Definition,
@@ -8,6 +9,7 @@ import {
   PackageReference,
   PassConfig,
   Reference,
+  Tag,
   YamlFileLoader
 } from './index'
 
@@ -66,6 +68,8 @@ function assertIsDefinition (value: Definition): void {
     throw TypeError()
   }
 }
+
+function assertType<T> (value: T): void {}
 
 // * Container *
 // Constructors
@@ -134,6 +138,9 @@ loader = new JsFileLoader(container)
 loader.load('/path/to/file.js')
 
 // * Definition *
+// Constructor
+new Definition()
+new Definition(null, ['some_argument'])
 const mailerDefinition = new Definition(Mailer, ['sendmail'])
 
 // Properties
@@ -146,6 +153,18 @@ mailerDefinition.synthetic = true
 mailerDefinition.shared = false
 mailerDefinition.abstract = true
 mailerDefinition.parent = 'base_mailer'
+mailerDefinition.Object = {}
+mailerDefinition.args = [3.14, 'sendmail', new PackageReference('fs')]
+mailerDefinition.appendArgs = ['sendmail']
+// Readonly properties
+const mailerFactory = mailerDefinition.factory
+if (mailerFactory != null) {
+  assertType<Object|Reference>(mailerFactory.Object);
+  assertType<string>(mailerFactory.method)
+}
+assertType<Call[]>(mailerDefinition.calls)
+assertType<Tag[]>(mailerDefinition.tags)
+assertType<Map<string, any>>(mailerDefinition.properties)
 
 // Other methods
 mailerDefinition.addTag('tag_name')
