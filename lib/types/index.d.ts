@@ -18,6 +18,21 @@ export interface CompilerPass {
     process(container: ContainerBuilder): void;
 }
 
+export interface Factory {
+    Object: Object|Reference;
+    method: string;
+}
+
+export interface Call {
+    method: string;
+    args: Argument[];
+}
+
+export interface Tag {
+    name: string;
+    attributes: Map<any, any>;
+}
+
 export class InstanceManager {
     constructor (containerBuilder: ContainerBuilder, definitions: Map<string, Definition>, alias: Map<string, string>);
 
@@ -80,8 +95,11 @@ export class ContainerBuilder {
 }
 
 export class Definition {
-    constructor (object: any, args?: Argument[]);
+    constructor (object?: any, args?: Argument[]);
 
+    Object: any
+    args: Argument[];
+    appendArgs: Argument[];
     public: boolean;
     deprecated: string;
     lazy: boolean;
@@ -91,6 +109,10 @@ export class Definition {
     shared: boolean;
     abstract: boolean;
     parent: string;
+    readonly factory: Factory|null;
+    readonly calls: Call[];
+    readonly tags: Tag[];
+    readonly properties: Map<string, any>;
 
     addArgument (argument: Argument): Definition;
 
