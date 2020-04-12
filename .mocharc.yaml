@@ -1,2 +1,5 @@
 require: '@babel/register'
 spec: test/node-dependency-injection/**/*.spec.js
+color: true
+ui: bdd
+reporter: nyan
