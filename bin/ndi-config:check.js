@@ -14,7 +14,7 @@ program.arguments('<path>').action((dir) => {
   dir = path.isAbsolute(dir) ? dir : path.join(process.cwd(), dir)
   let loader
 
-  switch (path.extname(dir)) {
+  switch (path.extname(dir).split('.').pop()) {
     case JsAdapter.FORMAT:
       loader = new JsFileLoader(container)
       break
