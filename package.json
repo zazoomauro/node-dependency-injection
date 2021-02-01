@@ -49,21 +49,21 @@
     "commander": "^5.1.0",
     "console.table": "^0.10.0",
     "fs": "^0.0.2",
-    "js-yaml": "^3.14.0"
+    "js-yaml": "^3.14.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.10.5",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/register": "^7.10.5",
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/register": "^7.12.10",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
     "codecov": "^4.0.0-0",
-    "cross-env": "^7.0.2",
+    "cross-env": "^7.0.3",
     "istanbul": "^0.4.5",
-    "mocha": "^8.0.1",
+    "mocha": "^8.2.1",
     "nyc": "^15.1.0",
-    "sinon": "^9.0.2",
+    "sinon": "^9.2.4",
     "standard": "^14.3.4"
   },
   "babel": {
