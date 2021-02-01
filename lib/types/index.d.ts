@@ -141,6 +141,12 @@ export class Reference {
     readonly nullable: boolean;
 }
 
+export class TagReference {
+    constructor (name: string);
+
+    readonly name: string;
+}
+
 export class PassConfig {
     static readonly TYPE_BEFORE_OPTIMIZATION: PassConfigHook;
     static readonly TYPE_OPTIMIZE: PassConfigHook;
