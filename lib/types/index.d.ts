@@ -4,7 +4,7 @@ export type PassConfigHook = 'beforeOptimization'|'optimize'|'beforeRemoving'|'r
 
 export type Parameter = string|boolean|object|any[];
 
-export type Argument = Reference|PackageReference|any;
+export type Argument = TagReference|Reference|PackageReference|any;
 
 export interface Extension {
     load: Function;
