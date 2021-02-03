@@ -1,75 +1,77 @@
 import {
-  Call,
-  CompilerPass,
-  ContainerBuilder,
-  Definition,
-  JsFileLoader,
-  JsonFileLoader,
-  Logger,
-  PackageReference,
-  PassConfig,
-  Reference,
-  Tag,
-  YamlFileLoader
+    Call,
+    CompilerPass,
+    ContainerBuilder,
+    Definition,
+    JsFileLoader,
+    JsonFileLoader,
+    Logger,
+    PackageReference,
+    PassConfig,
+    Reference,
+    Tag,
+    YamlFileLoader
 } from './index'
 
 // Stuff for using in tests
 class Mailer {
-  private transport: string
-  private count: number
+    private transport: string
+    private count: number
 
-  constructor(transport: string, count: number) {
-    this.transport = transport
-    this.count = count
-  }
+    constructor(transport: string, count: number) {
+        this.transport = transport
+        this.count = count
+    }
 
-  sendMail (email: string, text: string) {
-    console.log(email, text)
-  }
+    sendMail(email: string, text: string) {
+        console.log(email, text)
+    }
 }
 
 class NewsletterManager {
-  private mailer: Mailer
-  private fs: any
+    private mailer: Mailer
+    private fs: any
 
-  construct (mailer: Mailer, fs: any) {
-    this.mailer = mailer
-    this.fs = fs
-  }
+    construct(mailer: Mailer, fs: any) {
+        this.mailer = mailer
+        this.fs = fs
+    }
 }
 
 class MailerManager {
-  private mailer: Mailer
+    private mailer: Mailer
 
-  setMailer (mailer: Mailer) {
-    this.mailer = mailer
-  }
+    setMailer(mailer: Mailer) {
+        this.mailer = mailer
+    }
 }
 
 class SomeManager {
-  getFactory (): any {
-    // return something
-  }
+    getFactory(): any {
+        // return something
+    }
 }
 
 class CustomPass implements CompilerPass {
-  process (container: ContainerBuilder) {
-    // ... do something during the compilation
-  }
+    process(container: ContainerBuilder) {
+        // ... do something during the compilation
+    }
 }
 
-function assertIsBoolean (value: boolean): void {
-  if (value !== true && value !== false) {
-    throw TypeError()
-  }
-}
-function assertIsDefinition (value: Definition): void {
-  if (!(value instanceof Definition)) {
-    throw TypeError()
-  }
+function assertIsBoolean(value: boolean): void {
+    if (value !== true && value !== false) {
+        throw TypeError()
+    }
 }
 
-function assertType<T> (value: T): void {}
+function assertIsDefinition(value: Definition): void {
+    if (!(value instanceof Definition)) {
+        throw TypeError()
+    }
+}
+
+function assertType<T>(value: T): void {
+}
 
 // * Container *
 // Constructors
@@ -82,15 +84,15 @@ container.register('mailer')
 container.register('mailer', Mailer)
 container.register('mailer', Mailer, ['sendmail'])
 container
-  .register('mailer')
- .addArgument('sendmail')
+    .register('mailer')
+    .addArgument('sendmail')
 container
-  .register('newsletter_manager', NewsletterManager)
-  .addArgument(new Reference('mailer'))
-  .addArgument(new PackageReference('fs-extra'))
+    .register('newsletter_manager', NewsletterManager)
+    .addArgument(new Reference('mailer'))
+    .addArgument(new PackageReference('fs-extra'))
 container
-  .register('mailer_manager', MailerManager)
-   .addMethodCall('setMailer', [new Reference('mailer')])
+    .register('mailer_manager', MailerManager)
+    .addMethodCall('setMailer', [new Reference('mailer')])
 
 // Set
 container.set('mailer', new Mailer('sendmail', 5))
@@ -101,11 +103,13 @@ mailer.sendMail('hello@example.com', 'Hi!')
 
 // Logger
 container.logger = console
+
 class NullLogger implements Logger {
-  warn(message?: any, ...optionalParams: any[]): void {
-    // do nothing
-  }
+    warn(message?: any, ...optionalParams: any[]): void {
+        // do nothing
+    }
 }
+
 container.logger = new NullLogger()
 
 // Other methods
@@ -159,8 +163,8 @@ mailerDefinition.appendArgs = ['sendmail']
 // Readonly properties
 const mailerFactory = mailerDefinition.factory
 if (mailerFactory != null) {
-  assertType<Object|Reference>(mailerFactory.Object);
-  assertType<string>(mailerFactory.method)
+    assertType<Object | Reference>(mailerFactory.Object);
+    assertType<string>(mailerFactory.method)
 }
 assertType<Call[]>(mailerDefinition.calls)
 assertType<Tag[]>(mailerDefinition.tags)

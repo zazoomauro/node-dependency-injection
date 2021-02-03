@@ -1,10 +1,10 @@
 // Only for typings exports
 
-export type PassConfigHook = 'beforeOptimization'|'optimize'|'beforeRemoving'|'remove'|'afterRemoving';
+export type PassConfigHook = 'beforeOptimization' | 'optimize' | 'beforeRemoving' | 'remove' | 'afterRemoving';
 
-export type Parameter = string|boolean|object|any[];
+export type Parameter = string | boolean | object | any[];
 
-export type Argument = TagReference|Reference|PackageReference|any;
+export type Argument = TagReference | Reference | PackageReference | any;
 
 export interface Extension {
     load: Function;
@@ -19,7 +19,7 @@ export interface CompilerPass {
 }
 
 export interface Factory {
-    Object: Object|Reference;
+    Object: Object | Reference;
     method: string;
 }
 
@@ -34,17 +34,15 @@ export interface Tag {
 }
 
 export class InstanceManager {
-    constructor (containerBuilder: ContainerBuilder, definitions: Map<string, Definition>, alias: Map<string, string>);
+    constructor(containerBuilder: ContainerBuilder, definitions: Map<string, Definition>, alias: Map<string, string>);
 
-    getInstance (id: string, bypassPublic?: boolean): any;
+    getInstance(id: string, bypassPublic?: boolean): any;
 
-    getInstanceFromDefinition (definition: Definition): any;
+    getInstanceFromDefinition(definition: Definition): any;
 }
 
 // Package exports
 export class ContainerBuilder {
-    constructor (containerReferenceAsService?: boolean, defaultDir?: string|null);
-
     readonly defaultDir: string;
     readonly containerReferenceAsService: boolean;
     readonly definitions: Map<string, Definition>;
@@ -54,49 +52,49 @@ export class ContainerBuilder {
     frozen: boolean;
     logger: Logger;
 
-    addCompilerPass (compilerPass: any, type?: PassConfigHook, priority?: number): void;
+    constructor(containerReferenceAsService?: boolean, defaultDir?: string | null);
 
-    compile (): void;
+    addCompilerPass(compilerPass: any, type?: PassConfigHook, priority?: number): void;
 
-    findDefinition (key: string): Definition;
+    compile(): void;
 
-    findTaggedServiceIds (name: string): Map<any, any>;
+    findDefinition(key: string): Definition;
 
-    get<T = any> (id: string): T;
+    findTaggedServiceIds(name: string): Map<any, any>;
 
-    getDefinition (key: string): Definition;
+    get<T = any>(id: string): T;
 
-    getParameter<T extends Parameter> (key: string): T;
+    getDefinition(key: string): Definition;
 
-    has (key: string): boolean;
+    getParameter<T extends Parameter>(key: string): T;
 
-    hasDefinition (key: string): boolean;
+    has(key: string): boolean;
 
-    hasParameter (key: string): boolean;
+    hasDefinition(key: string): boolean;
 
-    isSet (id: string): boolean;
+    hasParameter(key: string): boolean;
 
-    register (id: string, object?: any, args?: Argument[]): Definition;
+    isSet(id: string): boolean;
 
-    registerExtension (extension: Extension): void;
+    register(id: string, object?: any, args?: Argument[]): Definition;
 
-    remove (id: string): void;
+    registerExtension(extension: Extension): void;
 
-    removeDefinition (key: string): boolean;
+    remove(id: string): void;
 
-    set (id: string, instance: any): void;
+    removeDefinition(key: string): boolean;
 
-    setAlias (alias: string, id: string): void;
+    set(id: string, instance: any): void;
 
-    setDefinition (id: string, definition: Definition): Definition;
+    setAlias(alias: string, id: string): void;
 
-    setParameter (key: string, value: Parameter): void;
+    setDefinition(id: string, definition: Definition): Definition;
+
+    setParameter(key: string, value: Parameter): void;
 
 }
 
 export class Definition {
-    constructor (object?: any, args?: Argument[]);
-
     Object: any
     args: Argument[];
     appendArgs: Argument[];
@@ -109,42 +107,44 @@ export class Definition {
     shared: boolean;
     abstract: boolean;
     parent: string;
-    readonly factory: Factory|null;
+    readonly factory: Factory | null;
     readonly calls: Call[];
     readonly tags: Tag[];
     readonly properties: Map<string, any>;
 
-    addArgument (argument: Argument): Definition;
+    constructor(object?: any, args?: Argument[]);
 
-    addMethodCall (method: string, args: any[]): Definition;
+    addArgument(argument: Argument): Definition;
 
-    addProperty (key: string, value: any): Definition;
+    addMethodCall(method: string, args: any[]): Definition;
 
-    addTag (name: string, attributes?: Map<any, any>): Definition;
+    addProperty(key: string, value: any): Definition;
 
-    isPublic (bypassPublic?: boolean): boolean;
+    addTag(name: string, attributes?: Map<any, any>): Definition;
 
-    setFactory (Object: Reference|Object, method: string): void;
+    isPublic(bypassPublic?: boolean): boolean;
+
+    setFactory(Object: Reference | Object, method: string): void;
 
 }
 
 export class PackageReference {
-    constructor (id: string);
-
     readonly id: string;
+
+    constructor(id: string);
 }
 
 export class Reference {
-    constructor (id: string, nullable?: boolean);
-
     readonly id: string;
     readonly nullable: boolean;
+
+    constructor(id: string, nullable?: boolean);
 }
 
 export class TagReference {
-    constructor (name: string);
-
     readonly name: string;
+
+    constructor(name: string);
 }
 
 export class PassConfig {
@@ -154,17 +154,20 @@ export class PassConfig {
     static readonly TYPE_REMOVE: PassConfigHook;
     static readonly TYPE_AFTER_REMOVING: PassConfigHook;
 
-    static isValidType (type: string): boolean;
+    static isValidType(type: string): boolean;
 }
 
 export class FileLoader {
     constructor(container: ContainerBuilder);
 
-    load(file: string|null): void;
+    load(file: string | null): void;
 }
 
-export class YamlFileLoader extends FileLoader {}
+export class YamlFileLoader extends FileLoader {
+}
 
-export class JsFileLoader extends FileLoader {}
+export class JsFileLoader extends FileLoader {
+}
 
-export class JsonFileLoader extends JsFileLoader {}
+export class JsonFileLoader extends JsFileLoader {
+}
