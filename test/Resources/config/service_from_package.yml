@@ -1,0 +1,6 @@
+services:
+  # Example service that will load a 
+  # class from a package, not a file
+  foo_emitter:
+    class: events
+    main: EventEmitter

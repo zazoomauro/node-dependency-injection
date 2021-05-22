@@ -21,6 +21,7 @@ import { NamedService } from '../../../Resources/NamedService'
 import RepositoryManager from '../../../Resources/RepositoryManager'
 import RepositoryFoo from '../../../Resources/RepositoryFoo'
 import RepositoryBar from '../../../Resources/RepositoryBar'
+import EventEmitter from 'events'
 
 const assert = chai.assert
 
@@ -381,6 +382,29 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(repositoryFoo, RepositoryFoo)
       assert.instanceOf(repositoryBar, RepositoryBar)
       assert.equal(repositoryManager.repositories.length, 2)
+    })
+  })
+
+ describe('load class from package', () => {
+    beforeEach(() => {
+      container = new ContainerBuilder()
+      loader = new YamlFileLoader(container)
+      container.compile()
+    })
+
+    it('should load class from package without errors', () => {
+      // Arrange.
+      const configPath = path.join(
+        __dirname,
+        '/../../../Resources/config/service_from_package.yml'
+      )
+
+      // Act.
+      loader.load(configPath)
+      const fooEmitter = container.get('foo_emitter')
+
+      // Assert.
+      assert.instanceOf(fooEmitter, EventEmitter)
     })
   })
 })
