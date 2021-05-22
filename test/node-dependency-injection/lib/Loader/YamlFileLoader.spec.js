@@ -385,7 +385,7 @@ describe('YamlFileLoader', () => {
     })
   })
 
- describe('load class from package', () => {
+  describe('load class from package', () => {
     beforeEach(() => {
       container = new ContainerBuilder()
       loader = new YamlFileLoader(container)
