@@ -406,5 +406,23 @@ describe('YamlFileLoader', () => {
       // Assert.
       assert.instanceOf(fooEmitter, EventEmitter)
     })
+
+    it('should only try to load from package if error code is MODULE_NOT_FOUND', () => {
+      // Arrange.
+      const configPath = path.join(
+        __dirname,
+        '/../../../Resources/config/service_with_errors.yml'
+      )
+
+      // Act.
+      let getService = () => {
+        loader.load(configPath)
+        const syntaxErrorService = container.get('syntax_error_service')
+      }
+
+      // Assert.
+      assert.throw(getService, SyntaxError)
+    })
+
   })
 })
