@@ -1,0 +1,3 @@
+services:
+  syntax_error_service:
+    class: './../SyntaxErrorClass.js'
