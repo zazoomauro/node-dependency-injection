@@ -1,5 +1,9 @@
 # Change Log
 
+# [2.7.2] - 2020-01-09
+### Changed
+- Add warning log when service is not registered
+
 # [2.4.8] - 2020-01-09
 ### Changed
 - Add process.env variables support to services arguments using %env(ENV_VAR)% syntax
@@ -56,7 +60,7 @@
 
 # [2.0.0] - 2017-09-26
 ### Changed
-- updating production and developers dependencies 
+- updating production and developers dependencies
 ### Added
 - adding new project logo
 - preparing version 2
