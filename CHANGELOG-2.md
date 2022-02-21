@@ -1,6 +1,6 @@
 # Change Log
 
-# [2.7.2] - 2020-01-09
+# [2.7.2] - 2022-02-21
 ### Changed
 - Add warning log when service is not registered
 
