@@ -8,14 +8,17 @@ import PassConfig from '../../../lib/PassConfig'
 import path from 'path'
 import FooManager from './../../Resources/fooManager'
 import BarManager from './../../Resources/barManager'
+import Sinon from 'sinon'
 
 const assert = chai.assert
 
 describe('ContainerBuilder', () => {
   let container
+  const logger = { warn: Sinon.spy() }
 
   beforeEach(() => {
     container = new ContainerBuilder()
+    container.logger = logger
   })
 
   describe('default directory', () => {
@@ -268,6 +271,7 @@ describe('ContainerBuilder', () => {
         // Assert.
         assert.throw(actual, Error,
           `The service ${syntheticServiceName} is not registered`)
+        assert.isTrue(logger.warn.calledWith(`The service ${syntheticServiceName} is not registered`))
       })
 
     it(
@@ -289,6 +293,7 @@ describe('ContainerBuilder', () => {
         // Assert.
         assert.throw(actual, Error,
           `The service ${syntheticServiceName} is not registered`)
+        assert.isTrue(logger.warn.calledWith(`The service ${syntheticServiceName} is not registered`))
       })
 
     it('should return the instance with a factory definition', () => {
@@ -408,7 +413,8 @@ describe('ContainerBuilder', () => {
       const actual = () => container.get(id)
 
       // Assert.
-      return assert.throw(actual, Error, `The service ${id} is not registered`)
+      assert.throw(actual, Error, `The service ${id} is not registered`)
+      assert.isTrue(logger.warn.calledWith(`The service ${id} is not registered`))
     })
 
     it('should return the right service', () => {
@@ -754,6 +760,7 @@ describe('ContainerBuilder', () => {
       // Assert.
       assert.throw(actual, Error,
         'The service service_container is not registered')
+      assert.isTrue(logger.warn.calledWith(`The service service_container is not registered`))
     })
   })
 
