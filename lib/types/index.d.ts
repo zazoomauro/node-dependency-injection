@@ -62,7 +62,7 @@ export class ContainerBuilder {
 
     findTaggedServiceIds(name: string): Map<any, any>;
 
-    get<T = any>(id: string): T;
+    get<T = any>(id: string|any): T;
 
     getDefinition(key: string): Definition;
 
@@ -170,4 +170,12 @@ export class JsFileLoader extends FileLoader {
 }
 
 export class JsonFileLoader extends JsFileLoader {
+}
+
+export class Autowire {
+    constructor (container: ContainerBuilder);
+
+    get container (): ContainerBuilder;
+
+    process (): Promise<void>;
 }
