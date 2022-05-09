@@ -1,0 +1,147 @@
+parameters:
+    fooParameter: barValue
+    barParameter: ['foo', 'bar']
+    fooProperty: 'fooProperty'
+    param_false: false
+    param_object:
+      foo: 'bar'
+      bar: 'foo'
+
+services:
+    foo:
+        class: ./../Foo
+        arguments: ['@bar', '%fs', 'foo-bar', '%fooParameter%', '%env(NODE_ENV)%']
+        tags:
+            - {name: 'fooTag'}
+        properties:
+            property: '%fooProperty%'
+
+
+    bar:
+        class: ./../Bar
+        calls:
+            - {method: setFooBar, arguments: ['@foobar']}
+        tags:
+            - {name: 'fooTag'}
+
+    foobar:
+        class: ./../Foobar
+        arguments:
+            - '@injected.lazy.service'
+        deprecated: 'Deprecated service'
+
+    f:  '@foo'
+
+    lazy.service:
+        class: ./../Foobar
+        lazy: true
+
+    injected.lazy.service:
+        class: ./../Foobar
+        lazy: true
+
+    factory:
+        class: ./../Factory
+
+    from_factory_without_args:
+        factory:
+            class: ./../Factory
+            method: getFactoryWithoutArgs
+
+    from_factory_with_args:
+        arguments: ['ok']
+        factory:
+            class: ./../Factory
+            method: getFactoryWithArgs
+
+    from_factory_with_reference_without_args:
+        factory:
+            class: '@factory'
+            method: getFactoryWithoutArgs
+
+    from_factory_with_reference_with_args:
+        arguments: ['ok']
+        factory:
+            class: '@factory'
+            method: getFactoryWithArgs
+
+    from_factory_with_reference_with_service_arg:
+        arguments: ['@f']
+        factory:
+            class: '@factory'
+            method: getFactoryWithServiceArg
+
+    service_missing_dependencies:
+        class: ./../MissingDependencies
+        arguments: ['@f', '@?not_exists']
+
+    service_with_dependencies:
+        class: ./../MissingDependencies
+        arguments: ['@f', '@?foobar']
+
+    service_missing_dependencies_call:
+        class: ./../MissingDependencies
+        calls:
+            - {method: setMethod, arguments: ['@?not_exists']}
+
+    service_with_dependencies_call:
+        class: ./../MissingDependencies
+        calls:
+            - {method: setMethod, arguments: ['@foobar']}
+
+    foo_with_true:
+        class: ./../Foo
+        arguments: ['@bar', '%fs', true, '%true%']
+
+    foo_with_false:
+        class: ./../Foo
+        arguments: ['@bar', '%fs%', 'not', '%param_false%']
+
+    private_service:
+        class: ./../Foo
+        arguments: ['@bar', '%fs%']
+        public: false
+
+    service_using_private_service:
+        class: ./../Foo
+        arguments: ['@private_service']
+
+    synthetic_service:
+        synthetic: true
+
+    app.listener:
+        class: ./../Listener
+        tags:
+            - {name: listener, attributes: {event: postUpdate}}
+
+    app.mailer:
+        class: ./../Mailer
+
+    app.decorating_mailer:
+        class: ./../DecoratingMailer
+        decorates: app.mailer
+        arguments: ['@app.decorating_mailer.inner']
+        public: false
+
+    service_with_object_parameter:
+        class: ./../BarManager
+        arguments: ['%param_object%']
+
+    not_shared_service:
+        class: ./../Mailer
+        shared: false
+
+    decorate.app.mailer:
+        class: ./../Mailer
+
+    decorate.one:
+        class: ./../DecoratingMailerOne
+        decorates: decorate.app.mailer
+        decoration_priority: 3
+        arguments: ['@decorate.one.inner']
+
+    decorate.two:
+        class: ./../DecoratingMailerTwo
+        decorates: decorate.app.mailer
+        decoration_priority: 1
+        arguments: ['@decorate.two.inner']

@@ -1,0 +1,23 @@
+services:
+  app.base_class:
+    abstract: true
+    class: Resources-ts/abstract/BaseClass
+    arguments: ['@app.service']
+
+  app.child_class:
+    class: Resources-ts/abstract/ChildClass
+    parent: app.base_class
+
+  app.service:
+    class: Resources-ts/abstract/Service
+
+  mailer:
+    class: Resources-ts/Mailer
+
+  app.failure.base_class:
+    class: Resources-ts/abstract/BaseClass
+    arguments: ['@app.service']
+
+  app.failure.child_class:
+    class: Resources-ts/abstract/ChildClass
+    parent: app.failure.base_class

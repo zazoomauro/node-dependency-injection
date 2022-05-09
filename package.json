@@ -11,7 +11,7 @@
     "ndi": "dist/bin/ndi.js"
   },
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha",
+    "test": "cross-env NODE_ENV=test mocha -r ts-node/register",
     "test:coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text mocha",
     "test:standard": "standard",
     "test:standard:fix": "standard --fix",
@@ -50,6 +50,7 @@
   },
   "homepage": "https://github.com/zazoomauro/node-dependency-injection#readme",
   "dependencies": {
+    "@typescript-eslint/parser": "^5.22.0",
     "chalk": "^4.1.0",
     "commander": "^8.1.0",
     "console.table": "^0.10.0",
@@ -59,17 +60,22 @@
   "devDependencies": {
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-runtime": "^7.17.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/register": "^7.12.10",
-    "babel-plugin-istanbul": "^6.0.0",
-    "chai": "^4.2.0",
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "babel-plugin-istanbul": "^6.1.1",
+    "chai": "^4.3.6",
     "codecov": "^4.0.0-0",
     "cross-env": "^7.0.3",
     "istanbul": "^0.4.5",
-    "mocha": "^9.0.3",
+    "mocha": "^9.2.2",
     "nyc": "^15.1.0",
     "sinon": "^11.1.2",
-    "standard": "^16.0.3"
+    "standard": "^16.0.3",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
   },
   "babel": {
     "presets": [
@@ -78,7 +84,8 @@
     "env": {
       "test": {
         "plugins": [
-          "istanbul"
+          "istanbul",
+          "@babel/plugin-transform-runtime"
         ]
       }
     }

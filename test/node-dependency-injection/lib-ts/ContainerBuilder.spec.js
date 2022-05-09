@@ -6,9 +6,11 @@ import Reference from '../../../lib/Reference'
 import YamlFileLoader from '../../../lib/Loader/YamlFileLoader'
 import PassConfig from '../../../lib/PassConfig'
 import path from 'path'
-import FooManager from './../../Resources/fooManager'
-import BarManager from './../../Resources/barManager'
+import FooManager from './../../Resources-ts/FooManager'
+import BarManager from './../../Resources-ts/BarManager'
 import Sinon from 'sinon'
+import { addAbortSignal } from 'stream'
+import FileClassPass from '../../Resources-ts/CompilerPass/FileClassPass'
 
 const assert = chai.assert
 
@@ -22,39 +24,18 @@ describe('ContainerBuilder', () => {
   })
 
   describe('default directory', () => {
-    it('should not load if root directory is not absolute', () => {
-      // Arrange.
-      const dir = 'hola/foo/src'
-      
-      // Act.
-      const func = () => new ContainerBuilder(false, dir)
-
-      // Assert.
-      assert.throw(func, Error, 'Root directory must be absolute')
-    })
-
-    it('should not load if root directory not found', () => {
-      // Arrange.
-      const dir = '/hola/foo/src'
-
-      // Act.
-      const func = () => new ContainerBuilder(false, dir)
-
-      // Assert.
-      assert.throw(func, Error, 'Root directory not found')
-    })
-
-    it('should load if root directory is valid', () => {
+    it('should return default dir', () => {
       // Arrange.
       const dir = path.join(
         __dirname, '..', '..', 'Resources-ts', 'Autowire', 'src'
       )
-
-      // Act.
       const container = new ContainerBuilder(false, dir)
 
+      // Act.
+      const actual = container.defaultDir
+
       // Assert.
-      assert.strictEqual(container.defaultDir, dir)
+      return assert.strictEqual(actual, dir)
     })
   })
 
@@ -130,19 +111,6 @@ describe('ContainerBuilder', () => {
   })
 
   describe('get', () => {
-    it('should retrieve instance service from a class type', () => {
-      // Arrange.
-      const id = 'some_service'
-      class Foo {}
-      container.register(id, Foo)
-
-      // Act.
-      const actual = container.get(Foo)
-
-      // Assert.
-      assert.instanceOf(actual, Foo)
-    })
-    
     it('should retrieve the same instance if is a shared definition',
       () => {
         // Arrange.
@@ -1087,23 +1055,23 @@ describe('ContainerBuilder', () => {
       'should not instantiate a service twice even if a dependency needs another service from yml loader',
       () => {
         // Arrange.
-        FooManager.prototype.fooManagerCalls = 0
+        FooManager.fooManagerCalls = 0;
         const loader = new YamlFileLoader(container)
         loader.load(
-          path.join(__dirname, '../../Resources/config/fake-services-2.yml'))
+          path.join(__dirname, '../../Resources-ts/config/fake-services-2.yml'))
 
         // Act.
         container.compile()
 
         // Assert.
-        return assert.strictEqual(FooManager.prototype.fooManagerCalls, 1)
+        return assert.strictEqual(FooManager.fooManagerCalls, 1)
       })
 
     it(
       'should not instantiate a service twice even if a dependency needs another service from container builder',
       () => {
         // Arrange.
-        FooManager.prototype.fooManagerCalls = 0
+        FooManager.fooManagerCalls = 0
         container.register('foo_manager', FooManager)
         container.register('bar_manager', BarManager)
           .addArgument(new Reference('foo_manager'))
@@ -1112,7 +1080,7 @@ describe('ContainerBuilder', () => {
         container.compile()
 
         // Assert.
-        return assert.strictEqual(FooManager.prototype.fooManagerCalls, 1)
+        return assert.strictEqual(FooManager.fooManagerCalls, 1)
       })
 
     it('should return an instance with set properties', () => {
@@ -1225,6 +1193,18 @@ describe('ContainerBuilder', () => {
       // Assert.
       return assert.throw(actual, Error,
         `${type} is a wrong compiler pass config type`)
+    })
+
+    it('should register a compiler pass from a ts file class', () => {
+      // Arrange.
+
+      // Act.
+      container.addCompilerPass(new FileClassPass)
+
+      // Assert.
+      return assert.strictEqual(
+        container._compilerPass[PassConfig.TYPE_BEFORE_OPTIMIZATION].length,
+        1)
     })
   })
 

@@ -1,0 +1,60 @@
+{
+  "parameters": {
+    "fooParameter": "barValue",
+    "barParameter": [
+      "foo",
+      "bar"
+    ],
+    "fooProperty": "fooProperty",
+    "param_object": {
+      "foo": "bar",
+      "bar": "foo"
+    }
+  },
+  "services": {
+    "foo": {
+      "class": "./../Foo",
+      "arguments": [
+        "@bar",
+        "%fs",
+        "foo-bar",
+        "%fooParameter%",
+        "%env(NODE_ENV)%"
+      ],
+      "tags": [
+        {
+          "name": "fooTag"
+        }
+      ],
+      "properties": {
+        "property": "%fooProperty%"
+      }
+    },
+    "bar": {
+      "class": "./../Bar",
+      "calls": [
+        {
+          "method": "setFooBar",
+          "arguments": [
+            "@foobar"
+          ]
+        }
+      ],
+      "tags": [
+        {
+          "name": "fooTag"
+        }
+      ]
+    },
+    "foobar": {
+      "class": "./../Foobar"
+    },
+    "f": "@foo",
+    "service_with_object_parameter": {
+      "class": "./../BarManager",
+      "arguments": [
+        "%param_object%"
+      ]
+    }
+  }
+}
