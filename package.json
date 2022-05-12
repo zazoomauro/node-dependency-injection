@@ -11,8 +11,8 @@
     "ndi": "dist/bin/ndi.js"
   },
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha -r ts-node/register",
-    "test:coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text mocha",
+    "test": "cross-env NODE_ENV=test ts-mocha --paths",
+    "test:coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text ts-mocha --paths",
     "test:standard": "standard",
     "test:standard:fix": "standard --fix",
     "build:lib": "rm -rf dist/lib/* && babel lib -d dist/lib -D",
@@ -65,6 +65,7 @@
     "@babel/preset-env": "^7.17.10",
     "@babel/register": "^7.17.7",
     "@types/chai": "^4.3.1",
+    "@types/expect": "^24.3.0",
     "@types/mocha": "^9.1.1",
     "babel-plugin-istanbul": "^6.1.1",
     "chai": "^4.3.6",
@@ -75,7 +76,9 @@
     "nyc": "^15.1.0",
     "sinon": "^11.1.2",
     "standard": "^16.0.4",
+    "ts-mocha": "^10.0.0",
     "ts-node": "^10.7.0",
+    "tsconfig-paths": "^4.0.0",
     "typescript": "^4.6.4"
   },
   "babel": {

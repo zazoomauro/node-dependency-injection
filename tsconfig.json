@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
-    "lib": ["DOM", "ES7"]
+    "lib": ["DOM", "ES7"],
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": [
+        "./test/Resources-ts/AutowireModulePath/src/*"
+      ]
+    }
   }
 }
