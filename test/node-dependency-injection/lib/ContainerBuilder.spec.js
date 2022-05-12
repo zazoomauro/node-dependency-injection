@@ -142,6 +142,18 @@ describe('ContainerBuilder', () => {
       // Assert.
       assert.instanceOf(actual, Foo)
     })
+
+    it('should not retrieve instance service from a class type if not registered', () => {
+      // Arrange.
+      class Foo { }
+
+      // Act.
+      const actual = () => container.get(Foo)
+
+      // Assert.
+      assert.throw(actual, Error, `The service Foo is not registered`)
+      assert.isTrue(logger.warn.calledWith(`The service Foo is not registered`))
+    })
     
     it('should retrieve the same instance if is a shared definition',
       () => {
