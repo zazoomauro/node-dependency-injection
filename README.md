@@ -68,6 +68,39 @@ And get services from your container
 const mailer = container.get('service.mailer')
 ```
 
+Autowire for typescript
+------------
+
+```ts
+import {ContainerBuilder, Autowire} from 'node-dependency-injection'
+
+const container = new ContainerBuilder(
+  true, 
+  '/path/to/src'
+)
+const autowire = new Autowire(container)
+await autowire.process()
+
+```
+
+or from yaml-json-js configuration
+
+```yaml
+# /path/to/services.yml
+services:
+  _defaults:
+    autowire: true
+    rootDir:  "/path/to/src"
+```
+
+You can also get a service from a class definition
+
+```ts
+import SomeService from '@src/service/SomeService'
+
+container.get(SomeService)
+```
+
 
 Configuration files: how to load and use configuration files
 ------------
@@ -103,6 +136,7 @@ const mailer = container.get('service.mailer')
 List of features
 ------------
 
+- Autowire only for TypeScript
 - Configuration files with JS, YAML or JSON.
 - Multiple configuration files
 - Custom relative service directory
