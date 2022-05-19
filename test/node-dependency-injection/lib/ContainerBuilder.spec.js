@@ -1,5 +1,7 @@
 import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised';
+chai.use(chaiAsPromised);
 import ContainerBuilder from '../../../lib/ContainerBuilder'
 import Definition from '../../../lib/Definition'
 import Reference from '../../../lib/Reference'
@@ -192,7 +194,7 @@ describe('ContainerBuilder', () => {
         return assert.notStrictEqual(actual, expected)
       })
 
-    it('should get a decorated service properly', () => {
+    it('should get a decorated service properly', async () => {
       // Arrange.
       class Foo {}
 
@@ -204,14 +206,14 @@ describe('ContainerBuilder', () => {
       decoratingDefinition.decoratedService = 'foo'
 
       // Act.
-      container.compile()
+      await container.compile()
       const actual = container.get('foo')
 
       // Assert.
       assert.instanceOf(actual, DecoratingFoo)
     })
 
-    it('should get the inner service from a decorated service', () => {
+    it('should get the inner service from a decorated service', async () => {
       // Arrange.
       class Foo {}
 
@@ -223,14 +225,14 @@ describe('ContainerBuilder', () => {
       decoratingDefinition.decoratedService = 'foo'
 
       // Act.
-      container.compile()
+      await container.compile()
       const actual = container.get('decorating.foo.inner')
 
       // Assert.
       assert.instanceOf(actual, Foo)
     })
 
-    it('should inject the inner service to the decorated service', () => {
+    it('should inject the inner service to the decorated service', async () => {
       // Arrange.
       class Foo {}
 
@@ -251,7 +253,7 @@ describe('ContainerBuilder', () => {
       decoratingDefinition.args = [new Reference('decorating.foo.inner')]
 
       // Act.
-      container.compile()
+      await container.compile()
       const actual = container.get('foo')
 
       // Assert.
@@ -259,7 +261,7 @@ describe('ContainerBuilder', () => {
     })
 
     it('should inject the inner service to the decorated service with ' +
-      'decoration priority', () => {
+      'decoration priority', async () => {
       // Arrange.
       const expected = 'decoration_priority'
 
@@ -296,7 +298,7 @@ describe('ContainerBuilder', () => {
       definitionBaz.decorationPriority = 1
 
       // Act.
-      container.compile()
+      await container.compile()
       const actual = container.get('foo')
 
       // Assert.
@@ -746,7 +748,7 @@ describe('ContainerBuilder', () => {
       return assert.strictEqual(actual.bar, value)
     })
 
-    it('should instantiate a lazy service only when get the service', () => {
+    it('should instantiate a lazy service only when get the service', async () => {
       // Arrange.
       const fooId = 'service.foo'
       let constructorCalls = 0
@@ -760,7 +762,7 @@ describe('ContainerBuilder', () => {
       const definition = new Definition(Foo)
       definition.lazy = true
       container.setDefinition(fooId, definition)
-      container.compile()
+      await container.compile()
 
       // Act.
       container.get(fooId)
@@ -813,7 +815,7 @@ describe('ContainerBuilder', () => {
   })
 
   describe('compile', () => {
-    it('should not instance an abstract definition on compile', () => {
+    it('should not instance an abstract definition on compile', async () => {
       // Arrange.
       let expected = true
 
@@ -824,7 +826,7 @@ describe('ContainerBuilder', () => {
       container.setDefinition('foo', definition)
 
       // Act.
-      container.compile()
+      await container.compile()
 
       // Assert.
       return assert.isTrue(expected)
@@ -832,7 +834,7 @@ describe('ContainerBuilder', () => {
 
     it(
       'should throw an ServiceCircularReferenceException instead of RangeError',
-      () => {
+      async () => {
         // Arrange.
         container.register('service.a', class A {})
           .addArgument(new Reference('service.b'))
@@ -840,14 +842,14 @@ describe('ContainerBuilder', () => {
           .addArgument(new Reference('service.a'))
 
         // Act.
-        const actual = () => container.compile()
+        const actual = container.compile()
 
         // Assert.
-        return assert.throw(actual, 'Circular reference detected')
+        assert.isRejected(actual, 'Circular reference detected')
       })
 
     it('should call the process method by priority properly',
-      () => {
+      async () => {
         // Arrange.
         const fooId = 'service.foo'
 
@@ -868,7 +870,7 @@ describe('ContainerBuilder', () => {
           PassConfig.TYPE_AFTER_REMOVING, 17)
 
         // Act.
-        container.compile()
+        await container.compile()
 
         // Assert.
         assert.strictEqual(expected[0], valueFirstPass)
@@ -877,7 +879,7 @@ describe('ContainerBuilder', () => {
       })
 
     it('should add more compiler pass by priority',
-      () => {
+      async () => {
         // Arrange.
         const fooId = 'service.foo'
 
@@ -895,14 +897,14 @@ describe('ContainerBuilder', () => {
           PassConfig.TYPE_AFTER_REMOVING, 2)
 
         // Act.
-        container.compile()
+        await container.compile()
 
         // Assert.
         return assert.instanceOf(container.get(fooId), Foo)
       })
 
     it('should remove private instances if no remove pass config passed',
-      () => {
+      async () => {
         // Arrange.
         const fooId = 'service.foo'
 
@@ -913,14 +915,14 @@ describe('ContainerBuilder', () => {
         container.setDefinition(fooId, definition)
 
         // Act.
-        container.compile()
+        await container.compile()
 
         // Assert.
         return assert.isUndefined(container._container.get(fooId))
       })
 
     it('should not remove private instances if remove pass config passed',
-      () => {
+      async () => {
         // Arrange.
         const fooId = 'service.foo'
 
@@ -937,13 +939,13 @@ describe('ContainerBuilder', () => {
         container.addCompilerPass(new FooPass(), PassConfig.TYPE_REMOVE)
 
         // Act.
-        container.compile()
+        await container.compile()
 
         // Assert.
         return assert.instanceOf(container._container.get(fooId), Foo)
       })
 
-    it('should load an extension when compile', () => {
+    it('should load an extension when compile', async () => {
       // Arrange.
       let extensionLoaded = false
 
@@ -956,7 +958,7 @@ describe('ContainerBuilder', () => {
       container.registerExtension(new FooExtension())
 
       // Act.
-      container.compile()
+      await container.compile()
 
       // Assert.
       assert.isTrue(extensionLoaded)
@@ -964,7 +966,7 @@ describe('ContainerBuilder', () => {
 
     it(
       'should register an empty compiler pass with a optimize type will not freeze the container',
-      () => {
+      async () => {
         // Arrange.
         class FooPass {
           process () {}
@@ -973,23 +975,23 @@ describe('ContainerBuilder', () => {
         container.addCompilerPass(new FooPass(), PassConfig.TYPE_OPTIMIZE)
 
         // Act.
-        container.compile()
+        await container.compile()
 
         // Assert.
         return assert.isFalse(container.frozen)
       })
 
-    it('should compile the container and freeze the same container', () => {
+    it('should compile the container and freeze the same container', async () => {
       // Arrange not needed.
 
       // Act.
-      container.compile()
+      await container.compile()
 
       // Assert.
       return assert.isTrue(container.frozen)
     })
 
-    it('should compile the container and return a service', () => {
+    it('should compile the container and return a service', async () => {
       // Arrange.
       const id = 'service.foo'
       const parameter = 'foobar'
@@ -1007,19 +1009,19 @@ describe('ContainerBuilder', () => {
       container.register(id, Foo).addArgument(parameter)
 
       // Act.
-      container.compile()
+      await container.compile()
 
       // Assert.
       return assert.strictEqual(container.get(id).parameter, parameter)
     })
 
     it('should not register more services when the container is already frozen',
-      () => {
+      async () => {
         // Arrange.
         container.register('foo', class Foo {})
 
         // Act.
-        container.compile()
+        await container.compile()
         const actual = () => container.register('bar', class Bar {})
 
         // Assert.
@@ -1029,7 +1031,7 @@ describe('ContainerBuilder', () => {
 
     it(
       'should prevent instantiate class again if we get a service and then compile',
-      () => {
+      async () => {
         const fooId = 'service.foo'
         let constructorCalls = 0
 
@@ -1043,7 +1045,7 @@ describe('ContainerBuilder', () => {
         container.get(fooId)
 
         // Act.
-        container.compile()
+        await container.compile()
         const foo = container.get(fooId)
 
         // Assert.
@@ -1051,7 +1053,7 @@ describe('ContainerBuilder', () => {
         return assert.instanceOf(foo, Foo)
       })
 
-    it('should process the registered pass process method', () => {
+    it('should process the registered pass process method', async () => {
       // Arrange.
       let processedPass = false
       let expectedContainer = null
@@ -1066,7 +1068,7 @@ describe('ContainerBuilder', () => {
       container.addCompilerPass(new FooPass())
 
       // Act.
-      container.compile()
+      await container.compile()
 
       // Assert.
       assert.isTrue(processedPass)
@@ -1075,7 +1077,7 @@ describe('ContainerBuilder', () => {
 
     it(
       'should not instantiate twice even if there is a compiler pass during compilation',
-      () => {
+      async () => {
         // Arrange.
         let actualCompilations = 0
 
@@ -1088,8 +1090,8 @@ describe('ContainerBuilder', () => {
         container.addCompilerPass(new FooPass())
 
         // Act.
-        container.compile()
-        container.compile()
+        await container.compile()
+        await container.compile()
 
         // Assert.
         return assert.strictEqual(actualCompilations, 1)
@@ -1097,15 +1099,15 @@ describe('ContainerBuilder', () => {
 
     it(
       'should not instantiate a service twice even if a dependency needs another service from yml loader',
-      () => {
+      async () => {
         // Arrange.
         FooManager.prototype.fooManagerCalls = 0
         const loader = new YamlFileLoader(container)
-        loader.load(
+        await loader.load(
           path.join(__dirname, '../../Resources/config/fake-services-2.yml'))
 
         // Act.
-        container.compile()
+        await container.compile()
 
         // Assert.
         return assert.strictEqual(FooManager.prototype.fooManagerCalls, 1)
@@ -1113,7 +1115,7 @@ describe('ContainerBuilder', () => {
 
     it(
       'should not instantiate a service twice even if a dependency needs another service from container builder',
-      () => {
+      async () => {
         // Arrange.
         FooManager.prototype.fooManagerCalls = 0
         container.register('foo_manager', FooManager)
@@ -1121,13 +1123,13 @@ describe('ContainerBuilder', () => {
           .addArgument(new Reference('foo_manager'))
 
         // Act.
-        container.compile()
+        await container.compile()
 
         // Assert.
         return assert.strictEqual(FooManager.prototype.fooManagerCalls, 1)
       })
 
-    it('should return an instance with set properties', () => {
+    it('should return an instance with set properties', async () => {
       // Arrange.
       class Foo {
         set bar (value) {
@@ -1147,13 +1149,13 @@ describe('ContainerBuilder', () => {
       container.setDefinition(serviceId, definition)
 
       // Act.
-      container.compile()
+      await container.compile()
 
       // Assert.
       return assert.strictEqual(container.get(serviceId).bar, value)
     })
 
-    it('should not instantiate a lazy service on compile', () => {
+    it('should not instantiate a lazy service on compile', async () => {
       // Arrange.
       const fooId = 'service.foo'
       let constructorCalls = 0
@@ -1169,7 +1171,7 @@ describe('ContainerBuilder', () => {
       container.setDefinition(fooId, definition)
 
       // Act.
-      container.compile()
+      await container.compile()
 
       // Assert.
       return assert.strictEqual(constructorCalls, 0)

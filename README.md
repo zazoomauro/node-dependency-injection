@@ -125,7 +125,7 @@ import {ContainerBuilder, YamlFileLoader} from 'node-dependency-injection'
 
 let container = new ContainerBuilder()
 let loader = new YamlFileLoader(container)
-loader.load('/path/to/file.yml')
+await loader.load('/path/to/file.yml')
 ```
 
 And get services from your container easily
