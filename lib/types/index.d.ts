@@ -15,7 +15,7 @@ export interface Logger {
 }
 
 export interface CompilerPass {
-    process(container: ContainerBuilder): void;
+    process(container: ContainerBuilder): Promise<void>;
 }
 
 export interface Factory {
@@ -56,7 +56,7 @@ export class ContainerBuilder {
 
     addCompilerPass(compilerPass: any, type?: PassConfigHook, priority?: number): void;
 
-    compile(): void;
+    compile(): Promise<void>;
 
     findDefinition(key: string): Definition;
 
@@ -160,7 +160,7 @@ export class PassConfig {
 export class FileLoader {
     constructor(container: ContainerBuilder);
 
-    load(file: string | null): void;
+    load(file: string | null): Promise<void>;
 }
 
 export class YamlFileLoader extends FileLoader {
