@@ -1,5 +1,7 @@
 import { describe, it } from 'mocha'
 import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised';
+chai.use(chaiAsPromised);
 import path from 'path'
 import ContainerBuilder from '../../../lib/ContainerBuilder'
 import YamlFileLoader from '../../../lib/Loader/YamlFileLoader'
@@ -29,8 +31,8 @@ describe('AutowireTS', () => {
         const autowire = new Autowire(container)
 
         // Act.
-        autowire.process()
-        container.compile()
+        await autowire.process()
+        await container.compile()
 
         // Assert.
         assert.instanceOf(autowire.container, ContainerBuilder)
@@ -52,7 +54,7 @@ describe('AutowireTS', () => {
         let loader = new YamlFileLoader(container)
 
         // Act.
-        loader.load(
+        await loader.load(
             path.join(
                 __dirname,
                 '/../../Resources-ts/Autowire/config/services.yaml',
@@ -76,7 +78,7 @@ describe('AutowireTS', () => {
         let loader = new JsFileLoader(container)
 
         // Act.
-        loader.load(
+        await loader.load(
             path.join(
                 __dirname,
                 '/../../Resources-ts/Autowire/config/services.js',
@@ -100,7 +102,7 @@ describe('AutowireTS', () => {
         let loader = new JsonFileLoader(container)
 
         // Act.
-        loader.load(
+        await loader.load(
             path.join(
                 __dirname,
                 '/../../Resources-ts/Autowire/config/services.json',
@@ -132,8 +134,8 @@ describe('AutowireTS', () => {
         const autowire = new Autowire(container)
 
         // Act.
-        autowire.process()
-        container.compile()
+        await autowire.process()
+        await container.compile()
 
         // Assert.
         assert.instanceOf(autowire.container, ContainerBuilder)
@@ -164,8 +166,8 @@ describe('AutowireTS', () => {
         const autowire = new Autowire(container, tsConfigPath)
 
         // Act.
-        autowire.process()
-        container.compile()
+        await autowire.process()
+        await container.compile()
 
         // Assert.
         assert.instanceOf(autowire.container, ContainerBuilder)

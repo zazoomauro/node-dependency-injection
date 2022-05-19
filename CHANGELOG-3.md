@@ -1,7 +1,10 @@
 # Change Log
 
-# [3.0.0] - 2022-05-09
+# [3.0.0] - 2022-05-19
 ### Changed
+- File Loader load method is now Promised
+- ContainerBuilder compile is now Promised
+- Custom Compiler Pass process needs to be Promised
 ### Added
 - Autowire support for TypeScript
 - Get container service from a class instance

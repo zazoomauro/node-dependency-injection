@@ -1,5 +1,7 @@
 import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised';
+chai.use(chaiAsPromised);
 import YamlFileLoader from '../../../../lib/Loader/YamlFileLoader'
 import ContainerBuilder from '../../../../lib/ContainerBuilder'
 import Foo from '../../../Resources-ts/Foo'
@@ -25,7 +27,7 @@ import EventEmitter from 'events'
 
 const assert = chai.assert
 
-describe('YamlFileLoader', () => {
+describe('YamlFileLoaderTS', () => {
   let loader
   let loaderSelfReference
   let container
@@ -41,9 +43,9 @@ describe('YamlFileLoader', () => {
       loaderSelfReference = new YamlFileLoader(containerSelfReference)
     })
 
-    it('should inject the service container properly', () => {
+    it('should inject the service container properly', async () => {
       // Arrange.
-      loaderSelfReference.load(path.join(__dirname,
+      await loaderSelfReference.load(path.join(__dirname,
         '/../../../Resources-ts/config/container-self-reference.yml'))
 
       // Act.
@@ -53,9 +55,9 @@ describe('YamlFileLoader', () => {
       assert.instanceOf(actual.container, ContainerBuilder)
     })
 
-    it('should throw an exception if service container ', () => {
+    it('should throw an exception if service container ', async () => {
       // Arrange.
-      loader.load(path.join(__dirname,
+      await loader.load(path.join(__dirname,
         '/../../../Resources-ts/config/container-self-reference.yml'))
 
       // Act.
@@ -66,11 +68,11 @@ describe('YamlFileLoader', () => {
         'The service service_container is not registered')
     })
 
-    it('should load a container with a private npm package', () => {
+    it('should load a container with a private npm package', async () => {
       // Arrange.
 
       // Act.
-      loader.load(
+      await loader.load(
         path.join(__dirname, '/../../../Resources-ts/config/private.yml'))
       const actual = () => container.get('foo')
 
@@ -78,11 +80,11 @@ describe('YamlFileLoader', () => {
       return assert.throw(actual, 'Cannot find module \'@company/repository\'')
     })
 
-    it('should load an abstract class with dependencies properly', () => {
+    it('should load an abstract class with dependencies properly', async () => {
       // Arrange not needed.
 
       // Act.
-      loader.load(
+      await loader.load(
         path.join(__dirname, '/../../../Resources-ts/config/abstract.yml'))
       const childClass = container.get('app.child_class')
       const throwAbstractServiceException = () => container.get(
@@ -99,29 +101,27 @@ describe('YamlFileLoader', () => {
         'The parent service app.failure.base_class is not abstract')
     })
 
-    it('should throw an exception if the yaml file not exists', () => {
+    it('should throw an exception if the yaml file not exists', async () => {
       // Arrange.
       const file = 'fake-filePath.yml'
 
       // Act.
-      const actual = () => loader.load(file)
+      const actual = loader.load(file)
 
       // Assert.
-      return assert.throw(actual, Error, `Service file ${file} not found`)
+      return assert.isRejected(actual, Error, `Service file ${file} not found`)
     })
 
-    it('should throw an exception if the yaml file had invalid syntax', () => {
-      const actual = () => {
-        loader.load(
-          path.join(__dirname,
-            '/../../../Resources-ts/config/invalid-yaml-syntax.yml')
-        )
-      }
+    it('should throw an exception if the yaml file had invalid syntax', async () => {
+      const actual = loader.load(
+        path.join(__dirname,
+          '/../../../Resources-ts/config/invalid-yaml-syntax.yml')
+      )
 
-      return assert.throw(actual, Error, /^Service file could not be loaded\. /)
+      return assert.isRejected(actual, Error, /^Service file could not be loaded\. /)
     })
 
-    it('should load a simple container', () => {
+    it('should load a simple container', async () => {
       // Arrange.
       const serviceName = 'foo'
       const aliasName = 'f'
@@ -133,9 +133,9 @@ describe('YamlFileLoader', () => {
       const envVariableExpected = 'test'
 
       // Act.
-      loader.load(
+      await loader.load(
         path.join(__dirname, '/../../../Resources-ts/config/fake-services.yml'))
-      container.compile()
+      await container.compile()
       const service = container.get(serviceName)
       const aliasService = container.get(aliasName)
       const taggedServices = container.findTaggedServiceIds(tagName)
@@ -209,12 +209,12 @@ describe('YamlFileLoader', () => {
       return assert.lengthOf(arrayActualParameter, 2)
     })
 
-    it('should load properly a not shared service', () => {
+    it('should load properly a not shared service', async () => {
       // Arrange.
       const notSharedServiceName = 'not_shared_service'
 
       // Act.
-      loader.load(
+      await loader.load(
         path.join(__dirname, '/../../../Resources-ts/config/fake-services.yml'))
       const actual = container.get(notSharedServiceName)
       const expected = container.get(notSharedServiceName)
@@ -223,14 +223,14 @@ describe('YamlFileLoader', () => {
       return assert.notStrictEqual(actual, expected)
     })
 
-    it('should load properly synthetic service', () => {
+    it('should load properly synthetic service', async () => {
       // Arrange.
       const syntheticServiceName = 'synthetic_service'
       const syntheticInstance = new SyntheticService()
       container.set(syntheticServiceName, syntheticInstance)
 
       // Act.
-      loader.load(
+      await loader.load(
         path.join(__dirname, '/../../../Resources-ts/config/fake-services.yml'))
       const syntheticService = container.get(syntheticServiceName)
 
@@ -238,12 +238,12 @@ describe('YamlFileLoader', () => {
       return assert.instanceOf(syntheticService, SyntheticService)
     })
 
-    it('should load properly service without default export', () => {
+    it('should load properly service without default export', async () => {
       // Arrange.
       const serviceName = 'named'
 
       // Act.
-      loader.load(
+      await loader.load(
         path.join(__dirname, '/../../../Resources-ts/config/named-service.yml'))
       const service = container.get(serviceName)
 
@@ -259,13 +259,13 @@ describe('YamlFileLoader', () => {
       loader = new YamlFileLoader(container)
     })
 
-    it('should load multiple service files', () => {
+    it('should load multiple service files', async () => {
       // Arrange.
       const serviceName1 = 'foo'
       const serviceName2 = 'foo_manager'
 
       // Act.
-      loader.load(
+      await loader.load(
         path.join(__dirname, '/../../../Resources-ts/config/fake-imports.yml'))
       const service1 = container.get(serviceName1)
       const service2 = container.get(serviceName2)
@@ -284,7 +284,7 @@ describe('YamlFileLoader', () => {
       loader = new YamlFileLoader(container)
     })
 
-    it('should load multiple service files in subfolder', () => {
+    it('should load multiple service files in subfolder', async () => {
       // Arrange.
       const barServiceName = 'bar'
       const bazServiceName = 'baz'
@@ -292,7 +292,7 @@ describe('YamlFileLoader', () => {
         '/../../../Resources-ts/config/fake-import-subfolder.yml')
 
       // Act.
-      loader.load(configPath)
+      await loader.load(configPath)
       const bar = container.get(barServiceName)
       const baz = container.get(bazServiceName)
 
@@ -303,20 +303,20 @@ describe('YamlFileLoader', () => {
   })
 
   describe('load with default directory', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       container = new ContainerBuilder(false,
         path.join(__dirname, '..', '..', '..'))
       loader = new YamlFileLoader(container)
-      container.compile()
+      await container.compile()
     })
 
-    it('should load instance of service properly', () => {
+    it('should load instance of service properly', async () => {
       // Arrange.
       const configPath = path.join(__dirname,
         '/../../../Resources-ts/config/defaultdir.yaml')
 
       // Act.
-      loader.load(configPath)
+      await loader.load(configPath)
       const mailer = container.get('mailer')
       const service = container.get('app.service')
       const child = container.get('app.child_class')
@@ -329,13 +329,13 @@ describe('YamlFileLoader', () => {
   })
 
   describe('load with main', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       container = new ContainerBuilder()
       loader = new YamlFileLoader(container)
-      container.compile()
+      await container.compile()
     })
 
-    it('should load instance of service properly', () => {
+    it('should load instance of service properly', async () => {
       // Arrange.
       const configPath = path.join(
         __dirname,
@@ -343,7 +343,7 @@ describe('YamlFileLoader', () => {
       )
 
       // Act.
-      loader.load(configPath)
+      await loader.load(configPath)
       const one = container.get('classOne')
       const two = container.get('classTwo')
       const multipleExports = container.get('multipleExports')
@@ -358,13 +358,13 @@ describe('YamlFileLoader', () => {
   })
 
   describe('load with tags', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       container = new ContainerBuilder()
       loader = new YamlFileLoader(container)
-      container.compile()
+      await container.compile()
     })
 
-    it('should load instance of service with tagged arguments', () => {
+    it('should load instance of service with tagged arguments', async () => {
       // Arrange.
       const configPath = path.join(
         __dirname,
@@ -372,7 +372,7 @@ describe('YamlFileLoader', () => {
       )
 
       // Act.
-      loader.load(configPath)
+      await loader.load(configPath)
       const repositoryManager = container.get('repository-manager')
       const repositoryFoo = container.get('repository-foo')
       const repositoryBar = container.get('repository-bar')
@@ -386,13 +386,13 @@ describe('YamlFileLoader', () => {
   })
 
   describe('load class from package', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       container = new ContainerBuilder()
       loader = new YamlFileLoader(container)
-      container.compile()
+      await container.compile()
     })
 
-    it('should load class from package without errors', () => {
+    it('should load class from package without errors', async () => {
       // Arrange.
       const configPath = path.join(
         __dirname,
@@ -400,7 +400,7 @@ describe('YamlFileLoader', () => {
       )
 
       // Act.
-      loader.load(configPath)
+      await loader.load(configPath)
       const fooEmitter = container.get('foo_emitter')
 
       // Assert.
