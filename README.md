@@ -9,8 +9,6 @@ The Node Dependency Injection component allows you to standardize and centralize
 
 [![Npm Version](https://badge.fury.io/js/node-dependency-injection.svg)](https://badge.fury.io/js/node-dependency-injection)
 [![Build Status](https://travis-ci.org/zazoomauro/node-dependency-injection.svg?branch=master)](https://travis-ci.org/zazoomauro/node-dependency-injection)
-[![Dependencies](https://david-dm.org/zazoomauro/node-dependency-injection.svg)](https://david-dm.org/zazoomauro/node-dependency-injection)
-[![DevDependencies](https://david-dm.org/zazoomauro/node-dependency-injection/dev-status.svg)](https://david-dm.org/zazoomauro/node-dependency-injection#info=devDependencies)
 [![Code Coverage](https://codecov.io/gh/zazoomauro/node-dependency-injection/branch/master/graph/badge.svg)](https://codecov.io/gh/zazoomauro/node-dependency-injection)
 [![Code Climate](https://codeclimate.com/github/zazoomauro/node-dependency-injection/badges/gpa.svg)](https://codeclimate.com/github/zazoomauro/node-dependency-injection)
 [![Coding Standard](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
@@ -68,8 +66,12 @@ And get services from your container
 const mailer = container.get('service.mailer')
 ```
 
-Autowire for typescript
+Autowire for TypeScript
 ------------
+
+> WARNING: Is only available for node-ts or node with ts-node-register.
+
+> WARNING: It doesn´t work with `babel` or `tsc` or any other transpilation/compilation process.
 
 ```ts
 import {ContainerBuilder, Autowire} from 'node-dependency-injection'
