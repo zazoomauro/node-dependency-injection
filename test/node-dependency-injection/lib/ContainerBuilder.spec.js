@@ -132,6 +132,28 @@ describe('ContainerBuilder', () => {
   })
 
   describe('get', () => {
+    it('should not retrieve instance from a boolean id', () => {
+      // Arrange.
+      const id = true
+
+      // Act.
+      const actual = () => container.get(id)
+
+      // Assert.
+      assert.throw(actual, Error, `Unable to retrieve instance from id with type boolean.`)
+    })
+
+    it('should not retrieve instance from a number id', () => {
+      // Arrange.
+      const id = 91238
+
+      // Act.
+      const actual = () => container.get(id)
+
+      // Assert.
+      assert.throw(actual, Error, `Unable to retrieve instance from id with type number.`)
+    })
+
     it('should retrieve instance service from a class type', () => {
       // Arrange.
       const id = 'some_service'
