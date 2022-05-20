@@ -3,6 +3,7 @@ module.exports = {
     _defaults: {
       autowire: true,
       rootDir: "../src",
+      exclude: ["/ToExclude"]
     }
   }
 }

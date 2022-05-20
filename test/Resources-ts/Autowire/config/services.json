@@ -2,7 +2,10 @@
   "services": {
     "_defaults": {
       "autowire": true,
-      "rootDir": "../src"
+      "rootDir": "../src",
+      "exclude": [
+        "/ToExclude"
+      ]
     }
   }
 }
