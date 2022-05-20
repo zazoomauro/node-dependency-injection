@@ -138,7 +138,7 @@ const mailer = container.get('service.mailer')
 List of features
 ------------
 
-- Autowire only for TypeScript
+- Autowire for TypeScript
 - Configuration files with JS, YAML or JSON.
 - Multiple configuration files
 - Custom relative service directory
