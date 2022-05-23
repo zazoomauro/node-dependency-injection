@@ -178,4 +178,8 @@ export class Autowire {
     get container (): ContainerBuilder;
 
     process (): Promise<void>;
+
+    addExclude(excludedPath: string): void;
+
+    enableDump(servicePath: string): void;
 }
