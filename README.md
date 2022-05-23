@@ -69,15 +69,11 @@ const mailer = container.get('service.mailer')
 Autowire for TypeScript
 ------------
 
-> WARNING: Is only available for node-ts or node with ts-node-register.
-
-> WARNING: It doesn´t work with `babel` or `tsc` or any other transpilation/compilation process.
-
 ```ts
 import {ContainerBuilder, Autowire} from 'node-dependency-injection'
 
 const container = new ContainerBuilder(
-  true, 
+  false, 
   '/path/to/src'
 )
 const autowire = new Autowire(container)
@@ -101,6 +97,37 @@ You can also get a service from a class definition
 import SomeService from '@src/service/SomeService'
 
 container.get(SomeService)
+```
+
+If you are transpiling your Typescript may you need to dump the some kind of service configuration file.
+
+```ts
+import {ContainerBuilder, Autowire} from 'node-dependency-injection'
+
+const container = new ContainerBuilder(
+  false, 
+  '/path/to/src'
+)
+const autowire = new Autowire(container)
+autowire.enableDump('/some/path/to/dist/services.yaml')
+await autowire.process()
+
+```
+
+My proposal for load configuration file in a production environment:
+
+```ts
+if (process.env.NODE_ENV === 'dev') {
+  this._container = new ContainerBuilder(false, '/src');
+  this._autowire = new Autowire(this._container);
+  this._autowire.enableDump('/some/path/to/dist/services.yaml');
+  await this._autowire.process();
+} else {
+  this._container = new ContainerBuilder(false);
+  this._loader = new YamlFileLoader(this._container);
+  await this._loader.load('/some/path/to/dist/services.yaml');
+}
+await this._container.compile();
 ```
 
 
