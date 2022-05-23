@@ -114,7 +114,7 @@ await autowire.process()
 
 ```
 
-My proposal for load configuration file in a production environment:
+My proposal for load configuration file in a production environment with transpiling/babel compilation:
 
 ```ts
 if (process.env.NODE_ENV === 'dev') {
@@ -123,7 +123,7 @@ if (process.env.NODE_ENV === 'dev') {
   this._autowire.enableDump('/some/path/to/dist/services.yaml');
   await this._autowire.process();
 } else {
-  this._container = new ContainerBuilder(false);
+  this._container = new ContainerBuilder(false, '/dist');
   this._loader = new YamlFileLoader(this._container);
   await this._loader.load('/some/path/to/dist/services.yaml');
 }

@@ -30,6 +30,34 @@ import ServiceFileNotValidExtension from '../../../lib/Exception/ServiceFileNotV
 const assert = chai.assert
 
 describe('AutowireTS', () => {
+    it('should generate a working services file in yaml with default directory', async () => {
+        // Arrange.
+        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const container = new ContainerBuilder(false, dir)
+        const autowire = new Autowire(container)
+        const dumpPath = '/tmp/services.yaml'
+        autowire.enableDump(dumpPath)
+        await autowire.process()
+        const containerDump = new ContainerBuilder(false, dir)
+        const loader = new YamlFileLoader(containerDump)
+
+        // Act.
+        await loader.load(dumpPath)
+
+        // Assert.
+        assert.instanceOf(containerDump, ContainerBuilder)
+        assert.instanceOf(containerDump.get(FooBar), FooBar)
+        assert.instanceOf(containerDump.get(Foo), Foo)
+        assert.notInstanceOf(containerDump.get(Foo), NotUsedFoo)
+        assert.instanceOf(containerDump.get(Bar), Bar)
+        assert.instanceOf(containerDump.get(FooBar).multiple, ImplementsOne)
+        assert.notInstanceOf(containerDump.get(FooBar).multiple, ImplementsTwo)
+        const valueAbstractGetNumber = await containerDump.get(Foo).getNumber()
+        assert.strictEqual(valueAbstractGetNumber, 20)
+        const value = await containerDump.get(FooBar).callBarProcessMethod()
+        assert.strictEqual(value, 10)
+    })
+
     it('should not generate a working services file if path is not absolute', async () => {
         // Arrange.
         const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
