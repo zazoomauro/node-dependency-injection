@@ -24,10 +24,125 @@ import ImplementsOnePath from '../../Resources-ts/AutowireModulePath/src/Service
 import ImplementsTwoPath from '../../Resources-ts/AutowireModulePath/src/Service/ImplementsTwo'
 import PathExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExclude/ExcludedService'
 import PathInFolderExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExclude/InFolderExclude/InFolderExcludedService'
+import ServiceFileNotAbsolute from '../../../lib/Exception/ServiceFileNotAbsolute';
+import ServiceFileNotValidExtension from '../../../lib/Exception/ServiceFileNotValidExtension';
 
 const assert = chai.assert
 
 describe('AutowireTS', () => {
+    it('should not generate a working services file if path is not absolute', async () => {
+        // Arrange.
+        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const container = new ContainerBuilder(false, dir)
+        const autowire = new Autowire(container)
+        const dumpPath = 'tmp/services.yml'
+        
+        // Act.
+        const actual = () => autowire.enableDump(dumpPath)
+
+        // Assert.
+        assert.throws(actual, ServiceFileNotAbsolute)
+    })
+
+    it('should not generate a working services file if path extension is not valid', async () => {
+        // Arrange.
+        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const container = new ContainerBuilder(false, dir)
+        const autowire = new Autowire(container)
+        const dumpPath = '/tmp/services.txt'
+
+        // Act.
+        const actual = () => autowire.enableDump(dumpPath)
+
+        // Assert.
+        assert.throws(actual, ServiceFileNotValidExtension)
+    })
+
+    it('should generate a working services file in yaml', async () => {
+        // Arrange.
+        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const container = new ContainerBuilder(false, dir)
+        const autowire = new Autowire(container)
+        const dumpPath = '/tmp/services.yaml'
+        autowire.enableDump(dumpPath)
+        await autowire.process()
+        const containerDump = new ContainerBuilder(false, dir)
+        const loader = new YamlFileLoader(containerDump)
+
+        // Act.
+        await loader.load(dumpPath)
+
+        // Assert.
+        assert.instanceOf(autowire.container, ContainerBuilder)
+        assert.instanceOf(container.get(FooBar), FooBar)
+        assert.instanceOf(container.get(Foo), Foo)
+        assert.notInstanceOf(container.get(Foo), NotUsedFoo)
+        assert.instanceOf(container.get(Bar), Bar)
+        assert.instanceOf(container.get(FooBar).multiple, ImplementsOne)
+        assert.notInstanceOf(container.get(FooBar).multiple, ImplementsTwo)
+        const valueAbstractGetNumber = await container.get(Foo).getNumber()
+        assert.strictEqual(valueAbstractGetNumber, 20)
+        const value = await container.get(FooBar).callBarProcessMethod()
+        assert.strictEqual(value, 10)
+    })
+
+    it('should generate a working services file in json', async () => {
+        // Arrange.
+        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const container = new ContainerBuilder(false, dir)
+        const autowire = new Autowire(container)
+        const dumpPath = '/tmp/services.json'
+        autowire.enableDump(dumpPath)
+        await autowire.process()
+        const containerDump = new ContainerBuilder(false, dir)
+        const loader = new JsonFileLoader(containerDump)
+
+        // Act.
+        await loader.load(dumpPath)
+
+        // Assert.
+        assert.instanceOf(autowire.container, ContainerBuilder)
+        assert.instanceOf(container.get(FooBar), FooBar)
+        assert.instanceOf(container.get(Foo), Foo)
+        assert.notInstanceOf(container.get(Foo), NotUsedFoo)
+        assert.instanceOf(container.get(Bar), Bar)
+        assert.instanceOf(container.get(FooBar).multiple, ImplementsOne)
+        assert.notInstanceOf(container.get(FooBar).multiple, ImplementsTwo)
+        const valueAbstractGetNumber = await container.get(Foo).getNumber()
+        assert.strictEqual(valueAbstractGetNumber, 20)
+        const value = await container.get(FooBar).callBarProcessMethod()
+        assert.strictEqual(value, 10)
+    })
+
+    it('should generate a working services file in js', async () => {
+        // Arrange.
+        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const container = new ContainerBuilder(false, dir)
+        const autowire = new Autowire(container)
+        const dumpPath = '/tmp/services.js'
+        autowire.enableDump(dumpPath)
+        await autowire.process()
+        const containerDump = new ContainerBuilder(false, dir)
+        const loader = new JsFileLoader(containerDump)
+
+        // Act.
+        await loader.load(dumpPath)
+
+        // Assert.
+        assert.instanceOf(autowire.container, ContainerBuilder)
+        assert.instanceOf(container.get(FooBar), FooBar)
+        assert.instanceOf(container.get(Foo), Foo)
+        assert.notInstanceOf(container.get(Foo), NotUsedFoo)
+        assert.instanceOf(container.get(Bar), Bar)
+        assert.instanceOf(container.get(FooBar).multiple, ImplementsOne)
+        assert.notInstanceOf(container.get(FooBar).multiple, ImplementsTwo)
+        const valueAbstractGetNumber = await container.get(Foo).getNumber()
+        assert.strictEqual(valueAbstractGetNumber, 20)
+        const value = await container.get(FooBar).callBarProcessMethod()
+        assert.strictEqual(value, 10)
+    })
+
+
     it('should not return an exluded service from an excluded dir', async () => {
         // Arrange.
         const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
