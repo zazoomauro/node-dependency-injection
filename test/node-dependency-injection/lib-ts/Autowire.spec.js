@@ -34,6 +34,38 @@ describe('AutowireTS', () => {
     const excludedServiceMessage = 'The service ExcludedService is not registered'
     const inFolderExcludedMessage = 'The service InFolderExcludedService is not registered'
 
+    it('should get service file when was properly set', () => {
+        // Arrange.
+        const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
+        const container = new ContainerBuilder(false, dir)
+        const autowire = new Autowire(container)
+        const dumpPath = `${dumpServicesPath}.yaml`
+        const serviceFile = new ServiceFile(dumpPath, true)
+        autowire.serviceFile = serviceFile
+
+        // Act.
+        const actual = autowire.serviceFile
+
+        // Assert.
+        assert.strictEqual(actual, serviceFile)
+        assert.instanceOf(actual, ServiceFile)
+    })
+
+    it('should throw container default dir must be set if was not set', () => {
+        // Arrange.
+        const container = new ContainerBuilder()
+
+        // Act.
+        const actual = () => new Autowire(container)
+
+        // Assert.
+        assert.throws(
+            actual,
+            Error,
+            'Container default dir must be set'
+        )
+    })
+
     it('should generate a working services file in yaml with absolute path', async () => {
         // Arrange.
         const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
