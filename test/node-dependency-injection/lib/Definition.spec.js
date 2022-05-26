@@ -138,7 +138,7 @@ describe('Definition', () => {
   })
 
   describe('lazy', () => {
-    it('should set as true', () => {
+    it('should set as true as lazy', () => {
       // Arrange not needed.
 
       // Act.
@@ -150,7 +150,7 @@ describe('Definition', () => {
   })
 
   describe('deprecated', () => {
-    it('should set as true', () => {
+    it('should set as true as deprecated', () => {
       // Arrange not needed.
 
       // Act.
@@ -160,7 +160,7 @@ describe('Definition', () => {
       assert.isTrue(definition.deprecated)
     })
 
-    it('should set as false', () => {
+    it('should set as false as deprecated', () => {
       // Arrange.
       definition.deprecated = true
 
@@ -173,7 +173,7 @@ describe('Definition', () => {
   })
 
   describe('synthetic', () => {
-    it('should set as true', () => {
+    it('should set as true as synthetic', () => {
       // Arrange not needed.
 
       // Act.
@@ -183,7 +183,7 @@ describe('Definition', () => {
       assert.isTrue(definition.synthetic)
     })
 
-    it('should set as false', () => {
+    it('should set as false as synthetic', () => {
       // Arrange.
       definition.synthetic = true
 

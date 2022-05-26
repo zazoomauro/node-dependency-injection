@@ -225,8 +225,10 @@ describe('ContainerBuilder', () => {
       class DecoratingFoo {}
 
       container.register('foo', Foo)
-      const decoratingDefinition = container.register('decorating.foo',
-        DecoratingFoo)
+      const decoratingDefinition = container.register(
+        'decorating1.foo',
+        DecoratingFoo
+      )
       decoratingDefinition.decoratedService = 'foo'
 
       // Act.
@@ -381,7 +383,7 @@ describe('ContainerBuilder', () => {
       class Bar {}
 
       const method = 'getFactory'
-      const id = 'foo.service'
+      const id = 'foo1.service'
       const definition = new Definition()
       definition.setFactory(Foo, method)
       container.setDefinition(id, definition)
@@ -409,7 +411,7 @@ describe('ContainerBuilder', () => {
         class Bar {}
 
         const method = 'getFactory'
-        const id = 'foo.service'
+        const id = 'foo2.service'
         const definition = new Definition()
         definition.args = [true]
         definition.setFactory(Foo, method)
@@ -433,7 +435,7 @@ describe('ContainerBuilder', () => {
       class Bar {}
 
       const method = 'getFactory'
-      const id = 'foo.service'
+      const id = 'foo3.service'
       const factoryId = 'factory.service'
       container.register(factoryId, Foo)
       const definition = new Definition()
@@ -493,7 +495,7 @@ describe('ContainerBuilder', () => {
 
     it('should return the right service', () => {
       // Arrange.
-      const id = 'service.foo'
+      const id = 'service1.foo'
 
       class Foo {
       }
@@ -510,7 +512,7 @@ describe('ContainerBuilder', () => {
     it('should return the right service with argument in the constructor',
       () => {
         // Arrange.
-        const id = 'service.foo'
+        const id = 'service2.foo'
         const param = 'foo bar'
 
         class Foo {
@@ -532,10 +534,10 @@ describe('ContainerBuilder', () => {
         return assert.strictEqual(actual.param, param)
       })
 
-    it('should return the right service with reference argument', () => {
+    it('should return the right service with different reference argument', () => {
       // Arrange.
-      const id = 'service.foo'
-      const referenceId = 'service.bar'
+      const id = 'service3.foo'
+      const referenceId = 'service3.bar'
 
       class Bar {
       }
@@ -562,8 +564,8 @@ describe('ContainerBuilder', () => {
 
     it('should return the right service with reference argument', () => {
       // Arrange.
-      const id = 'service.foo'
-      const referenceId = 'service.bar'
+      const id = 'service4.foo'
+      const referenceId = 'service4.bar'
 
       class Bar {
       }
@@ -593,8 +595,8 @@ describe('ContainerBuilder', () => {
     it('should return the right service with reference argument nullable',
       () => {
         // Arrange.
-        const id = 'service.foo'
-        const referenceId = 'service.bar'
+        const id = 'service5.foo'
+        const referenceId = 'service5.bar'
 
         class Foo {
           constructor (bar = null) {
@@ -620,9 +622,9 @@ describe('ContainerBuilder', () => {
 
     it('should return the right service with reference argument', () => {
       // Arrange.
-      const id = 'service.foo'
-      const reference1Id = 'service.bar'
-      const reference2Id = 'service.foo_bar'
+      const id = 'service6.foo'
+      const reference1Id = 'service6.bar'
+      const reference2Id = 'service6.foo_bar'
 
       class FooBar {
       }
@@ -662,7 +664,7 @@ describe('ContainerBuilder', () => {
 
     it('should call the method without any argument', () => {
       // Arrange.
-      const id = 'service.foo'
+      const id = 'service7.foo'
       const parameter = 'foobar'
 
       class Foo {
@@ -686,7 +688,7 @@ describe('ContainerBuilder', () => {
 
     it('should throw an exception if the method call does not exists', () => {
       // Arrange.
-      const id = 'service.foo'
+      const id = 'service8.foo'
       const method = 'bar'
 
       class Foo {}
@@ -703,7 +705,7 @@ describe('ContainerBuilder', () => {
     it(
       'should get the service instance and instantiate ones multiple service dependency',
       () => {
-        const fooId = 'service.foo'
+        const fooId = 'service9.foo'
         const barId = 'service.bar'
         const fooBarId = 'service.foo_bar'
         let constructorCalls = 0
@@ -774,7 +776,7 @@ describe('ContainerBuilder', () => {
 
     it('should instantiate a lazy service only when get the service', async () => {
       // Arrange.
-      const fooId = 'service.foo'
+      const fooId = 'service10.foo'
       let constructorCalls = 0
 
       class Foo {
@@ -797,7 +799,7 @@ describe('ContainerBuilder', () => {
 
     it('should throw an exception if we get a private service', () => {
       // Arrange.
-      const fooId = 'service.foo'
+      const fooId = 'service11.foo'
 
       class Foo {}
 
@@ -875,7 +877,7 @@ describe('ContainerBuilder', () => {
     it('should call the process method by priority properly',
       async () => {
         // Arrange.
-        const fooId = 'service.foo'
+        const fooId = 'service12.foo'
 
         class Foo {}
 
@@ -905,7 +907,7 @@ describe('ContainerBuilder', () => {
     it('should add more compiler pass by priority',
       async () => {
         // Arrange.
-        const fooId = 'service.foo'
+        const fooId = 'service13.foo'
 
         class Foo {}
 
@@ -930,7 +932,7 @@ describe('ContainerBuilder', () => {
     it('should remove private instances if no remove pass config passed',
       async () => {
         // Arrange.
-        const fooId = 'service.foo'
+        const fooId = 'service14.foo'
 
         class Foo {}
 
@@ -948,7 +950,7 @@ describe('ContainerBuilder', () => {
     it('should not remove private instances if remove pass config passed',
       async () => {
         // Arrange.
-        const fooId = 'service.foo'
+        const fooId = 'service15.foo'
 
         class Foo {}
 
@@ -1017,7 +1019,7 @@ describe('ContainerBuilder', () => {
 
     it('should compile the container and return a service', async () => {
       // Arrange.
-      const id = 'service.foo'
+      const id = 'service15.foo'
       const parameter = 'foobar'
 
       class Foo {
@@ -1056,7 +1058,7 @@ describe('ContainerBuilder', () => {
     it(
       'should prevent instantiate class again if we get a service and then compile',
       async () => {
-        const fooId = 'service.foo'
+        const fooId = 'service16.foo'
         let constructorCalls = 0
 
         class Foo {
@@ -1181,7 +1183,7 @@ describe('ContainerBuilder', () => {
 
     it('should not instantiate a lazy service on compile', async () => {
       // Arrange.
-      const fooId = 'service.foo'
+      const fooId = 'service17.foo'
       let constructorCalls = 0
 
       class Foo {

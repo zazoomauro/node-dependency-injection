@@ -136,7 +136,7 @@ describe('YamlFileLoaderTS', () => {
 
       // Act.
       await loader.load(
-        path.join(__dirname, '/../../../Resources-ts/config/fake-services.yml'))
+        path.join(__dirname, '..', '/../../Resources-ts/config/fake-services.yml'))
       await container.compile()
       const service = container.get(serviceName)
       const aliasService = container.get(aliasName)
@@ -277,14 +277,6 @@ describe('YamlFileLoaderTS', () => {
 
       return assert.instanceOf(service2, FooManager)
     })
-  })
-
-  describe('load imports in subfolder', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new YamlFileLoader(container)
-    })
 
     it('should load multiple service files in subfolder', async () => {
       // Arrange.
@@ -357,14 +349,6 @@ describe('YamlFileLoaderTS', () => {
       assert.instanceOf(defaultClass, DefaultClass)
       return assert.instanceOf(multipleExports, MultipleExports)
     })
-  })
-
-  describe('load with tags', () => {
-    beforeEach(async () => {
-      container = new ContainerBuilder()
-      loader = new YamlFileLoader(container)
-      await container.compile()
-    })
 
     it('should load instance of service with tagged arguments', async () => {
       // Arrange.
@@ -384,14 +368,6 @@ describe('YamlFileLoaderTS', () => {
       assert.instanceOf(repositoryFoo, RepositoryFoo)
       assert.instanceOf(repositoryBar, RepositoryBar)
       assert.equal(repositoryManager.repositories.length, 2)
-    })
-  })
-
-  describe('load class from package', () => {
-    beforeEach(async () => {
-      container = new ContainerBuilder()
-      loader = new YamlFileLoader(container)
-      await container.compile()
     })
 
     it('should load class from package without errors', async () => {

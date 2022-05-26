@@ -29,12 +29,17 @@ import ServiceFile from '../../../lib/ServiceFile';
 const assert = chai.assert
 
 describe('AutowireTS', () => {
+    const resourcesTsFolder = 'Resources-ts'
+    const dumpServicesPath = '/tmp/services'
+    const excludedServiceMessage = 'The service ExcludedService is not registered'
+    const inFolderExcludedMessage = 'The service InFolderExcludedService is not registered'
+
     it('should generate a working services file in yaml with absolute path', async () => {
         // Arrange.
-        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container)
-        const dumpPath = '/tmp/services.yaml'
+        const dumpPath = `${dumpServicesPath}.yaml`
         autowire.serviceFile = new ServiceFile(dumpPath, true)
         await autowire.process()
         const containerDump = new ContainerBuilder(false)
@@ -59,38 +64,10 @@ describe('AutowireTS', () => {
 
     it('should generate a working services file in yaml with default directory', async () => {
         // Arrange.
-        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container)
-        const dumpPath = '/tmp/services.yaml'
-        autowire.serviceFile = new ServiceFile(dumpPath)
-        await autowire.process()
-        const containerDump = new ContainerBuilder(false, dir)
-        const loader = new YamlFileLoader(containerDump)
-
-        // Act.
-        await loader.load(dumpPath)
-
-        // Assert.
-        assert.instanceOf(containerDump, ContainerBuilder)
-        assert.instanceOf(containerDump.get(FooBar), FooBar)
-        assert.instanceOf(containerDump.get(Foo), Foo)
-        assert.notInstanceOf(containerDump.get(Foo), NotUsedFoo)
-        assert.instanceOf(containerDump.get(Bar), Bar)
-        assert.instanceOf(containerDump.get(FooBar).multiple, ImplementsOne)
-        assert.notInstanceOf(containerDump.get(FooBar).multiple, ImplementsTwo)
-        const valueAbstractGetNumber = await containerDump.get(Foo).getNumber()
-        assert.strictEqual(valueAbstractGetNumber, 20)
-        const value = await containerDump.get(FooBar).callBarProcessMethod()
-        assert.strictEqual(value, 10)
-    })
-
-    it('should generate a working services file in yaml', async () => {
-        // Arrange.
-        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
-        const container = new ContainerBuilder(false, dir)
-        const autowire = new Autowire(container)
-        const dumpPath = '/tmp/services.yaml'
+        const dumpPath = `${dumpServicesPath}.yaml`
         autowire.serviceFile = new ServiceFile(dumpPath)
         await autowire.process()
         const containerDump = new ContainerBuilder(false, dir)
@@ -115,10 +92,10 @@ describe('AutowireTS', () => {
 
     it('should generate a working services file in json', async () => {
         // Arrange.
-        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container)
-        const dumpPath = '/tmp/services.json'
+        const dumpPath = `${dumpServicesPath}.json`
         autowire.serviceFile = new ServiceFile(dumpPath)
         await autowire.process()
         const containerDump = new ContainerBuilder(false, dir)
@@ -143,10 +120,10 @@ describe('AutowireTS', () => {
 
     it('should generate a working services file in js', async () => {
         // Arrange.
-        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container)
-        const dumpPath = '/tmp/services.js'
+        const dumpPath = `${dumpServicesPath}.js`
         autowire.serviceFile = new ServiceFile(dumpPath)
         await autowire.process()
         const containerDump = new ContainerBuilder(false, dir)
@@ -172,7 +149,7 @@ describe('AutowireTS', () => {
 
     it('should not return an exluded service from an excluded dir', async () => {
         // Arrange.
-        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container)
         autowire.addExclude('/ToExclude')
@@ -183,13 +160,16 @@ describe('AutowireTS', () => {
         const actual = () => container.get(ExcludedService)
 
         // Assert.
-        assert.throw(actual, Error,
-            'The service ExcludedService is not registered')
+        assert.throw(
+            actual, 
+            Error,
+            excludedServiceMessage
+        )
     })
 
     it('should not return an in folder exluded service from an excluded dir', async () => {
         // Arrange.
-        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container)
         autowire.addExclude('ToExclude')
@@ -201,12 +181,12 @@ describe('AutowireTS', () => {
 
         // Assert.
         assert.throw(actual, Error,
-            'The service InFolderExcludedService is not registered')
+            inFolderExcludedMessage)
     })
 
     it('should process and return a compiled container with services', async () => {
         // Arrange.
-        const dir = path.join(__dirname, '..', '..', 'Resources-ts', 'Autowire', 'src')
+        const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container)
 
@@ -245,12 +225,12 @@ describe('AutowireTS', () => {
         assert.throw(
             () => container.get(InFolderExcludedService),
             Error,
-            'The service InFolderExcludedService is not registered'
+            inFolderExcludedMessage
         )
         assert.throw(
             () => container.get(ExcludedService),
             Error,
-            'The service ExcludedService is not registered'
+            excludedServiceMessage
         )
         assert.instanceOf(container.get(FooBar), FooBar)
         assert.instanceOf(container.get(Foo), Foo)
@@ -279,12 +259,12 @@ describe('AutowireTS', () => {
         assert.throw(
             () => container.get(InFolderExcludedService),
             Error,
-            'The service InFolderExcludedService is not registered'
+            inFolderExcludedMessage
         )
         assert.throw(
             () => container.get(ExcludedService),
             Error,
-            'The service ExcludedService is not registered'
+            excludedServiceMessage
         )
         assert.instanceOf(container.get(FooBar), FooBar)
         assert.instanceOf(container.get(Foo), Foo)
@@ -313,12 +293,12 @@ describe('AutowireTS', () => {
         assert.throw(
             () => container.get(InFolderExcludedService),
             Error,
-            'The service InFolderExcludedService is not registered'
+            inFolderExcludedMessage
         )
         assert.throw(
             () => container.get(ExcludedService),
             Error,
-            'The service ExcludedService is not registered'
+            excludedServiceMessage
         )
         assert.instanceOf(container.get(FooBar), FooBar)
         assert.instanceOf(container.get(Foo), Foo)
@@ -336,7 +316,7 @@ describe('AutowireTS', () => {
             __dirname, 
             '..', 
             '..', 
-            'Resources-ts', 
+            resourcesTsFolder, 
             'AutowireModulePath', 
             'src'
         )
@@ -361,13 +341,45 @@ describe('AutowireTS', () => {
         assert.strictEqual(value, 10)
     })
 
+    it('should load in not existing tsconfig.json', async () => {
+        // Arrange.
+        const dir = path.join(
+            __dirname,
+            '..',
+            '..',
+            resourcesTsFolder,
+            'AutowireModulePath',
+            'src'
+        )
+        const tsConfigPath = path.join(process.cwd(), 'tsconfigs.json')
+        const container = new ContainerBuilder(false, dir)
+        const autowire = new Autowire(container, tsConfigPath)
+        autowire.addExclude('ToExclude')
+
+        // Act.
+        await autowire.process()
+        await container.compile()
+
+        // Assert.
+        assert.throw(
+            () => container.get(PathInFolderExcludedService),
+            Error,
+            inFolderExcludedMessage
+        )
+        assert.throw(
+            () => container.get(PathExcludedService),
+            Error,
+            excludedServiceMessage
+        )
+    })
+
     it('should load with sophisticated path mapping in custom tsconfig.json', async () => {
         // Arrange.
         const dir = path.join(
             __dirname,
             '..',
             '..',
-            'Resources-ts',
+            resourcesTsFolder,
             'AutowireModulePath',
             'src'
         )
@@ -384,12 +396,12 @@ describe('AutowireTS', () => {
         assert.throw(
             () => container.get(PathInFolderExcludedService),
             Error,
-            'The service InFolderExcludedService is not registered'
+            inFolderExcludedMessage
         )
         assert.throw(
             () => container.get(PathExcludedService),
             Error,
-            'The service ExcludedService is not registered'
+            excludedServiceMessage
         )
         assert.instanceOf(autowire.container, ContainerBuilder)
         assert.instanceOf(container.get(FooBarPath), FooBarPath)

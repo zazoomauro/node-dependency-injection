@@ -21,13 +21,13 @@ describe('JsonFileLoader', () => {
   let container
   const logger = { warn: () => {} }
 
-  describe('load', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new JsonFileLoader(container)
-    })
+  beforeEach(() => {
+    container = new ContainerBuilder()
+    container.logger = logger
+    loader = new JsonFileLoader(container)
+  })
 
+  describe('load', () => {
     it('should throw an exception if the json file not exists', () => {
       // Arrange.
       const file = 'fake-filePath.json'
@@ -81,12 +81,6 @@ describe('JsonFileLoader', () => {
   })
 
   describe('load multiple imports', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new JsonFileLoader(container)
-    })
-
     it('should load multiple service files', async () => {
       // Arrange.
       const serviceName = 'foo'
@@ -102,12 +96,6 @@ describe('JsonFileLoader', () => {
   })
 
   describe('load imports in subfolder', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new JsonFileLoader(container)
-    })
-
     it('should load multiple service files in subfolder', async () => {
       // Arrange.
       const barServiceName = 'bar'

@@ -21,13 +21,13 @@ describe('JsFileLoader', () => {
   let container
   const logger = { warn: () => {} }
 
-  describe('load', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new JsFileLoader(container)
-    })
+  beforeEach(() => {
+    container = new ContainerBuilder()
+    container.logger = logger
+    loader = new JsFileLoader(container)
+  })
 
+  describe('load', () => {
     it('should throw an exception if the js file not exists', () => {
       // Arrange.
       const file = 'fake-filePath.js'
@@ -78,12 +78,6 @@ describe('JsFileLoader', () => {
   })
 
   describe('load multiple imports', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new JsFileLoader(container)
-    })
-
     it('should load multiple service files', async () => {
       // Arrange.
       const serviceName = 'foo'
@@ -99,12 +93,6 @@ describe('JsFileLoader', () => {
   })
 
   describe('load imports in subfolder', () => {
-    beforeEach(() => {
-      container = new ContainerBuilder()
-      container.logger = logger
-      loader = new JsFileLoader(container)
-    })
-
     it('should load multiple service files in subfolder', async () => {
       // Arrange.
       const barServiceName = 'bar'
@@ -124,12 +112,6 @@ describe('JsFileLoader', () => {
   })
 
   describe('load with tags', () => {
-    beforeEach(async () => {
-      container = new ContainerBuilder()
-      loader = new JsFileLoader(container)
-      await container.compile()
-    })
-
     it('should load instance of service with tagged arguments', async () => {
       // Arrange.
       const configPath = path.join(
