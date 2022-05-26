@@ -2,6 +2,8 @@ import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
+import chaiIterator from 'chai-iterator';
+chai.use(chaiIterator);
 import JsFileLoader from '../../../../lib/Loader/JsFileLoader'
 import ContainerBuilder from '../../../../lib/ContainerBuilder'
 import Foo from '../../../Resources/foo'

@@ -1,6 +1,9 @@
 import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+chai.use(chaiAsPromised)
+import chaiIterator from 'chai-iterator'
+chai.use(chaiIterator)
 import JsonFileLoader from '../../../../lib/Loader/JsonFileLoader'
 import ContainerBuilder from '../../../../lib/ContainerBuilder'
 import Foo from '../../../Resources-ts/Foo'
@@ -11,7 +14,6 @@ import RepositoryManager from '../../../Resources-ts/RepositoryManager'
 import RepositoryFoo from '../../../Resources-ts/RepositoryFoo'
 import RepositoryBar from '../../../Resources-ts/RepositoryBar'
 
-chai.use(chaiAsPromised)
 const assert = chai.assert
 
 describe('JsonFileLoaderTs', () => {

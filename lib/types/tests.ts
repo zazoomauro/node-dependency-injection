@@ -53,7 +53,7 @@ class SomeManager {
 }
 
 class CustomPass implements CompilerPass {
-    process(container: ContainerBuilder) {
+    async process(container: ContainerBuilder) {
         // ... do something during the compilation
     }
 }
@@ -66,6 +66,13 @@ function assertIsBoolean(value: boolean): void {
 
 function assertIsDefinition(value: Definition): void {
     if (!(value instanceof Definition)) {
+        throw TypeError()
+    }
+}
+
+async function assertIsPromisedDefinition(value: Promise<Definition>): Promise<void> {
+    const definition = await value
+    if (!(definition instanceof Definition)) {
         throw TypeError()
     }
 }
@@ -117,7 +124,7 @@ assertIsBoolean(container.has('some'))
 assertIsBoolean(container.hasDefinition('some'))
 assertIsBoolean(container.removeDefinition('some'))
 assertIsDefinition(container.getDefinition('some'))
-assertIsDefinition(container.findDefinition('some'))
+assertIsPromisedDefinition(container.findDefinition('some'))
 assertIsBoolean(container.hasParameter('mailer.transport'))
 container.findTaggedServiceIds('tag')
 container.setAlias('mailer', 'service.mailer')

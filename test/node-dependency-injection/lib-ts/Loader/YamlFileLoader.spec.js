@@ -1,7 +1,9 @@
 import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised';
-chai.use(chaiAsPromised);
+import chaiAsPromised from 'chai-as-promised'
+chai.use(chaiAsPromised)
+import chaiIterator from 'chai-iterator'
+chai.use(chaiIterator)
 import YamlFileLoader from '../../../../lib/Loader/YamlFileLoader'
 import ContainerBuilder from '../../../../lib/ContainerBuilder'
 import Foo from '../../../Resources-ts/Foo'

@@ -36,7 +36,7 @@ export interface Tag {
 export class InstanceManager {
     constructor(containerBuilder: ContainerBuilder, definitions: Map<string, Definition>, alias: Map<string, string>);
 
-    getInstance(id: string, bypassPublic?: boolean): any;
+    getInstance(id: any, bypassPublic?: boolean): any;
 
     getInstanceFromDefinition(definition: Definition): any;
 }
@@ -58,9 +58,9 @@ export class ContainerBuilder {
 
     compile(): Promise<void>;
 
-    findDefinition(key: string): Definition;
+    findDefinition(key: string): Promise<Definition>;
 
-    findTaggedServiceIds(name: string): Map<any, any>;
+    findTaggedServiceIds(name: string): Iterable<{id: string, definition: Definition}>;
 
     get<T = any>(id: string|any): T;
 
@@ -181,5 +181,13 @@ export class Autowire {
 
     addExclude(excludedPath: string): void;
 
-    enableDump(servicePath: string): void;
+    set serviceFile(serviceFile: ServiceFile);
+
+    get serviceFile(): ServiceFile;
+}
+
+export class ServiceFile {
+    constructor (servicesDumpPath: string, absolutePath: boolean);
+
+    generateFromContainer(container: ContainerBuilder): Promise<void>;
 }

@@ -2,6 +2,8 @@ import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
+import chaiIterator from 'chai-iterator';
+chai.use(chaiIterator);
 import ContainerBuilder from '../../../lib/ContainerBuilder'
 import Definition from '../../../lib/Definition'
 import Reference from '../../../lib/Reference'
@@ -1390,7 +1392,7 @@ describe('ContainerBuilder', () => {
       return assert.lengthOf(actual, 1)
     })
 
-    it('should return a map of attributes', () => {
+    it('should return an iterable of attributes', () => {
       // Arrange.
       const tagName = 'listener'
       const eventName = 'event'
@@ -1399,13 +1401,15 @@ describe('ContainerBuilder', () => {
       const attributes = new Map()
       attributes.set(eventName, eventValue)
       definition.addTag(tagName, attributes)
-      container.setDefinition('app.listener', definition)
+      const definitionKey = 'app.listener'
+      container.setDefinition(definitionKey, definition)
 
       // Act.
       const actual = container.findTaggedServiceIds(tagName)
 
       // Assert.
-      for (const definition of actual.values()) {
+      for (const {id, definition} of actual) {
+        assert.strictEqual(id, definitionKey)
         for (const tag of definition.tags) {
           assert.strictEqual(eventValue, tag.attributes.get(eventName))
         }
@@ -1639,7 +1643,7 @@ describe('ContainerBuilder', () => {
   })
 
   describe('findDefinition', () => {
-    it('should return a definition if an alias was properly set', () => {
+    it('should return a definition if an alias was properly set', async () => {
       // Arrange.
       class Foo {}
 
@@ -1650,21 +1654,21 @@ describe('ContainerBuilder', () => {
       container.setAlias(keyAlias, key)
 
       // Act.
-      const actual = container.findDefinition(keyAlias)
+      const actual = await container.findDefinition(keyAlias)
 
       // Assert.
       return assert.instanceOf(actual, Definition)
     })
 
-    it('should throw an exception if a definition was not set properly', () => {
+    it('should throw an exception if a definition was not set properly', async () => {
       // Arrange.
       const key = 'foo'
 
       // Act.
-      const actual = () => container.findDefinition(key)
+      const actual = container.findDefinition(key)
 
       // Assert.
-      return assert.throw(actual, Error, `${key} definition not found`)
+      return assert.isRejected(actual, Error, `${key} definition not found`)
     })
   })
 

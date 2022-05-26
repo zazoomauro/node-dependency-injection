@@ -102,14 +102,14 @@ container.get(SomeService)
 If you are transpiling your Typescript may you need to dump the some kind of service configuration file.
 
 ```ts
-import {ContainerBuilder, Autowire} from 'node-dependency-injection'
+import {ContainerBuilder, Autowire, ServiceFile} from 'node-dependency-injection'
 
 const container = new ContainerBuilder(
   false, 
   '/path/to/src'
 )
 const autowire = new Autowire(container)
-autowire.enableDump('/some/path/to/dist/services.yaml')
+autowire.serviceFile = new ServiceFile('/some/path/to/dist/services.yaml')
 await autowire.process()
 
 ```
@@ -120,7 +120,7 @@ My proposal for load configuration file in a production environment with transpi
 if (process.env.NODE_ENV === 'dev') {
   this._container = new ContainerBuilder(false, '/src');
   this._autowire = new Autowire(this._container);
-  this._autowire.enableDump('/some/path/to/dist/services.yaml');
+  this._autowire.serviceFile = new ServiceFile('/some/path/to/dist/services.yaml');
   await this._autowire.process();
 } else {
   this._container = new ContainerBuilder(false, '/dist');

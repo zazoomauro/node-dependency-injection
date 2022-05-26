@@ -2,6 +2,8 @@ import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
+import chaiIterator from 'chai-iterator';
+chai.use(chaiIterator);
 import ContainerBuilder from '../../../lib/ContainerBuilder'
 import Definition from '../../../lib/Definition'
 import Reference from '../../../lib/Reference'
@@ -13,7 +15,6 @@ import BarManager from './../../Resources-ts/BarManager'
 import Sinon from 'sinon'
 import FileClassPass from '../../Resources-ts/CompilerPass/FileClassPass'
 
-chai.use(chaiAsPromised);
 const assert = chai.assert
 
 describe('ContainerBuilderTS', () => {
@@ -1301,7 +1302,7 @@ describe('ContainerBuilderTS', () => {
   })
 
   describe('findTaggedServiceIds', () => {
-    it('should return an array with tagged services', () => {
+    it('should return an iterable with tagged services', () => {
       // Arrange.
       class Foo {}
 
@@ -1336,7 +1337,7 @@ describe('ContainerBuilderTS', () => {
       return assert.lengthOf(actual, 1)
     })
 
-    it('should return a map of attributes', () => {
+    it('should return an iterable of attributes', () => {
       // Arrange.
       const tagName = 'listener'
       const eventName = 'event'
@@ -1351,7 +1352,7 @@ describe('ContainerBuilderTS', () => {
       const actual = container.findTaggedServiceIds(tagName)
 
       // Assert.
-      for (const definition of actual.values()) {
+      for (const {id, definition} of actual) {
         for (const tag of definition.tags) {
           assert.strictEqual(eventValue, tag.attributes.get(eventName))
         }
@@ -1585,7 +1586,7 @@ describe('ContainerBuilderTS', () => {
   })
 
   describe('findDefinition', () => {
-    it('should return a definition if an alias was properly set', () => {
+    it('should return a definition if an alias was properly set', async () => {
       // Arrange.
       class Foo {}
 
@@ -1596,7 +1597,7 @@ describe('ContainerBuilderTS', () => {
       container.setAlias(keyAlias, key)
 
       // Act.
-      const actual = container.findDefinition(keyAlias)
+      const actual = await container.findDefinition(keyAlias)
 
       // Assert.
       return assert.instanceOf(actual, Definition)
@@ -1607,10 +1608,10 @@ describe('ContainerBuilderTS', () => {
       const key = 'foo'
 
       // Act.
-      const actual = () => container.findDefinition(key)
+      const actual = container.findDefinition(key)
 
       // Assert.
-      return assert.throw(actual, Error, `${key} definition not found`)
+      return assert.isRejected(actual, Error, `${key} definition not found`)
     })
   })
 
