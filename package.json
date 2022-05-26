@@ -49,6 +49,9 @@
     "url": "https://github.com/zazoomauro/node-dependency-injection/issues"
   },
   "homepage": "https://github.com/zazoomauro/node-dependency-injection#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.17.10",
     "@babel/runtime": "^7.17.9",
