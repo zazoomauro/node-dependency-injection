@@ -52,13 +52,13 @@ $ npm test || test:coverage
 Please, follow [Standard JS Coding Guidelines](http://standardjs.com)
 
 ```console
-$ npm run test:standard
+$ npx standard
 ```
 
 and if you want to fix automatically some of your source code
  
 ```console
-$ npm run test:standard:fix
+$ npx standard --fix
 ```
 
 ### 5. Documentation/Wiki ###

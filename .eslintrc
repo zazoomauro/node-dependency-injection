@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "plugin:sonarjs/recommended"
+  ],
+  "plugins": [
+    "sonarjs"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "sonarjs/cognitive-complexity": "error",
+    "sonarjs/no-identical-expressions": "error"
+  }
+}
