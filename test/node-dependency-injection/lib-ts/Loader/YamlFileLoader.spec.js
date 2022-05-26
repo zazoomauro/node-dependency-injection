@@ -45,6 +45,18 @@ describe('YamlFileLoaderTS', () => {
       loaderSelfReference = new YamlFileLoader(containerSelfReference)
     })
 
+    it('should do nothing if defaults has not autowire true', async () => {
+      // Arrange.
+      await loaderSelfReference.load(path.join(__dirname,
+        '/../../../Resources-ts/config/services-no-autowire.yml'))
+
+      // Act.
+      const actual = containerSelfReference.get('some_manager_with_container')
+
+      // Assert.
+      assert.instanceOf(actual.container, ContainerBuilder)
+    })
+
     it('should inject the service container properly', async () => {
       // Arrange.
       await loaderSelfReference.load(path.join(__dirname,

@@ -1,0 +1,6 @@
+services:
+    _defaults: ~
+  
+    some_manager_with_container:
+      class: ./../SomeManagerWithContainer
+      arguments: ['@service_container']

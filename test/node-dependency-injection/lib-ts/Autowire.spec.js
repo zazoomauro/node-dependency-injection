@@ -25,6 +25,7 @@ import ImplementsTwoPath from '../../Resources-ts/AutowireModulePath/src/Service
 import PathExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExclude/ExcludedService'
 import PathInFolderExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExclude/InFolderExclude/InFolderExcludedService'
 import ServiceFile from '../../../lib/ServiceFile';
+import RootDirectoryNotFound from '../../../lib/Exception/RootDirectoryNotFound';
 
 const assert = chai.assert
 
@@ -239,6 +240,26 @@ describe('AutowireTS', () => {
         const value = await container.get(FooBar).callBarProcessMethod()
         assert.strictEqual(value, 10)
     })
+
+    it(
+        'should load services with autowire and absolute root dir on autowire',
+        async () => {
+            // Arrange.
+            const container = new ContainerBuilder()
+            let loader = new YamlFileLoader(container)
+            
+            // Act.
+            const actual = loader.load(
+                path.join(
+                    __dirname,
+                    '/../../Resources-ts/Autowire/config/services-absolute-root-dir.yaml',
+                )
+            )
+
+            // Assert.
+            assert.isRejected(actual, RootDirectoryNotFound)
+        }
+    )
 
     it('should loading services with autowire and yaml file loader', async () => {
         // Arrange.

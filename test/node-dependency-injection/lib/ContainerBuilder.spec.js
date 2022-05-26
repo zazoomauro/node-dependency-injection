@@ -1206,6 +1206,26 @@ describe('ContainerBuilder', () => {
 
   describe('addCompilerPass', () => {
     it(
+      'should increment priority by type and priority if has already same priority', 
+      () => {
+        // Arrange.
+        class FooPassOne {
+          process() { }
+        }
+
+        class FooPassTwo {
+          process() { }
+        }
+
+        // Act.
+        container.addCompilerPass(new FooPassOne(), PassConfig.TYPE_REMOVE, 1)
+        container.addCompilerPass(new FooPassTwo(), PassConfig.TYPE_REMOVE, 1)
+
+        // Assert.
+        assert.lengthOf(container._compilerPass[PassConfig.TYPE_REMOVE], 3)
+    })
+
+    it(
       'should throw an error if the registered compiler pass do not have process method',
       () => {
         // Arrange.
