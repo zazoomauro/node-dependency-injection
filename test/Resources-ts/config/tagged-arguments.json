@@ -1,0 +1,16 @@
+{
+  "services": {
+    "repository-manager": {
+      "class": "./../RepositoryManager",
+      "arguments": ["!tagged repository"]
+    },
+    "repository-foo": {
+      "class": "./../RepositoryFoo",
+      "tags": [{ "name": "repository" }]
+    },
+    "repository-bar": {
+      "class": "./../RepositoryBar",
+      "tags": [{ "name": "repository" }]
+    }
+  }
+}

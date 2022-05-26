@@ -9,8 +9,6 @@ The Node Dependency Injection component allows you to standardize and centralize
 
 [![Npm Version](https://badge.fury.io/js/node-dependency-injection.svg)](https://badge.fury.io/js/node-dependency-injection)
 [![Build Status](https://travis-ci.org/zazoomauro/node-dependency-injection.svg?branch=master)](https://travis-ci.org/zazoomauro/node-dependency-injection)
-[![Dependencies](https://david-dm.org/zazoomauro/node-dependency-injection.svg)](https://david-dm.org/zazoomauro/node-dependency-injection)
-[![DevDependencies](https://david-dm.org/zazoomauro/node-dependency-injection/dev-status.svg)](https://david-dm.org/zazoomauro/node-dependency-injection#info=devDependencies)
 [![Code Coverage](https://codecov.io/gh/zazoomauro/node-dependency-injection/branch/master/graph/badge.svg)](https://codecov.io/gh/zazoomauro/node-dependency-injection)
 [![Code Climate](https://codeclimate.com/github/zazoomauro/node-dependency-injection/badges/gpa.svg)](https://codeclimate.com/github/zazoomauro/node-dependency-injection)
 [![Coding Standard](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
@@ -68,6 +66,70 @@ And get services from your container
 const mailer = container.get('service.mailer')
 ```
 
+Autowire for TypeScript
+------------
+
+```ts
+import {ContainerBuilder, Autowire} from 'node-dependency-injection'
+
+const container = new ContainerBuilder(
+  false, 
+  '/path/to/src'
+)
+const autowire = new Autowire(container)
+await autowire.process()
+
+```
+
+or from yaml-json-js configuration
+
+```yaml
+# /path/to/services.yml
+services:
+  _defaults:
+    autowire: true
+    rootDir:  "/path/to/src"
+```
+
+You can also get a service from a class definition
+
+```ts
+import SomeService from '@src/service/SomeService'
+
+container.get(SomeService)
+```
+
+If you are transpiling your Typescript may you need to dump the some kind of service configuration file.
+
+```ts
+import {ContainerBuilder, Autowire, ServiceFile} from 'node-dependency-injection'
+
+const container = new ContainerBuilder(
+  false, 
+  '/path/to/src'
+)
+const autowire = new Autowire(container)
+autowire.serviceFile = new ServiceFile('/some/path/to/dist/services.yaml')
+await autowire.process()
+
+```
+
+My proposal for load configuration file in a production environment with transpiling/babel compilation:
+
+```ts
+if (process.env.NODE_ENV === 'dev') {
+  this._container = new ContainerBuilder(false, '/src');
+  this._autowire = new Autowire(this._container);
+  this._autowire.serviceFile = new ServiceFile('/some/path/to/dist/services.yaml');
+  await this._autowire.process();
+} else {
+  this._container = new ContainerBuilder(false, '/dist');
+  this._loader = new YamlFileLoader(this._container);
+  await this._loader.load('/some/path/to/dist/services.yaml');
+}
+await this._container.compile();
+```
+
 
 Configuration files: how to load and use configuration files
 ------------
@@ -90,7 +152,7 @@ import {ContainerBuilder, YamlFileLoader} from 'node-dependency-injection'
 
 let container = new ContainerBuilder()
 let loader = new YamlFileLoader(container)
-loader.load('/path/to/file.yml')
+await loader.load('/path/to/file.yml')
 ```
 
 And get services from your container easily
@@ -103,6 +165,7 @@ const mailer = container.get('service.mailer')
 List of features
 ------------
 
+- Autowire for TypeScript
 - Configuration files with JS, YAML or JSON.
 - Multiple configuration files
 - Custom relative service directory

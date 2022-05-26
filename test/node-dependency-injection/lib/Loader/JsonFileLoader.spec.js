@@ -1,5 +1,9 @@
 import { describe, it, beforeEach } from 'mocha'
 import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised';
+chai.use(chaiAsPromised);
+import chaiIterator from 'chai-iterator';
+chai.use(chaiIterator);
 import JsonFileLoader from '../../../../lib/Loader/JsonFileLoader'
 import ContainerBuilder from '../../../../lib/ContainerBuilder'
 import Foo from '../../../Resources/foo'
@@ -29,13 +33,13 @@ describe('JsonFileLoader', () => {
       const file = 'fake-filePath.json'
 
       // Act.
-      const actual = () => loader.load(file)
+      const actual = loader.load(file)
 
       // Assert.
-      return assert.throw(actual, Error, `File ${file} not found`)
+      return assert.isRejected(actual, Error, `File ${file} not found`)
     })
 
-    it('should load a simple container', () => {
+    it('should load a simple container', async () => {
       // Arrange.
       const serviceName = 'foo'
       const aliasName = 'f'
@@ -47,7 +51,7 @@ describe('JsonFileLoader', () => {
       const envVariableExpected = 'test'
 
       // Act.
-      loader.load(
+      await loader.load(
         path.join(__dirname, '/../../../Resources/config/fake-services.json'))
       const service = container.get(serviceName)
       const aliasService = container.get(aliasName)
@@ -83,12 +87,12 @@ describe('JsonFileLoader', () => {
       loader = new JsonFileLoader(container)
     })
 
-    it('should load multiple service files', () => {
+    it('should load multiple service files', async () => {
       // Arrange.
       const serviceName = 'foo'
 
       // Act.
-      loader.load(
+      await loader.load(
         path.join(__dirname, '/../../../Resources/config/fake-services.json'))
       const service = container.get(serviceName)
 
@@ -104,7 +108,7 @@ describe('JsonFileLoader', () => {
       loader = new JsonFileLoader(container)
     })
 
-    it('should load multiple service files in subfolder', () => {
+    it('should load multiple service files in subfolder', async () => {
       // Arrange.
       const barServiceName = 'bar'
       const bazServiceName = 'baz'
@@ -112,7 +116,7 @@ describe('JsonFileLoader', () => {
         '/../../../Resources/config/fake-import-subfolder.json')
 
       // Act.
-      loader.load(configPath)
+      await loader.load(configPath)
       const bar = container.get(barServiceName)
       const baz = container.get(bazServiceName)
 
@@ -123,13 +127,13 @@ describe('JsonFileLoader', () => {
   })
 
   describe('load with tags', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       container = new ContainerBuilder()
       loader = new JsonFileLoader(container)
-      container.compile()
+      await container.compile()
     })
 
-    it('should load instance of service with tagged arguments', () => {
+    it('should load instance of service with tagged arguments', async () => {
       // Arrange.
       const configPath = path.join(
         __dirname,
@@ -137,7 +141,7 @@ describe('JsonFileLoader', () => {
       )
 
       // Act.
-      loader.load(configPath)
+      await loader.load(configPath)
       const repositoryManager = container.get('repository-manager')
       const repositoryFoo = container.get('repository-foo')
       const repositoryBar = container.get('repository-bar')

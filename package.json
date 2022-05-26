@@ -1,6 +1,6 @@
 {
   "name": "node-dependency-injection",
-  "version": "2.7.3",
+  "version": "3.0.0-beta.6",
   "description": "The NodeDependencyInjection component allows you to standardize and centralize the way objects are constructed in your application.",
   "main": "dist/lib/index.js",
   "directories": {
@@ -11,8 +11,8 @@
     "ndi": "dist/bin/ndi.js"
   },
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha",
-    "test:coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text mocha",
+    "test": "cross-env NODE_ENV=test ts-mocha --paths",
+    "test:coverage": "cross-env NODE_ENV=test nyc --reporter=lcov --reporter=text ts-mocha --paths",
     "test:standard": "standard",
     "test:standard:fix": "standard --fix",
     "build:lib": "rm -rf dist/lib/* && babel lib -d dist/lib -D",
@@ -50,30 +50,50 @@
   },
   "homepage": "https://github.com/zazoomauro/node-dependency-injection#readme",
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.17.10",
+    "@babel/runtime": "^7.17.9",
+    "@typescript-eslint/typescript-estree": "^5.23.0",
     "chalk": "^4.1.0",
-    "commander": "^8.1.0",
+    "commander": "^8.3.0",
     "console.table": "^0.10.0",
     "js-yaml": "^4.0.0",
+    "json5": "^2.2.1",
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/register": "^7.12.10",
-    "babel-plugin-istanbul": "^6.0.0",
-    "chai": "^4.2.0",
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "@babel/register": "^7.17.7",
+    "@types/chai": "^4.3.1",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^9.1.1",
+    "babel-plugin-istanbul": "^6.1.1",
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "chai-iterator": "^3.0.2",
     "codecov": "^4.0.0-0",
     "cross-env": "^7.0.3",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-sonarjs": "^0.13.0",
     "istanbul": "^0.4.5",
-    "mocha": "^9.0.3",
+    "mocha": "^9.2.2",
     "nyc": "^15.1.0",
     "sinon": "^11.1.2",
-    "standard": "^16.0.3"
+    "standard": "^16.0.4",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.7.0",
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "^4.6.4"
   },
   "babel": {
     "presets": [
       "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/transform-runtime"
     ],
     "env": {
       "test": {
