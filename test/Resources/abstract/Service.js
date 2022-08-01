@@ -1,1 +1,6 @@
-export default class Service {}
+export default class Service {
+
+  getName() {
+    return 'service_foo'
+  }
+}

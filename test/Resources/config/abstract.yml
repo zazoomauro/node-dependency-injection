@@ -8,6 +8,10 @@ services:
     class: ./../abstract/ChildClass
     parent: app.base_class
 
+  app.child_class_two:
+    class: ./../abstract/ChildClassTwo
+    parent: app.base_class
+
   app.service:
     class: ./../abstract/Service
 
