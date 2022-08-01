@@ -18,6 +18,7 @@ import DecoratingMailer from '../../../Resources/DecoratingMailer'
 import Mailer from '../../../Resources/Mailer'
 import DecoratingMailerTwo from '../../../Resources/DecoratingMailerTwo'
 import ChildClass from '../../../Resources/abstract/ChildClass'
+import ChildClassTwo from '../../../Resources/abstract/ChildClassTwo'
 import Service from '../../../Resources/abstract/Service'
 import { MultipleExports, ClassOne, ClassTwo } from '../../../Resources/MultipleExports'
 import DefaultClass from '../../../Resources/MultipleExportsWithDefault'
@@ -89,6 +90,7 @@ describe('YamlFileLoader', () => {
       await loader.load(
         path.join(__dirname, '/../../../Resources/config/abstract.yml'))
       const childClass = container.get('app.child_class')
+      const childClassTwo = container.get('app.child_class_two')
       const throwAbstractServiceException = () => container.get(
         'app.base_class')
       const throwNotAbstractServiceException = () => container.get(
@@ -98,6 +100,9 @@ describe('YamlFileLoader', () => {
       assert.throw(throwAbstractServiceException, Error,
         'The service app.base_class is abstract')
       assert.instanceOf(childClass, ChildClass)
+      assert.strictEqual('service_foo', childClass.service.getName())
+      assert.instanceOf(childClassTwo, ChildClassTwo)
+      assert.strictEqual('service_foo', childClassTwo.service.getName())
       assert.instanceOf(childClass.service, Service)
       assert.throw(throwNotAbstractServiceException, Error,
         'The parent service app.failure.base_class is not abstract')

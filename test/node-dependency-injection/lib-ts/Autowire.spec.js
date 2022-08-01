@@ -11,6 +11,7 @@ import Autowire from '../../../lib/Autowire'
 import FooBar from '../../Resources-ts/Autowire/src/FooBar'
 import Bar from '../../Resources-ts/Autowire/src/Service/Bar'
 import Foo from '../../Resources-ts/Autowire/src/Service/Foo'
+import FooTwo from '../../Resources-ts/Autowire/src/Service/FooTwo'
 import NotUsedFoo from '../../Resources-ts/Autowire/src/NotUsed/Foo'
 import ImplementsOne from '../../Resources-ts/Autowire/src/Service/ImplementsOne'
 import ImplementsTwo from '../../Resources-ts/Autowire/src/Service/ImplementsTwo'
@@ -91,6 +92,12 @@ describe('AutowireTS', () => {
         assert.notInstanceOf(containerDump.get(FooBar).multiple, ImplementsTwo)
         const valueAbstractGetNumber = await containerDump.get(Foo).getNumber()
         assert.strictEqual(valueAbstractGetNumber, 20)
+        const processInterfaceGetNumber = await containerDump.get(Foo).getProcessFromInterface();
+        assert.strictEqual(processInterfaceGetNumber, 10)
+        const valueAbstractGetNumberTwo = await containerDump.get(FooTwo).getNumber()
+        assert.strictEqual(valueAbstractGetNumberTwo, 20)
+        const processInterfaceGetNumberTwo = await containerDump.get(FooTwo).getProcessFromInterface();
+        assert.strictEqual(processInterfaceGetNumberTwo, 10)
         const value = await containerDump.get(FooBar).callBarProcessMethod()
         assert.strictEqual(value, 10)
     })
@@ -237,6 +244,12 @@ describe('AutowireTS', () => {
         assert.notInstanceOf(container.get(FooBar).multiple, ImplementsTwo)
         const valueAbstractGetNumber = await container.get(Foo).getNumber()
         assert.strictEqual(valueAbstractGetNumber, 20)
+        const processGetNumber = await container.get(Foo).getProcessFromInterface()
+        assert.strictEqual(processGetNumber, 10)
+        const valueAbstractGetNumberTwo = await container.get(FooTwo).getNumber()
+        assert.strictEqual(valueAbstractGetNumberTwo, 20)
+        const processGetNumberTwo = await container.get(FooTwo).getProcessFromInterface()
+        assert.strictEqual(processGetNumberTwo, 10)
         const value = await container.get(FooBar).callBarProcessMethod()
         assert.strictEqual(value, 10)
     })
