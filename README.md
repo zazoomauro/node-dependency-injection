@@ -8,7 +8,7 @@ Node Dependency Injection
 The Node Dependency Injection component allows you to standardize and centralize the way objects are constructed in your application.
 
 [![Npm Version](https://badge.fury.io/js/node-dependency-injection.svg)](https://badge.fury.io/js/node-dependency-injection)
-![Build Status](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?event=push)
+![Build status](https://github.com/zazoomauro/node-dependency-injection/actions/workflows/test.yml/badge.svg)
 [![Code Coverage](https://codecov.io/gh/zazoomauro/node-dependency-injection/branch/master/graph/badge.svg)](https://codecov.io/gh/zazoomauro/node-dependency-injection)
 [![Code Climate](https://codeclimate.com/github/zazoomauro/node-dependency-injection/badges/gpa.svg)](https://codeclimate.com/github/zazoomauro/node-dependency-injection)
 [![Coding Standard](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)

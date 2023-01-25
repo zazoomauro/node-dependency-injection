@@ -1,7 +1,5 @@
 name: Checking coding standard and running steps
 
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-
 on:
   push:
     branches: [ master ]
