@@ -20,8 +20,7 @@
     "build": "npm run build:lib && npm run build:bin",
     "report:coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "preversion": "npm run test:standard && npm test",
-    "version": "npm run build",
-    "postversion": "git push && git push --tags && npm publish"
+    "postversion": "git push && git push --tags"
   },
   "standard": {
     "ignore": [
