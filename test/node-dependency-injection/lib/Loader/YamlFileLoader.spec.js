@@ -21,6 +21,7 @@ import ChildClass from '../../../Resources/abstract/ChildClass'
 import ChildClassTwo from '../../../Resources/abstract/ChildClassTwo'
 import Service from '../../../Resources/abstract/Service'
 import { MultipleExports, ClassOne, ClassTwo } from '../../../Resources/MultipleExports'
+import { KebabCaseFilenameClass } from '../../../Resources/kebab-case-filename-factory';
 import DefaultClass from '../../../Resources/MultipleExportsWithDefault'
 import { NamedService } from '../../../Resources/NamedService'
 import RepositoryManager from '../../../Resources/RepositoryManager'
@@ -347,11 +348,13 @@ describe('YamlFileLoader', () => {
       const two = container.get('classTwo')
       const multipleExports = container.get('multipleExports')
       const defaultClass = container.get('defaultClass')
+      const kebabCaseFilenameFactory = container.get('kebabCaseFilenameFactory')
 
       // Assert.
       assert.instanceOf(one, ClassOne)
       assert.instanceOf(two, ClassTwo)
       assert.instanceOf(defaultClass, DefaultClass)
+      assert.instanceOf(kebabCaseFilenameFactory, KebabCaseFilenameClass)
       return assert.instanceOf(multipleExports, MultipleExports)
     })
 

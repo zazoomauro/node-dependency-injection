@@ -20,6 +20,7 @@ import DecoratingMailerTwo from '../../../Resources-ts/DecoratingMailerTwo'
 import ChildClass from '../../../Resources-ts/abstract/ChildClass'
 import Service from '../../../Resources-ts/abstract/Service'
 import { MultipleExports, ClassOne, ClassTwo } from '../../../Resources-ts/MultipleExports'
+import { KebabCaseFilenameClass } from '../../../Resources-ts/kebab-case-filename-factory'
 import DefaultClass from '../../../Resources-ts/MultipleExportsWithDefault'
 import { NamedService } from '../../../Resources-ts/NamedService'
 import RepositoryManager from '../../../Resources-ts/RepositoryManager'
@@ -359,6 +360,7 @@ describe('YamlFileLoaderTS', () => {
       assert.instanceOf(one, ClassOne)
       assert.instanceOf(two, ClassTwo)
       assert.instanceOf(defaultClass, DefaultClass)
+      assert.instanceOf(kebabCaseFilenameFactory, KebabCaseFilenameClass)
       return assert.instanceOf(multipleExports, MultipleExports)
     })
 
