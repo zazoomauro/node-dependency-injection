@@ -9,3 +9,8 @@ services:
     class: ./../MultipleExports
   defaultClass:
     class: ./../MultipleExportsWithDefault
+  kebabCaseFilenameFactory:
+    factory:
+      class: ./../kebab-case-filename-factory
+      main: KebabCaseFilenameFactory
+      method: "create"
