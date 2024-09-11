@@ -52,9 +52,9 @@
     "node": ">=14.0.0"
   },
   "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.17.10",
+    "@babel/plugin-transform-runtime": "^7.19.1",
     "@babel/runtime": "^7.17.9",
-    "@typescript-eslint/typescript-estree": "^5.23.0",
+    "@typescript-eslint/typescript-estree": "^8.3.0",
     "chalk": "^4.1.0",
     "commander": "^8.3.0",
     "console.table": "^0.10.0",
