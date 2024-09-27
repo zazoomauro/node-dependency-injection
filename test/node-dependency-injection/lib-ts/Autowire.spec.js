@@ -1,5 +1,5 @@
 import { describe, it } from 'mocha'
-import chai from 'chai'
+import chai, { config } from 'chai'
 import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 import path from 'path'
@@ -25,6 +25,7 @@ import ImplementsOnePath from '../../Resources-ts/AutowireModulePath/src/Service
 import ImplementsTwoPath from '../../Resources-ts/AutowireModulePath/src/Service/ImplementsTwo'
 import PathExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExclude/ExcludedService'
 import PathInFolderExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExclude/InFolderExclude/InFolderExcludedService'
+import FooBarAutowireOverride from '../../Resources-ts/Autowire-Override/src/FooBarAutowireOverride'
 import ServiceFile from '../../../lib/ServiceFile';
 import RootDirectoryNotFound from '../../../lib/Exception/RootDirectoryNotFound';
 
@@ -35,6 +36,50 @@ describe('AutowireTS', () => {
     const dumpServicesPath = '/tmp/services'
     const excludedServiceMessage = 'The service ExcludedService is not registered'
     const inFolderExcludedMessage = 'The service InFolderExcludedService is not registered'
+
+    it("should not override single class with autowiring if not exists", async () => {
+        const configFile = path.join(
+          __dirname,
+          '..',
+          '..',
+          resourcesTsFolder,
+          'Autowire-Override',
+          'config',
+          'services-not-exists.yaml'
+        )
+        const cb = new ContainerBuilder()
+        const loader = new YamlFileLoader(cb)
+        await loader.load(configFile)
+        await cb.compile()
+    
+        // Act.
+        const actual = cb.get(FooBarAutowireOverride)
+        
+        // Assert.
+        assert.isUndefined(actual.adapter)
+      });
+
+    it("should override single class with autowiring", async () => {
+        const configFile = path.join(
+          __dirname,
+          '..',
+          '..',
+          resourcesTsFolder,
+          'Autowire-Override',
+          'config',
+          'services.yaml'
+        )
+        const cb = new ContainerBuilder()
+        const loader = new YamlFileLoader(cb)
+        await loader.load(configFile)
+        await cb.compile()
+    
+        // Act.
+        const actual = cb.get(FooBarAutowireOverride)
+        
+        // Assert.
+        assert.equal(actual.getString(), "ci")
+      });
 
     it('should get service file when was properly set', () => {
         // Arrange.

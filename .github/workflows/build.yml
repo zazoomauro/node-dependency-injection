@@ -2,16 +2,16 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 15.x, 16.x, 17.x]
+        node-version: [14.x, 15.x, 16.x, 17.x, 18.x, 19.x, 20.x]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -24,18 +24,18 @@ jobs:
       - run: npm test
 
   coverage:
-    needs: [ build ]
+    needs: [build]
     name: coverage
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@master
-      with:
-        node-version: '17'
-    - run: npm ci
-    - uses: paambaati/codeclimate-action@v3.2.0
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-      with:
-        coverageCommand: npm run test:coverage
-        coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: "17"
+      - run: npm ci
+      - uses: paambaati/codeclimate-action@v3.2.0
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: npm run test:coverage
+          coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov

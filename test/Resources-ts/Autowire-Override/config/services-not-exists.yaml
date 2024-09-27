@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autowire: true
+        rootDir: ../src
+
+    App.NoExists:
+        class: './FooBarAutowireOverride'
+        override_arguments:
+            - '@Caca'
