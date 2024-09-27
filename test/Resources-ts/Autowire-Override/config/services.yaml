@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autowire: true
+        rootDir: ../src
+
+    App.FooBarAutowireOverride:
+        class: './FooBarAutowireOverride'
+        override_arguments:
+            - '@CiAdapter'
