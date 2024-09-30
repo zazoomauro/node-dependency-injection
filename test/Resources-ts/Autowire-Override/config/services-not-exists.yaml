@@ -6,4 +6,4 @@ services:
     App.NoExists:
         class: './FooBarAutowireOverride'
         override_arguments:
-            - '@Caca'
+            - '@NotExists'

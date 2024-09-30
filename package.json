@@ -49,7 +49,7 @@
   },
   "homepage": "https://github.com/zazoomauro/node-dependency-injection#readme",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=15.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",

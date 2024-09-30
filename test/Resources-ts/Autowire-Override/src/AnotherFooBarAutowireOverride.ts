@@ -2,7 +2,7 @@ import Adapter from "./Adapter";
 import AnotherService from "./AnotherService";
 import SomeService from "./SomeService";
 
-export default class FooBarAutowireOverride {
+export default class AnotherFooBarAutowireOverride {
   constructor(
     private readonly _adapter: Adapter,
     private readonly _someService: SomeService,

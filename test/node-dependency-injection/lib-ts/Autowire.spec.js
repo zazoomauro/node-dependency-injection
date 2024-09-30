@@ -26,6 +26,7 @@ import ImplementsTwoPath from '../../Resources-ts/AutowireModulePath/src/Service
 import PathExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExclude/ExcludedService'
 import PathInFolderExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExclude/InFolderExclude/InFolderExcludedService'
 import FooBarAutowireOverride from '../../Resources-ts/Autowire-Override/src/FooBarAutowireOverride'
+import AnotherFooBarAutowireOverride from '../../Resources-ts/Autowire-Override/src/AnotherFooBarAutowireOverride'
 import ServiceFile from '../../../lib/ServiceFile';
 import RootDirectoryNotFound from '../../../lib/Exception/RootDirectoryNotFound';
 
@@ -76,9 +77,11 @@ describe('AutowireTS', () => {
     
         // Act.
         const actual = cb.get(FooBarAutowireOverride)
+        const actualAnother = cb.get(AnotherFooBarAutowireOverride)
         
         // Assert.
         assert.equal(actual.getString(), "ci")
+        assert.equal(actualAnother.getString(), "bar")
       });
 
     it('should get service file when was properly set', () => {
