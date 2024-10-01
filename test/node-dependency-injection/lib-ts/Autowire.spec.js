@@ -259,6 +259,7 @@ describe('AutowireTS', () => {
         await autowire.process()
         const containerDump = new ContainerBuilder(false, dir)
         const loader = new JsonFileLoader(containerDump)
+        await container.compile()
 
         // Act.
         await loader.load(dumpPath)
@@ -287,6 +288,7 @@ describe('AutowireTS', () => {
         await autowire.process()
         const containerDump = new ContainerBuilder(false, dir)
         const loader = new JsFileLoader(containerDump)
+        await container.compile()
 
         // Act.
         await loader.load(dumpPath)
