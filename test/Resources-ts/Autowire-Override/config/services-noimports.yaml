@@ -1,0 +1,14 @@
+services:
+    App.FooBarAutowireOverride:
+        class: './FooBarAutowireOverride'
+        override_arguments:
+            - '@CiAdapter'
+            - '@SomeService'
+            - '@AnotherService'
+
+    App.AnotherFooBarAutowireOverride:
+        class: './AnotherFooBarAutowireOverride'
+        override_arguments:
+            - '@FooAdapter'
+            - '@SomeService'
+            - '@AnotherService'

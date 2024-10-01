@@ -38,51 +38,121 @@ describe('AutowireTS', () => {
     const excludedServiceMessage = 'The service ExcludedService is not registered'
     const inFolderExcludedMessage = 'The service InFolderExcludedService is not registered'
 
-    it("should not override single class with autowiring if not exists", async () => {
-        const configFile = path.join(
-          __dirname,
-          '..',
-          '..',
-          resourcesTsFolder,
-          'Autowire-Override',
-          'config',
-          'services-not-exists.yaml'
-        )
-        const cb = new ContainerBuilder()
-        const loader = new YamlFileLoader(cb)
-        await loader.load(configFile)
-        await cb.compile()
-    
-        // Act.
-        const actual = cb.get(FooBarAutowireOverride)
-        
-        // Assert.
-        assert.isUndefined(actual.adapter)
-      });
+    describe("Autowiring override arguments", () => {
+        const folder = 'Autowire-Override';
 
-    it("should override single class with autowiring", async () => {
-        const configFile = path.join(
-          __dirname,
-          '..',
-          '..',
-          resourcesTsFolder,
-          'Autowire-Override',
-          'config',
-          'services.yaml'
-        )
-        const cb = new ContainerBuilder()
-        const loader = new YamlFileLoader(cb)
-        await loader.load(configFile)
-        await cb.compile()
-    
-        // Act.
-        const actual = cb.get(FooBarAutowireOverride)
-        const actualAnother = cb.get(AnotherFooBarAutowireOverride)
+        it("should override arguments be visible after compile container and dump file", async () => {
+            // Arrange.
+            const configFile = path.join(
+                __dirname,
+                '..',
+                '..',
+                resourcesTsFolder,
+                folder,
+                'config',
+                'services-noimports.yaml'
+            )
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, folder, 'src')
+            const container = new ContainerBuilder(false, dir)
+            const loader = new YamlFileLoader(container)
+            const autowire = new Autowire(container)
+            const dumpPath = `${dumpServicesPath}-override.yaml`
+            autowire.serviceFile = new ServiceFile(dumpPath)
+            await loader.load(configFile)
+            await autowire.process()
+            await container.compile()
+
+            const containerFromDump = new ContainerBuilder(false, dir)
+            const loaderFromDump = new YamlFileLoader(containerFromDump)
+
+            // Act.
+            await loaderFromDump.load(dumpPath)
+            
+            // Act.
+            const actual = containerFromDump.get(FooBarAutowireOverride)
+            const actualAnother = containerFromDump.get(AnotherFooBarAutowireOverride)
+            
+            // Assert.
+            assert.equal(actual.getString(), "ci")
+            assert.equal(actualAnother.getString(), "foo")
+        });
         
-        // Assert.
-        assert.equal(actual.getString(), "ci")
-        assert.equal(actualAnother.getString(), "bar")
-      });
+        it("should override arguments be visible after compile container", async () => {
+            // Arrange.
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, folder, 'src')
+            const container = new ContainerBuilder(false, dir)
+            const autowire = new Autowire(container)
+            const loader = new YamlFileLoader(container);
+            const configFile = path.join(
+                __dirname,
+                '..',
+                '..',
+                resourcesTsFolder,
+                folder,
+                'config',
+                'services-noimports.yaml'
+            )
+            await loader.load(configFile)
+            await autowire.process()
+            await container.compile()
+            
+            // Act.
+            const actual = container.get(FooBarAutowireOverride)
+            const actualAnother = container.get(AnotherFooBarAutowireOverride)
+            
+            // Assert.
+            assert.equal(actual.getString(), "ci")
+            assert.equal(actualAnother.getString(), "foo")
+        });
+    
+        it("should not override single class with autowiring if not exists", async () => {
+            // Arrange.
+            const configFile = path.join(
+              __dirname,
+              '..',
+              '..',
+              resourcesTsFolder,
+              folder,
+              'config',
+              'services-not-exists.yaml'
+            )
+            const cb = new ContainerBuilder()
+            const loader = new YamlFileLoader(cb)
+            await loader.load(configFile)
+            await cb.compile()
+        
+            // Act.
+            const actual = cb.get(FooBarAutowireOverride)
+            
+            // Assert.
+            assert.isUndefined(actual.adapter)
+          });
+    
+        it("should override single class with autowiring", async () => {
+            // Arrange.
+            const configFile = path.join(
+              __dirname,
+              '..',
+              '..',
+              resourcesTsFolder,
+              folder,
+              'config',
+              'services.yaml'
+            )
+            const cb = new ContainerBuilder()
+            const loader = new YamlFileLoader(cb)
+            await loader.load(configFile)
+            await cb.compile()
+        
+            // Act.
+            const actual = cb.get(FooBarAutowireOverride)
+            const actualAnother = cb.get(AnotherFooBarAutowireOverride)
+            
+            // Assert.
+            assert.equal(actual.getString(), "ci")
+            assert.equal(actualAnother.getString(), "bar")
+          });
+    })
 
     it('should get service file when was properly set', () => {
         // Arrange.
@@ -124,6 +194,7 @@ describe('AutowireTS', () => {
         const dumpPath = `${dumpServicesPath}.yaml`
         autowire.serviceFile = new ServiceFile(dumpPath, true)
         await autowire.process()
+        await container.compile()
         const containerDump = new ContainerBuilder(false)
         const loader = new YamlFileLoader(containerDump)
 
@@ -188,6 +259,7 @@ describe('AutowireTS', () => {
         await autowire.process()
         const containerDump = new ContainerBuilder(false, dir)
         const loader = new JsonFileLoader(containerDump)
+        await container.compile()
 
         // Act.
         await loader.load(dumpPath)
@@ -216,6 +288,7 @@ describe('AutowireTS', () => {
         await autowire.process()
         const containerDump = new ContainerBuilder(false, dir)
         const loader = new JsFileLoader(containerDump)
+        await container.compile()
 
         // Act.
         await loader.load(dumpPath)
