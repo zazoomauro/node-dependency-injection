@@ -2,7 +2,7 @@ name: Publish
 
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 permissions:
   contents: read
@@ -24,6 +24,11 @@ jobs:
       - run: npm -v
 
       - run: npm ci
+
+      # Set package.json version from the release tag (e.g. v3.2.7 → 3.2.7)
+      - name: Set version from tag
+        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
+
       - run: npm run build
 
       # Public packages sometimes need this explicitly (safe even if already public)
