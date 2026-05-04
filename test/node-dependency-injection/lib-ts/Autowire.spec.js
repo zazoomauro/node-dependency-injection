@@ -27,6 +27,12 @@ import PathExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExc
 import PathInFolderExcludedService from '../../Resources-ts/AutowireModulePath/src/ToExclude/InFolderExclude/InFolderExcludedService'
 import FooBarAutowireOverride from '../../Resources-ts/Autowire-Override/src/FooBarAutowireOverride'
 import AnotherFooBarAutowireOverride from '../../Resources-ts/Autowire-Override/src/AnotherFooBarAutowireOverride'
+import PlainParamService from '../../Resources-ts/Autowire/src/Service/PlainParamService'
+import PublicReadonlyParamService from '../../Resources-ts/Autowire/src/Service/PublicReadonlyParamService'
+import ProtectedReadonlyParamService from '../../Resources-ts/Autowire/src/Service/ProtectedReadonlyParamService'
+import PublicParamService from '../../Resources-ts/Autowire/src/Service/PublicParamService'
+import ProtectedParamService from '../../Resources-ts/Autowire/src/Service/ProtectedParamService'
+import PrivateParamService from '../../Resources-ts/Autowire/src/Service/PrivateParamService'
 import ServiceFile from '../../../lib/ServiceFile';
 import RootDirectoryNotFound from '../../../lib/Exception/RootDirectoryNotFound';
 
@@ -373,6 +379,15 @@ describe('AutowireTS', () => {
         assert.strictEqual(processGetNumberTwo, 10)
         const value = await container.get(FooBar).callBarProcessMethod()
         assert.strictEqual(value, 10)
+        const plainParamService = container.get(PlainParamService)
+        assert.instanceOf(plainParamService, PlainParamService)
+        const plainValue = await plainParamService.callBarProcessMethod()
+        assert.strictEqual(plainValue, 10)
+        assert.strictEqual(await container.get(PublicReadonlyParamService).callBarProcessMethod(), 10)
+        assert.strictEqual(await container.get(ProtectedReadonlyParamService).callBarProcessMethod(), 10)
+        assert.strictEqual(await container.get(PublicParamService).callBarProcessMethod(), 10)
+        assert.strictEqual(await container.get(ProtectedParamService).callBarProcessMethod(), 10)
+        assert.strictEqual(await container.get(PrivateParamService).callBarProcessMethod(), 10)
     })
 
     it(
