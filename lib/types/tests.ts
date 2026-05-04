@@ -1,4 +1,5 @@
 import {
+    Autowire,
     Call,
     CompilerPass,
     ContainerBuilder,
@@ -9,6 +10,7 @@ import {
     PackageReference,
     PassConfig,
     Reference,
+    ServiceFile,
     Tag,
     YamlFileLoader
 } from './index'
@@ -122,6 +124,7 @@ container.logger = new NullLogger()
 // Other methods
 assertIsBoolean(container.has('some'))
 assertIsBoolean(container.hasDefinition('some'))
+assertIsBoolean(container.hasAlias('some'))
 assertIsBoolean(container.removeDefinition('some'))
 assertIsDefinition(container.getDefinition('some'))
 assertIsPromisedDefinition(container.findDefinition('some'))
@@ -129,6 +132,12 @@ assertIsBoolean(container.hasParameter('mailer.transport'))
 container.findTaggedServiceIds('tag')
 container.setAlias('mailer', 'service.mailer')
 container.setParameter('mailer.transport', 'sendmail')
+// defaultDir setter
+container.defaultDir = '/'
+// autowire getter/setter
+const autowire = new Autowire(container)
+container.autowire = autowire
+assertType<Autowire | null>(container.autowire)
 // Compile
 container.addCompilerPass(new CustomPass())
 container.addCompilerPass(new CustomPass(), PassConfig.TYPE_AFTER_REMOVING)
@@ -152,6 +161,7 @@ loader.load('/path/to/file.js')
 // Constructor
 new Definition()
 new Definition(null, ['some_argument'])
+new Definition(Mailer, ['sendmail'], [new Reference('other')])
 const mailerDefinition = new Definition(Mailer, ['sendmail'])
 
 // Properties
@@ -167,6 +177,8 @@ mailerDefinition.parent = 'base_mailer'
 mailerDefinition.Object = {}
 mailerDefinition.args = [3.14, 'sendmail', new PackageReference('fs')]
 mailerDefinition.appendArgs = ['sendmail']
+mailerDefinition.overrideArgs = [new Reference('mailer')]
+assertType<any[]>(mailerDefinition.overrideArgs)
 // Readonly properties
 const mailerFactory = mailerDefinition.factory
 if (mailerFactory != null) {
@@ -182,6 +194,8 @@ mailerDefinition.addTag('tag_name')
 const tagAttributes = new Map()
 tagAttributes.set('event', 'prePersist')
 mailerDefinition.addTag('listener', tagAttributes)
+mailerDefinition.addArgument('arg')
+mailerDefinition.addArgument('arg', true)
 new Definition(SomeManager).setFactory(SomeManager, 'getFactory')
 
 // Setter injection
@@ -192,3 +206,11 @@ container.setDefinition('mailer_manage', mailerManagerDefinition)
 // Property injection
 const definition = new Definition(NewsletterManager)
 definition.addProperty('mailer', new Reference('mailer'))
+
+// * ServiceFile *
+new ServiceFile('/path/to/services.yaml')
+new ServiceFile('/path/to/services.yaml', true)
+
+// * Autowire *
+const autowireWithTsConfig = new Autowire(container, '/path/to/tsconfig.json')
+assertType<ContainerBuilder>(autowireWithTsConfig.container)

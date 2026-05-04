@@ -39,11 +39,15 @@ export class InstanceManager {
     getInstance(id: any, bypassPublic?: boolean): any;
 
     getInstanceFromDefinition(definition: Definition): any;
+
+    searchDefinitionsToOverrideArgs(): Map<string, Definition>;
+
+    searchNotOverrideDefinitionsByObject(Object: any): Map<string, Definition>;
 }
 
 // Package exports
 export class ContainerBuilder {
-    readonly defaultDir: string;
+    defaultDir: string;
     readonly containerReferenceAsService: boolean;
     readonly definitions: Map<string, Definition>;
     readonly instanceManager: InstanceManager;
@@ -51,6 +55,7 @@ export class ContainerBuilder {
     readonly services: Map<string, any>;
     frozen: boolean;
     logger: Logger;
+    autowire: Autowire | null;
 
     constructor(containerReferenceAsService?: boolean, defaultDir?: string | null);
 
@@ -69,6 +74,8 @@ export class ContainerBuilder {
     getParameter<T extends Parameter>(key: string): T;
 
     has(key: string): boolean;
+
+    hasAlias(alias: string): boolean;
 
     hasDefinition(key: string): boolean;
 
@@ -98,6 +105,7 @@ export class Definition {
     Object: any
     args: Argument[];
     appendArgs: Argument[];
+    overrideArgs: Argument[];
     public: boolean;
     deprecated: string;
     lazy: boolean;
@@ -112,9 +120,9 @@ export class Definition {
     readonly tags: Tag[];
     readonly properties: Map<string, any>;
 
-    constructor(object?: any, args?: Argument[]);
+    constructor(object?: any, args?: Argument[], overrideArgs?: Argument[]);
 
-    addArgument(argument: Argument): Definition;
+    addArgument(argument: Argument, append?: boolean): Definition;
 
     addMethodCall(method: string, args: any[]): Definition;
 
@@ -173,7 +181,7 @@ export class JsonFileLoader extends JsFileLoader {
 }
 
 export class Autowire {
-    constructor (container: ContainerBuilder);
+    constructor (container: ContainerBuilder, tsConfigFullPath?: string);
 
     get container (): ContainerBuilder;
 
@@ -187,7 +195,7 @@ export class Autowire {
 }
 
 export class ServiceFile {
-    constructor (servicesDumpPath: string, absolutePath: boolean);
+    constructor (servicesDumpPath: string, absolutePath?: boolean);
 
     generateFromContainer(container: ContainerBuilder): Promise<void>;
 }
