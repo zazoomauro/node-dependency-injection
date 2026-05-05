@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <services>
+        <service id="foo_manager" class="./../fooManager"/>
+
+        <service id="bar_manager" class="./../barManager">
+            <argument>@foo_manager</argument>
+        </service>
+    </services>
+</container>

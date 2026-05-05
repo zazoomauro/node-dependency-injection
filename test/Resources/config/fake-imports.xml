@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <imports>
+        <import resource="./fake-services.xml"/>
+        <import resource="./fake-services-2.xml"/>
+    </imports>
+</container>

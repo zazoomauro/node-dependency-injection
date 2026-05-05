@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+
+  <!-- Root element -->
+  <xs:element name="container">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="imports"    type="importsType"    minOccurs="0"/>
+        <xs:element name="parameters" type="parametersType" minOccurs="0"/>
+        <xs:element name="services"   type="servicesType"   minOccurs="0"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- ==================== imports ==================== -->
+  <xs:complexType name="importsType">
+    <xs:sequence>
+      <xs:element name="import" type="importType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="importType">
+    <xs:attribute name="resource" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!-- ==================== parameters ==================== -->
+  <xs:complexType name="parametersType">
+    <xs:sequence>
+      <xs:element name="parameter" type="parameterType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
+    A parameter can be:
+      - scalar   : <parameter key="name">value</parameter>
+      - boolean  : <parameter key="name" type="boolean">true</parameter>
+      - collection: <parameter key="name" type="collection">
+                      <parameter>item1</parameter>
+                      <parameter>item2</parameter>
+                    </parameter>
+      - map       : <parameter key="name" type="map">
+                      <parameter key="k">v</parameter>
+                    </parameter>
+  -->
+  <xs:complexType name="parameterType" mixed="true">
+    <xs:sequence>
+      <xs:element name="parameter" type="parameterType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="key"  type="xs:string"/>
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="collection"/>
+          <xs:enumeration value="map"/>
+          <xs:enumeration value="boolean"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <!-- ==================== services ==================== -->
+  <xs:complexType name="servicesType">
+    <xs:sequence>
+      <xs:element name="defaults" type="defaultsType" minOccurs="0"/>
+      <xs:element name="service"  type="serviceType"  minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- _defaults / autowire -->
+  <xs:complexType name="defaultsType">
+    <xs:sequence>
+      <xs:element name="bind"    type="bindType"    minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="exclude" type="excludeType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="autowire" type="xs:boolean"/>
+    <xs:attribute name="dir"      type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="bindType">
+    <xs:attribute name="prefix" type="xs:string" use="required"/>
+    <xs:attribute name="path"   type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="excludeType">
+    <xs:attribute name="pattern" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!-- service -->
+  <xs:complexType name="serviceType">
+    <xs:all>
+      <xs:element name="argument" type="argumentType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="tag"      type="tagType"      minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="call"     type="callType"     minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="factory"  type="factoryType"  minOccurs="0"/>
+    </xs:all>
+    <!-- identity -->
+    <xs:attribute name="id"    type="xs:string" use="required"/>
+    <xs:attribute name="class" type="xs:string"/>
+    <xs:attribute name="alias" type="xs:string"/>
+    <xs:attribute name="main"  type="xs:string"/>
+    <!-- behaviour flags -->
+    <xs:attribute name="lazy"       type="xs:boolean"/>
+    <xs:attribute name="public"     type="xs:boolean"/>
+    <xs:attribute name="shared"     type="xs:boolean"/>
+    <xs:attribute name="abstract"   type="xs:boolean"/>
+    <xs:attribute name="synthetic"  type="xs:boolean"/>
+    <xs:attribute name="parent"     type="xs:string"/>
+    <!-- decoration -->
+    <xs:attribute name="decorates"          type="xs:string"/>
+    <xs:attribute name="decoration-priority" type="xs:integer"/>
+    <!-- deprecation -->
+    <xs:attribute name="deprecated" type="xs:string"/>
+  </xs:complexType>
+
+  <!--
+    Argument values follow the same conventions as YAML/JSON loaders:
+      @serviceId         → Reference
+      @?serviceId        → Nullable Reference
+      %paramName%        → Parameter
+      %env(VAR_NAME)%    → Environment variable
+      !tagged tagName    → Tagged argument (set type="tagged")
+  -->
+  <xs:complexType name="argumentType" mixed="true">
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="tagged"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <!-- tag -->
+  <xs:complexType name="tagType">
+    <xs:anyAttribute processContents="lax"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!-- call -->
+  <xs:complexType name="callType">
+    <xs:sequence>
+      <xs:element name="argument" type="argumentType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="method" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!-- property -->
+  <xs:complexType name="propertyType" mixed="true">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!-- factory -->
+  <xs:complexType name="factoryType">
+    <!-- Use 'class' for a class path or 'service' for a service reference (@svcId) -->
+    <xs:attribute name="class"   type="xs:string"/>
+    <xs:attribute name="service" type="xs:string"/>
+    <xs:attribute name="method"  type="xs:string" use="required"/>
+    <xs:attribute name="main"    type="xs:string"/>
+  </xs:complexType>
+
+</xs:schema>

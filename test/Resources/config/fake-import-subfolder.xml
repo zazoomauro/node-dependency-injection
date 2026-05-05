@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <imports>
+        <import resource="./foo/bar.xml"/>
+        <import resource="./foo/baz.xml"/>
+    </imports>
+</container>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <services>
+        <service id="named" class="./../NamedService"/>
+    </services>
+</container>
