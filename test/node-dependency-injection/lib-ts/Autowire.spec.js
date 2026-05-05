@@ -524,6 +524,7 @@ describe('AutowireTS', () => {
         )
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container)
+        autowire.addExclude('NotUsed')
 
         // Act.
         await autowire.process()
@@ -557,6 +558,7 @@ describe('AutowireTS', () => {
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container, tsConfigPath)
         autowire.addExclude('ToExclude')
+        autowire.addExclude('NotUsed')
 
         // Act.
         await autowire.process()
@@ -589,6 +591,7 @@ describe('AutowireTS', () => {
         const container = new ContainerBuilder(false, dir)
         const autowire = new Autowire(container, tsConfigPath)
         autowire.addExclude('ToExclude')
+        autowire.addExclude('NotUsed')
 
         // Act.
         await autowire.process()

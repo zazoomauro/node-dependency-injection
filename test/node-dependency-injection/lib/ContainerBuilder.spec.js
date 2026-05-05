@@ -874,6 +874,23 @@ describe('ContainerBuilder', () => {
         assert.isRejected(actual, 'Circular reference detected')
       })
 
+    it('should re-throw errors that are not a RangeError', () => {
+      // Arrange.
+      const expectedError = new Error('compiler pass error')
+
+      class FailingPass {
+        process () { throw expectedError }
+      }
+
+      container.addCompilerPass(new FailingPass())
+
+      // Act.
+      const actual = container.compile()
+
+      // Assert.
+      return assert.isRejected(actual, 'compiler pass error')
+    })
+
     it('should call the process method by priority properly',
       async () => {
         // Arrange.
