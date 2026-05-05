@@ -1,143 +1,113 @@
-Node Dependency Injection
-=========================
+<p align="center">
+  <img src="assets/logo.png" alt="Node Dependency Injection" width="480" />
+</p>
 
-![NDI Logo](http://image.ibb.co/iGnCUn/logojoy.png)
+<h1 align="center">Node Dependency Injection</h1>
 
-#### A special thanks to [Symfony](http://symfony.com) which was a great inspiration and example for this project.
+<p align="center">
+  <strong>Standardize and centralize the way objects are constructed in your application.</strong><br/>
+  Inspired by the battle-tested <a href="http://symfony.com">Symfony</a> DI container, built for Node.js &amp; TypeScript.
+</p>
 
-The Node Dependency Injection component allows you to standardize and centralize the way objects are constructed in your application.
+<p align="center">
+  <a href="https://badge.fury.io/js/node-dependency-injection"><img src="https://badge.fury.io/js/node-dependency-injection.svg" alt="Npm Version" /></a>
+  <img src="https://github.com/zazoomauro/node-dependency-injection/actions/workflows/build.yml/badge.svg" alt="Build Status" />
+  <a href="https://codecov.io/gh/zazoomauro/node-dependency-injection"><img src="https://codecov.io/gh/zazoomauro/node-dependency-injection/branch/master/graph/badge.svg?token=faEAqrimPR" alt="Code Coverage" /></a>
+  <a href="https://www.npmjs.com/package/node-dependency-injection"><img src="https://img.shields.io/npm/dm/node-dependency-injection.svg" alt="Npm Downloads" /></a>
+  <a href="https://snyk.io/test/github/zazoomauro/node-dependency-injection"><img src="https://snyk.io/test/github/zazoomauro/node-dependency-injection/badge.svg" alt="Known Vulnerabilities" /></a>
+  <a href="https://github.com/zazoomauro/node-dependency-injection/blob/master/LICENCE"><img src="https://img.shields.io/npm/l/node-dependency-injection.svg" alt="License" /></a>
+</p>
 
-[![Npm Version](https://badge.fury.io/js/node-dependency-injection.svg)](https://badge.fury.io/js/node-dependency-injection)
-![Build Status](https://github.com/zazoomauro/node-dependency-injection/actions/workflows/build.yml/badge.svg)
-![Publish Status](https://github.com/zazoomauro/node-dependency-injection/actions/workflows/publish.yml/badge.svg)
-[![Code Coverage](https://codecov.io/gh/zazoomauro/node-dependency-injection/branch/master/graph/badge.svg?token=faEAqrimPR)](https://codecov.io/gh/zazoomauro/node-dependency-injection)
-[![Coding Standard](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-[![Known Vulnerabilities](https://snyk.io/test/github/zazoomauro/node-dependency-injection/badge.svg)](https://snyk.io/test/github/zazoomauro/node-dependency-injection)
-[![Npm Downloads](https://img.shields.io/npm/dm/node-dependency-injection.svg?maxAge=2592000)](https://www.npmjs.com/package/node-dependency-injection)
-[![License](https://img.shields.io/npm/l/node-dependency-injection.svg?maxAge=2592000?style=plastic)](https://github.com/zazoomauro/node-dependency-injection/blob/master/LICENCE)
+---
 
-Installation
-------------
+## Why Node Dependency Injection?
+
+Managing dependencies manually leads to tightly coupled, hard-to-test code. **Node Dependency Injection** gives you a powerful, flexible IoC container that wires your application together — keeping your classes clean, your tests simple, and your architecture solid.
+
+---
+
+## ✨ Features
+
+| | |
+|---|---|
+| 🔄 **Autowire** — zero-config DI for TypeScript | 📁 **Config files** — YAML, JSON or JS |
+| 🏭 **Factory pattern** — flexible service creation | 🏷️ **Service tagging** — group & inject by tag |
+| 💤 **Lazy services** — instantiate only when needed | 🎨 **Decorators** — wrap services transparently |
+| ⚡ **Compiler passes** — transform the container at build time | 🔒 **Private services** — encapsulate internals |
+| 🌳 **Parent / Abstract services** — share config via inheritance | 🧩 **Non-shared services** — new instance per call |
+| 🌿 **Environment parameters** — `%env(VAR)%` support | 🗑️ **Deprecation warnings** — mark services as deprecated |
+| 📦 **Express middleware** — first-class web framework support | 🖥️ **CLI** — inspect &amp; validate your container |
+
+---
+
+## 🚀 Installation
 
 ```sh
 npm install --save node-dependency-injection
 ```
 
-Usage: register and get services
------------
+---
 
-Imagine you have a `Mailer` class like this:
+## 🏁 Quick Start
 
-```js
-// services/Mailer.js
-
-export default class Mailer {
-  /**
-   * @param {ExampleService} exampleService
-   */
-  constructor(exampleService) {
-    this._exampleService = exampleService;
-  }
-
-  ...
-}
-```
-
-You can register this in the container as a service:
+Register services and wire them together in seconds:
 
 ```js
-import {ContainerBuilder} from 'node-dependency-injection'
+import { ContainerBuilder } from 'node-dependency-injection'
 import Mailer from './services/Mailer'
 import ExampleService from './services/ExampleService'
 
-let container = new ContainerBuilder()
+const container = new ContainerBuilder()
 
-container
-  .register('service.example', ExampleService)
+container.register('service.example', ExampleService)
+container.register('service.mailer', Mailer).addArgument('service.example')
 
-container
-  .register('service.mailer', Mailer)
-  .addArgument('service.example')
-```
+await container.compile()
 
-And get services from your container
-
-```js
 const mailer = container.get('service.mailer')
 ```
 
-Autowire for TypeScript
-------------
+---
+
+## 🔄 Autowire (TypeScript)
+
+Zero-configuration dependency injection — NDI reads your TypeScript type annotations and wires everything automatically:
 
 ```ts
-import {ContainerBuilder, Autowire} from 'node-dependency-injection'
+import { ContainerBuilder, Autowire } from 'node-dependency-injection'
 
-const container = new ContainerBuilder(
-  false, 
-  '/path/to/src'
-)
+const container = new ContainerBuilder(false, '/path/to/src')
 const autowire = new Autowire(container)
 await autowire.process()
+await container.compile()
 
-```
-
-or from yaml-json-js configuration
-
-```yaml
-# /path/to/services.yml
-services:
-  _defaults:
-    autowire: true
-    rootDir:  "/path/to/src"
-```
-
-You can also get a service from a class definition
-
-```ts
+// Retrieve by class — no string IDs needed
 import SomeService from '@src/service/SomeService'
-
-container.get(SomeService)
+const service = container.get(SomeService)
 ```
 
-If you are transpiling your Typescript may you need to dump the some kind of service configuration file.
+> **Production tip:** dump the autowired config to a YAML file and load it directly in prod — no TypeScript scanning overhead.
 
 ```ts
-import {ContainerBuilder, Autowire, ServiceFile} from 'node-dependency-injection'
-
-const container = new ContainerBuilder(
-  false, 
-  '/path/to/src'
-)
-const autowire = new Autowire(container)
-autowire.serviceFile = new ServiceFile('/some/path/to/dist/services.yaml')
-await autowire.process()
-
-```
-
-My proposal for load configuration file in a production environment with transpiling/babel compilation:
-
-```ts
-if (process.env.NODE_ENV === 'dev') {
-  this._container = new ContainerBuilder(false, '/src');
-  this._autowire = new Autowire(this._container);
-  this._autowire.serviceFile = new ServiceFile('/some/path/to/dist/services.yaml');
-  await this._autowire.process();
+if (process.env.NODE_ENV === 'development') {
+  const autowire = new Autowire(container)
+  autowire.serviceFile = new ServiceFile('/dist/services.yaml')
+  await autowire.process()
 } else {
-  this._container = new ContainerBuilder(false, '/dist');
-  this._loader = new YamlFileLoader(this._container);
-  await this._loader.load('/some/path/to/dist/services.yaml');
+  const loader = new YamlFileLoader(container)
+  await loader.load('/dist/services.yaml')
 }
-await this._container.compile();
+await container.compile()
 ```
 
+---
 
-Configuration files: how to load and use configuration files
-------------
+## 📁 Configuration Files
 
-You can also use configuration files to improve your service configuration
+Prefer declarative config? Use YAML, JSON or JS:
 
 ```yaml
-# /path/to/file.yml
+# services.yaml
 services:
   service.example:
     class: 'services/ExampleService'
@@ -148,98 +118,85 @@ services:
 ```
 
 ```js
-import {ContainerBuilder, YamlFileLoader} from 'node-dependency-injection'
+import { ContainerBuilder, YamlFileLoader } from 'node-dependency-injection'
 
-let container = new ContainerBuilder()
-let loader = new YamlFileLoader(container)
-await loader.load('/path/to/file.yml')
-```
+const container = new ContainerBuilder()
+const loader = new YamlFileLoader(container)
+await loader.load('/path/to/services.yaml')
+await container.compile()
 
-And get services from your container easily
-
-```js
-...
 const mailer = container.get('service.mailer')
 ```
 
-List of features
-------------
+---
 
-- Autowire for TypeScript
-- Configuration files with JS, YAML or JSON.
-- Multiple configuration files
-- Custom relative service directory
-- Compiling container
-  - Custom compiler pass
-  - Change definition behaviour
-- Using a factory to create services
-- Nullable Dependencies
-- Public or private services
-- Service Aliasing
-- Service Tagging
-- Parameters Injection
-- Lazy Services
-- Deprecate Services
-- Decorate Services
-- Synthetic Services
-- Non Shared Services
-- Parent and Abstract Services
-- Custom Logger
-- Container as Service
+## 📦 Ecosystem
 
-> Please read [full documentation](https://github.com/zazoomauro/node-dependency-injection/wiki)
+### Express Middleware
 
-ExpressJS Usage
-----------------
-
-If you are using expressJS and you like Node Dependency Injection Framework then I strongly recommend
-you to use the `node-dependency-injection-express-middleware` package.
-That gives you the possibility to retrieve the container from the request.
+Use NDI seamlessly with Express — retrieve the container directly from any request:
 
 ```bash
 npm install --save node-dependency-injection-express-middleware
 ```
 
-```javascript
+```js
 import NDIMiddleware from 'node-dependency-injection-express-middleware'
 import express from 'express'
 
 const app = express()
-
-const options = {serviceFilePath: 'some/path/to/config.yml'}
-app.use(new NDIMiddleware(options).middleware())
+app.use(new NDIMiddleware({ serviceFilePath: 'services.yaml' }).middleware())
 ```
 
 > [Express Middleware Documentation](https://github.com/zazoomauro/node-dependency-injection-express-middleware)
 
-TypeScript Usage
-----------------
+### CLI
 
-If you are using typescript and you like Node Dependency Injection Framework then typing are now provided at `node-dependency-injection` so 
-you do not have to create custom typing anymore.
+Inspect and validate your container from the command line:
 
 ```bash
-npm install --save node-dependency-injection
+# Validate a config file
+ndi config:check /path/to/services.yaml
+
+# Inspect a specific service
+ndi container:service /path/to/services.yaml service.mailer
 ```
 
-```typescript
-import { ContainerBuilder } from 'node-dependency-injection'
-import MongoClient from './services/MongoClient'
-import { Env } from './EnvType'
+---
 
-export async function boot(container = new ContainerBuilder(), env: Env) {
-    container.register('Service.MongoClient', MongoClient).addArgument({
-        host: env.HOST,
-        port: env.PORT,
-    })
-}
-```
+## 📖 Documentation
 
-Resources
----------
+The full documentation lives in the [**project wiki**](https://github.com/zazoomauro/node-dependency-injection/wiki), including guides on:
 
-- [Documentation](https://github.com/zazoomauro/node-dependency-injection/wiki)
-- [Collaboration and pull requests](CONTRIBUTING.md)
-- [Milestones](https://github.com/zazoomauro/node-dependency-injection/milestones)
-- [Twitter @zazoomauro](https://twitter.com/zazoomauro)
+- [Getting Started](https://github.com/zazoomauro/node-dependency-injection/wiki/GettingStarted)
+- [Autowire](https://github.com/zazoomauro/node-dependency-injection/wiki/Autowire)
+- [Configuration Files](https://github.com/zazoomauro/node-dependency-injection/wiki/ConfigurationFiles)
+- [Compiler Passes](https://github.com/zazoomauro/node-dependency-injection/wiki/CompilerPass)
+- [Tagging Services](https://github.com/zazoomauro/node-dependency-injection/wiki/Tagging)
+- [Factory](https://github.com/zazoomauro/node-dependency-injection/wiki/Factory)
+- [Lazy Services](https://github.com/zazoomauro/node-dependency-injection/wiki/LazyService)
+- [Decorators](https://github.com/zazoomauro/node-dependency-injection/wiki/Decorate)
+- [And much more...](https://github.com/zazoomauro/node-dependency-injection/wiki)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read the [contribution guide](CONTRIBUTING.md) before submitting a pull request.
+
+- [Open an issue](https://github.com/zazoomauro/node-dependency-injection/issues)
+- [View milestones](https://github.com/zazoomauro/node-dependency-injection/milestones)
 - [Changelog](CHANGELOG.md)
+
+---
+
+## 🙏 Credits
+
+Inspired by the [Symfony](http://symfony.com) Dependency Injection component — a special thanks to the Symfony team for their outstanding work.
+
+---
+
+<p align="center">
+  <a href="https://github.com/zazoomauro/node-dependency-injection/blob/master/LICENCE">MIT License</a> &nbsp;·&nbsp;
+  Made with ❤️ by <a href="https://twitter.com/zazoomauro">@zazoomauro</a>
+</p>
