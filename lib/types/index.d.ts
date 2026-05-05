@@ -12,7 +12,11 @@ export interface Extension {
 
 export interface Logger {
     warn(message?: any, ...optionalParams: any[]): void;
+    info?(message?: any, ...optionalParams: any[]): void;
+    debug?(message?: any, ...optionalParams: any[]): void;
 }
+
+export type Verbosity = 'silent' | 'warn' | 'info' | 'debug';
 
 export interface CompilerPass {
     process(container: ContainerBuilder): Promise<void>;
@@ -55,6 +59,7 @@ export class ContainerBuilder {
     readonly services: Map<string, any>;
     frozen: boolean;
     logger: Logger;
+    verbosity: Verbosity;
     autowire: Autowire | null;
 
     constructor(containerReferenceAsService?: boolean, defaultDir?: string | null);
