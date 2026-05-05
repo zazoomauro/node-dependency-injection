@@ -7,8 +7,10 @@ import util from 'util'
 import { ContainerBuilder, YamlFileLoader } from '../lib/'
 import JsAdapter from './Services/File/JsAdapter'
 import JsonAdapter from './Services/File/JsonAdapter'
+import XmlAdapter from './Services/File/XmlAdapter'
 import JsFileLoader from '../lib/Loader/JsFileLoader'
 import JsonFileLoader from '../lib/Loader/JsonFileLoader'
+import XmlFileLoader from '../lib/Loader/XmlFileLoader'
 import 'console.table'
 
 program.arguments('<path> <service>').action((dir, service) => {
@@ -22,6 +24,9 @@ program.arguments('<path> <service>').action((dir, service) => {
       break
     case JsonAdapter.FORMAT:
       loader = new JsonFileLoader(container)
+      break
+    case XmlAdapter.FORMAT:
+      loader = new XmlFileLoader(container)
       break
     default:
       loader = new YamlFileLoader(container)

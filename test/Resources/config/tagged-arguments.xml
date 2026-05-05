@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <services>
+        <service id="repository-manager" class="./../RepositoryManager">
+            <argument type="tagged">repository</argument>
+        </service>
+
+        <service id="repository-foo" class="./../RepositoryFoo">
+            <tag name="repository"/>
+        </service>
+
+        <service id="repository-bar" class="./../RepositoryBar">
+            <tag name="repository"/>
+        </service>
+    </services>
+</container>

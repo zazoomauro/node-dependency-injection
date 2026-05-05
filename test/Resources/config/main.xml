@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <services>
+        <service id="classOne" class="./../MultipleExports" main="ClassOne"/>
+        <service id="classTwo" class="./../MultipleExports" main="ClassTwo"/>
+        <service id="multipleExports" class="./../MultipleExports"/>
+        <service id="defaultClass" class="./../MultipleExportsWithDefault"/>
+        <service id="kebabCaseFilenameFactory">
+            <factory class="./../kebab-case-filename-factory" main="KebabCaseFilenameFactory" method="create"/>
+        </service>
+    </services>
+</container>

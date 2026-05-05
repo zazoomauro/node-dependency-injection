@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+    <parameters>
+        <parameter key="fooParameter">barValue</parameter>
+        <parameter key="barParameter" type="collection">
+            <parameter>foo</parameter>
+            <parameter>bar</parameter>
+        </parameter>
+        <parameter key="fooProperty">fooProperty</parameter>
+        <parameter key="param_false" type="boolean">false</parameter>
+        <parameter key="param_object" type="map">
+            <parameter key="foo">bar</parameter>
+            <parameter key="bar">foo</parameter>
+        </parameter>
+    </parameters>
+
+    <services>
+        <service id="foo" class="./../foo">
+            <argument>@bar</argument>
+            <argument>%fs</argument>
+            <argument>foo-bar</argument>
+            <argument>%fooParameter%</argument>
+            <argument>%env(NODE_ENV)%</argument>
+            <tag name="fooTag"/>
+            <property name="property">%fooProperty%</property>
+        </service>
+
+        <service id="bar" class="./../bar">
+            <call method="setFooBar">
+                <argument>@foobar</argument>
+            </call>
+            <tag name="fooTag"/>
+        </service>
+
+        <service id="foobar" class="./../foobar" deprecated="Deprecated service">
+            <argument>@injected.lazy.service</argument>
+        </service>
+
+        <service id="f" alias="foo"/>
+
+        <service id="lazy.service" class="./../foobar" lazy="true"/>
+
+        <service id="injected.lazy.service" class="./../foobar" lazy="true"/>
+
+        <service id="factory" class="./../factory"/>
+
+        <service id="from_factory_without_args">
+            <factory class="./../factory" method="getFactoryWithoutArgs"/>
+        </service>
+
+        <service id="from_factory_with_args">
+            <argument>ok</argument>
+            <factory class="./../factory" method="getFactoryWithArgs"/>
+        </service>
+
+        <service id="from_factory_with_reference_without_args">
+            <factory service="@factory" method="getFactoryWithoutArgs"/>
+        </service>
+
+        <service id="from_factory_with_reference_with_args">
+            <argument>ok</argument>
+            <factory service="@factory" method="getFactoryWithArgs"/>
+        </service>
+
+        <service id="from_factory_with_reference_with_service_arg">
+            <argument>@f</argument>
+            <factory service="@factory" method="getFactoryWithServiceArg"/>
+        </service>
+
+        <service id="service_missing_dependencies" class="./../missingDependencies">
+            <argument>@f</argument>
+            <argument>@?not_exists</argument>
+        </service>
+
+        <service id="service_with_dependencies" class="./../missingDependencies">
+            <argument>@f</argument>
+            <argument>@?foobar</argument>
+        </service>
+
+        <service id="service_missing_dependencies_call" class="./../missingDependencies">
+            <call method="setMethod">
+                <argument>@?not_exists</argument>
+            </call>
+        </service>
+
+        <service id="service_with_dependencies_call" class="./../missingDependencies">
+            <call method="setMethod">
+                <argument>@foobar</argument>
+            </call>
+        </service>
+
+        <service id="foo_with_true" class="./../foo">
+            <argument>@bar</argument>
+            <argument>%fs</argument>
+            <argument type="boolean">true</argument>
+            <argument>%true%</argument>
+        </service>
+
+        <service id="foo_with_false" class="./../foo">
+            <argument>@bar</argument>
+            <argument>%fs%</argument>
+            <argument>not</argument>
+            <argument>%param_false%</argument>
+        </service>
+
+        <service id="private_service" class="./../foo" public="false">
+            <argument>@bar</argument>
+            <argument>%fs%</argument>
+        </service>
+
+        <service id="service_using_private_service" class="./../foo">
+            <argument>@private_service</argument>
+        </service>
+
+        <service id="synthetic_service" synthetic="true"/>
+
+        <service id="app.listener" class="./../listener">
+            <tag name="listener" event="postUpdate"/>
+        </service>
+
+        <service id="app.mailer" class="./../Mailer"/>
+
+        <service id="app.decorating_mailer" class="./../DecoratingMailer" decorates="app.mailer" public="false">
+            <argument>@app.decorating_mailer.inner</argument>
+        </service>
+
+        <service id="service_with_object_parameter" class="./../barManager">
+            <argument>%param_object%</argument>
+        </service>
+
+        <service id="not_shared_service" class="./../Mailer" shared="false"/>
+
+        <service id="decorate.app.mailer" class="./../Mailer"/>
+
+        <service id="decorate.one" class="./../DecoratingMailerOne" decorates="decorate.app.mailer" decoration-priority="3">
+            <argument>@decorate.one.inner</argument>
+        </service>
+
+        <service id="decorate.two" class="./../DecoratingMailerTwo" decorates="decorate.app.mailer" decoration-priority="1">
+            <argument>@decorate.two.inner</argument>
+        </service>
+    </services>
+</container>
