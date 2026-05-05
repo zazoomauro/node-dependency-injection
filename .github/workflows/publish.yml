@@ -27,7 +27,7 @@ jobs:
 
       # Set package.json version from the release tag (e.g. v3.2.7 → 3.2.7)
       - name: Set version from tag
-        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
+        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --ignore-scripts
 
       - run: npm run build
 
