@@ -621,3 +621,55 @@ describe('AutowireTS', () => {
         assert.strictEqual(value, 10)
     })
 })
+import BindService from '../../Resources-ts/Autowire/src/Service/BindService'
+
+describe('AutowireTS - Bind', () => {
+    const resourcesTsFolder = 'Resources-ts'
+    const autowireFolder = 'Autowire'
+    const dir = path.join(__dirname, '..', '..', resourcesTsFolder, autowireFolder, 'src')
+
+    it('should inject a bound scalar argument by parameter name (programmatic)', async () => {
+        // Arrange.
+        const container = new ContainerBuilder(false, dir)
+        container.addBind('adminEmail', 'manager@example.com')
+        const autowire = new Autowire(container)
+
+        // Act.
+        await autowire.process()
+        await container.compile()
+        const service = container.get(BindService)
+
+        // Assert.
+        assert.instanceOf(service, BindService)
+        assert.strictEqual(service.getAdminEmail(), 'manager@example.com')
+        const value = await service.callBarProcessMethod()
+        assert.strictEqual(value, 10)
+    })
+
+    it('should inject a bound scalar argument via YAML _defaults.bind', async () => {
+        // Arrange.
+        const configFile = path.join(
+            __dirname, '..', '..', resourcesTsFolder, autowireFolder, 'config', 'services-bind.yaml'
+        )
+        const container = new ContainerBuilder(false, dir)
+        const loader = new YamlFileLoader(container)
+
+        // Act.
+        await loader.load(configFile)
+        await container.compile()
+        const service = container.get(BindService)
+
+        // Assert.
+        assert.instanceOf(service, BindService)
+        assert.strictEqual(service.getAdminEmail(), 'manager@example.com')
+    })
+
+    it('should expose binds via container.binds getter', () => {
+        // Arrange.
+        const container = new ContainerBuilder()
+        container.addBind('someParam', 'someValue')
+
+        // Assert.
+        assert.strictEqual(container.binds.get('someParam'), 'someValue')
+    })
+})

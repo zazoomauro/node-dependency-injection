@@ -1,0 +1,7 @@
+services:
+  _defaults:
+    autowire: true
+    rootDir: ../src
+    exclude: ["ToExclude"]
+    bind:
+      adminEmail: "manager@example.com"
