@@ -12,6 +12,7 @@ import {
     Reference,
     ServiceFile,
     Tag,
+    XmlFileLoader,
     YamlFileLoader
 } from './index'
 
@@ -156,6 +157,10 @@ loader.load('/path/to/file.json')
 container = new ContainerBuilder()
 loader = new JsFileLoader(container)
 loader.load('/path/to/file.js')
+
+container = new ContainerBuilder()
+loader = new XmlFileLoader(container)
+loader.load('/path/to/file.xml')
 
 // * Definition *
 // Constructor

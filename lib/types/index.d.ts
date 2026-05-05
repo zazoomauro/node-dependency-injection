@@ -185,6 +185,9 @@ export class JsFileLoader extends FileLoader {
 export class JsonFileLoader extends JsFileLoader {
 }
 
+export class XmlFileLoader extends FileLoader {
+}
+
 export class Autowire {
     constructor (container: ContainerBuilder, tsConfigFullPath?: string);
 
