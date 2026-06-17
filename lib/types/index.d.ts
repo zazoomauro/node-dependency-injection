@@ -4,7 +4,31 @@ export type PassConfigHook = 'beforeOptimization' | 'optimize' | 'beforeRemoving
 
 export type Parameter = string | boolean | object | any[];
 
-export type Argument = TagReference | Reference | PackageReference | any;
+export type Argument = TagReference | Reference | PackageReference | ParameterReference | any;
+
+export type ValidationSeverity = 'ERROR' | 'WARN' | 'INFO';
+
+export type ValidationIssueType =
+  | 'missing_dependency'
+  | 'circular_dependency'
+  | 'unresolved_parameter'
+  | 'unused_nullable_fallback'
+  | 'deprecated_service_in_use'
+  | 'orphan_tagged_service'
+  | 'keyed_group_no_default';
+
+export interface ValidationIssue {
+  severity: ValidationSeverity;
+  type: ValidationIssueType;
+  service: string;
+  detail: string;
+  message: string;
+}
+
+export interface CompileOptions {
+  validate?: boolean;
+  throwOnError?: boolean;
+}
 
 export interface Extension {
     load: Function;
@@ -66,7 +90,9 @@ export class ContainerBuilder {
 
     addCompilerPass(compilerPass: any, type?: PassConfigHook, priority?: number): void;
 
-    compile(): Promise<void>;
+    compile(): Promise<undefined>;
+    compile(options: CompileOptions & { validate: true }): Promise<ValidationResult>;
+    compile(options?: CompileOptions): Promise<ValidationResult | undefined>;
 
     findDefinition(key: string): Promise<Definition>;
 
@@ -206,4 +232,34 @@ export class ServiceFile {
     constructor (servicesDumpPath: string, absolutePath?: boolean);
 
     generateFromContainer(container: ContainerBuilder): Promise<void>;
+}
+
+export class ParameterReference {
+    readonly key: string;
+
+    constructor(key: string);
+}
+
+export class ValidationResult {
+    readonly errors: ValidationIssue[];
+    readonly warnings: ValidationIssue[];
+    readonly info: ValidationIssue[];
+    readonly isValid: boolean;
+    serviceCount: number;
+
+    addError(type: ValidationIssueType, service: string, detail: string, message: string): void;
+    addWarning(type: ValidationIssueType, service: string, detail: string, message: string): void;
+    addInfo(type: ValidationIssueType, service: string, detail: string, message: string): void;
+}
+
+export class ContainerValidationError extends Error {
+    readonly result: ValidationResult;
+
+    constructor(result: ValidationResult);
+}
+
+export class ContainerValidator {
+    constructor(container: ContainerBuilder);
+
+    validate(): ValidationResult;
 }
