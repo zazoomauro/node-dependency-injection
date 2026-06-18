@@ -4,7 +4,7 @@ export type PassConfigHook = 'beforeOptimization' | 'optimize' | 'beforeRemoving
 
 export type Parameter = string | boolean | object | any[];
 
-export type Argument = TagReference | Reference | PackageReference | ParameterReference | any;
+export type Argument = TagReference | Reference | KeyedReference | KeyedGroupReference | PackageReference | ParameterReference | any;
 
 export type ValidationSeverity = 'ERROR' | 'WARN' | 'INFO';
 
@@ -104,6 +104,10 @@ export class ContainerBuilder {
 
     getParameter<T extends Parameter>(key: string): T;
 
+    getKeyed<T = any>(group: string, key?: string | null): T;
+
+    getKeyedGroup<T = any>(group: string): Map<string, T>;
+
     has(key: string): boolean;
 
     hasAlias(alias: string): boolean;
@@ -115,6 +119,8 @@ export class ContainerBuilder {
     isSet(id: string): boolean;
 
     register(id: string, object?: any, args?: Argument[]): Definition;
+
+    registerKeyed(group: string, key: string, object?: any, args?: Argument[]): Definition;
 
     registerExtension(extension: Extension): void;
 
@@ -146,6 +152,9 @@ export class Definition {
     shared: boolean;
     abstract: boolean;
     parent: string;
+    keyedGroup: string | null;
+    keyedKey: string | null;
+    keyedDefault: boolean;
     readonly factory: Factory | null;
     readonly calls: Call[];
     readonly tags: Tag[];
@@ -165,6 +174,8 @@ export class Definition {
     addTag(name: string, attributes?: Map<any, any>): Definition;
 
     isPublic(bypassPublic?: boolean): boolean;
+
+    setDefault(value: boolean): Definition;
 
     setFactory(Object: Reference | Object, method: string): void;
 
@@ -193,6 +204,19 @@ export class TagReference {
     readonly name: string;
 
     constructor(name: string);
+}
+
+export class KeyedReference {
+    readonly group: string;
+    readonly key: string;
+
+    constructor(group: string, key: string);
+}
+
+export class KeyedGroupReference {
+    readonly group: string;
+
+    constructor(group: string);
 }
 
 export class PassConfig {

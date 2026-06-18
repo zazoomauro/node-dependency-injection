@@ -37,7 +37,8 @@ Managing dependencies manually leads to tightly coupled, hard-to-test code. **No
 | 🌳 **Parent / Abstract services** — share config via inheritance | 🧩 **Non-shared services** — new instance per call |
 | 🌿 **Environment parameters** — `%env(VAR)%` support | 🗑️ **Deprecation warnings** — mark services as deprecated |
 | 📦 **Express middleware** — first-class web framework support | 🖥️ **CLI** — inspect &amp; validate your container |
-| 🔀 **Conditional services** — register services based on env or other services | |
+| 🔀 **Conditional services** — register services based on env or other services | 🗝️ **Keyed services** — named strategy pattern with `registerKeyed` |
+| 🔗 **Autowire + Keyed** — inject keyed services via parameter binds | |
 
 ---
 
@@ -100,6 +101,100 @@ if (process.env.NODE_ENV === 'development') {
 }
 await container.compile()
 ```
+
+---
+
+## 🗝️ Keyed Services
+
+Keyed services let you register multiple implementations of the same interface under a named group, then retrieve a specific one by key or inject the entire group as a `Map`.
+
+### Programmatic API
+
+```js
+import { ContainerBuilder, KeyedReference, KeyedGroupReference } from 'node-dependency-injection'
+import StripePayment from './payments/StripePayment'
+import PaypalPayment from './payments/PaypalPayment'
+import CheckoutService from './CheckoutService'
+import PaymentRouter from './PaymentRouter'
+
+const container = new ContainerBuilder()
+
+// Register implementations under the 'payment' group
+container.registerKeyed('payment', 'stripe', StripePayment).setDefault(true)
+container.registerKeyed('payment', 'paypal', PaypalPayment)
+
+// Inject a specific key
+container.register('checkout', CheckoutService)
+  .addArgument(new KeyedReference('payment', 'stripe'))
+
+// Inject the full group as a Map<key, instance>
+container.register('payment.router', PaymentRouter)
+  .addArgument(new KeyedGroupReference('payment'))
+
+// Retrieve by key or get the default
+const stripe = container.getKeyed('payment', 'stripe')
+const defaultPayment = container.getKeyed('payment')          // returns the .setDefault(true) one
+const allPayments = container.getKeyedGroup('payment')        // Map { 'stripe' => …, 'paypal' => … }
+```
+
+### YAML configuration
+
+```yaml
+services:
+  payment.stripe:
+    class: 'payments/StripePayment'
+    keyed:
+      group: payment
+      key: stripe
+      default: true
+
+  payment.paypal:
+    class: 'payments/PaypalPayment'
+    keyed:
+      group: payment
+      key: paypal
+
+  checkout:
+    class: 'CheckoutService'
+    arguments: ['@keyed(payment, stripe)']
+
+  payment.router:
+    class: 'PaymentRouter'
+    arguments: ['@keyed_group(payment)']
+```
+
+### Autowire integration
+
+When using Autowire you can inject keyed services into **typed** constructor parameters by registering a bind whose name matches the parameter name:
+
+```typescript
+// TypeScript service
+export default class CheckoutService {
+  constructor(private readonly payment: IPaymentService) {}
+}
+
+export default class PaymentRouter {
+  constructor(private readonly payments: Map<string, IPaymentService>) {}
+}
+```
+
+```js
+container.registerKeyed('payment', 'stripe', StripePaymentService)
+container.registerKeyed('payment', 'paypal', PaypalPaymentService)
+
+// The bind name must match the constructor parameter name exactly
+container.addBind('payment', new KeyedReference('payment', 'stripe'))
+container.addBind('payments', new KeyedGroupReference('payment'))
+
+const autowire = new Autowire(container)
+await autowire.process()
+await container.compile()
+
+// container.get(CheckoutService).payment  → StripePaymentService
+// container.get(PaymentRouter).payments   → Map { 'stripe' => …, 'paypal' => … }
+```
+
+> **Note:** binds take priority over type-based resolution. The same mechanism works for scalar values — `container.addBind('apiKey', '%env(API_KEY)%')` — so keyed service binds fit naturally into the existing bind API.
 
 ---
 
@@ -231,6 +326,7 @@ The full documentation lives in the [**project wiki**](https://github.com/zazoom
 
 - [Getting Started](https://github.com/zazoomauro/node-dependency-injection/wiki/GettingStarted)
 - [Autowire](https://github.com/zazoomauro/node-dependency-injection/wiki/Autowire)
+- [Keyed Services](https://github.com/zazoomauro/node-dependency-injection/wiki/KeyedServices)
 - [Configuration Files](https://github.com/zazoomauro/node-dependency-injection/wiki/ConfigurationFiles)
 - [Compiler Passes](https://github.com/zazoomauro/node-dependency-injection/wiki/CompilerPass)
 - [Conditional Services](https://github.com/zazoomauro/node-dependency-injection/wiki/ConditionalServices)
