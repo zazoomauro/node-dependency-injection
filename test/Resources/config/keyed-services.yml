@@ -1,0 +1,23 @@
+services:
+    payment.stripe:
+        class: ./../StripePayment
+        keyed:
+            group: payment
+            key: stripe
+            default: true
+
+    payment.paypal:
+        class: ./../PaypalPayment
+        keyed:
+            group: payment
+            key: paypal
+
+    checkout:
+        class: ./../CheckoutService
+        arguments:
+            - '@keyed(payment, stripe)'
+
+    payment.router:
+        class: ./../PaymentRouter
+        arguments:
+            - '@keyed_group(payment)'
