@@ -4,6 +4,8 @@ import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 import path from 'path'
 import ContainerBuilder from '../../../lib/ContainerBuilder'
+import KeyedReference from '../../../lib/KeyedReference'
+import KeyedGroupReference from '../../../lib/KeyedGroupReference'
 import YamlFileLoader from '../../../lib/Loader/YamlFileLoader'
 import JsFileLoader from '../../../lib/Loader/JsFileLoader'
 import JsonFileLoader from '../../../lib/Loader/JsonFileLoader'
@@ -671,5 +673,70 @@ describe('AutowireTS - Bind', () => {
 
         // Assert.
         assert.strictEqual(container.binds.get('someParam'), 'someValue')
+    })
+})
+import KeyedCheckoutService from '../../Resources-ts/Autowire-Keyed/src/Service/KeyedCheckoutService'
+import KeyedPaymentRouterService from '../../Resources-ts/Autowire-Keyed/src/Service/KeyedPaymentRouterService'
+import StripePaymentService from '../../Resources-ts/Autowire-Keyed/src/Service/StripePaymentService'
+import PaypalPaymentService from '../../Resources-ts/Autowire-Keyed/src/Service/PaypalPaymentService'
+
+describe('AutowireTS - Keyed Services', () => {
+    const resourcesTsFolder = 'Resources-ts'
+    const autowireKeyedFolder = 'Autowire-Keyed'
+    const dir = path.join(__dirname, '..', '..', resourcesTsFolder, autowireKeyedFolder, 'src')
+
+    it('should inject a specific keyed service via KeyedReference bind (typed parameter)', async () => {
+        // Arrange.
+        const container = new ContainerBuilder(false, dir)
+        container.registerKeyed('payment', 'stripe', StripePaymentService)
+        container.registerKeyed('payment', 'paypal', PaypalPaymentService)
+        container.addBind('payment', new KeyedReference('payment', 'stripe'))
+        const autowire = new Autowire(container)
+
+        // Act.
+        await autowire.process()
+        await container.compile()
+        const service = container.get(KeyedCheckoutService)
+
+        // Assert.
+        assert.instanceOf(service, KeyedCheckoutService)
+        assert.strictEqual(service.processPayment(100), 'stripe:100')
+    })
+
+    it('should inject paypal keyed service via KeyedReference bind when key changes', async () => {
+        // Arrange.
+        const container = new ContainerBuilder(false, dir)
+        container.registerKeyed('payment', 'stripe', StripePaymentService)
+        container.registerKeyed('payment', 'paypal', PaypalPaymentService)
+        container.addBind('payment', new KeyedReference('payment', 'paypal'))
+        const autowire = new Autowire(container)
+
+        // Act.
+        await autowire.process()
+        await container.compile()
+        const service = container.get(KeyedCheckoutService)
+
+        // Assert.
+        assert.instanceOf(service, KeyedCheckoutService)
+        assert.strictEqual(service.processPayment(50), 'paypal:50')
+    })
+
+    it('should inject the full keyed group via KeyedGroupReference bind (Map-typed parameter)', async () => {
+        // Arrange.
+        const container = new ContainerBuilder(false, dir)
+        container.registerKeyed('payment', 'stripe', StripePaymentService)
+        container.registerKeyed('payment', 'paypal', PaypalPaymentService)
+        container.addBind('payments', new KeyedGroupReference('payment'))
+        const autowire = new Autowire(container)
+
+        // Act.
+        await autowire.process()
+        await container.compile()
+        const router = container.get(KeyedPaymentRouterService)
+
+        // Assert.
+        assert.instanceOf(router, KeyedPaymentRouterService)
+        assert.strictEqual(router.route('stripe', 200), 'stripe:200')
+        assert.strictEqual(router.route('paypal', 75), 'paypal:75')
     })
 })
