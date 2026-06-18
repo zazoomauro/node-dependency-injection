@@ -1,0 +1,40 @@
+services:
+    always.present:
+        class: ./../foo
+
+    env.exists.passes:
+        class: ./../bar
+        when:
+            env_exists: NODE_ENV
+
+    env.exists.fails:
+        class: ./../foobar
+        when:
+            env_exists: __THIS_VAR_SHOULD_NEVER_EXIST__
+
+    env.equals.passes:
+        class: ./../bar
+        when:
+            env_equals:
+                var: NODE_ENV
+                value: test
+
+    env.equals.fails:
+        class: ./../foobar
+        when:
+            env_equals:
+                var: NODE_ENV
+                value: production
+
+    primary.cache:
+        class: ./../foo
+
+    fallback.cache:
+        class: ./../bar
+        when:
+            missing: primary.cache
+
+    needs.primary.cache:
+        class: ./../foobar
+        when:
+            service_exists: primary.cache

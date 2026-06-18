@@ -159,6 +159,9 @@ export class Definition {
     readonly calls: Call[];
     readonly tags: Tag[];
     readonly properties: Map<string, any>;
+    readonly condition: Condition | null;
+    readonly whenMissingId: string | null;
+    readonly whenServiceExistsId: string | null;
 
     constructor(object?: any, args?: Argument[], overrideArgs?: Argument[]);
 
@@ -175,6 +178,12 @@ export class Definition {
     setDefault(value: boolean): Definition;
 
     setFactory(Object: Reference | Object, method: string): void;
+
+    setCondition(condition: Condition): Definition;
+
+    whenMissing(id: string): Definition;
+
+    whenServiceExists(id: string): Definition;
 
 }
 
@@ -286,4 +295,33 @@ export class ContainerValidator {
     constructor(container: ContainerBuilder);
 
     validate(): ValidationResult;
+}
+
+export class Condition {
+    readonly type: string;
+    readonly options: object;
+
+    constructor(type: string, options?: object);
+
+    isPhaseOne(): boolean;
+
+    isPhaseTwo(): boolean;
+
+    evaluate(): boolean;
+
+    evaluatePhaseTwo(remainingIds: Set<string>): boolean;
+
+    static envExists(varName: string): Condition;
+
+    static envEquals(varName: string, value: string): Condition;
+
+    static custom(fn: () => boolean): Condition;
+
+    static all(...conditions: Condition[]): Condition;
+
+    static any(...conditions: Condition[]): Condition;
+
+    static missing(id: string): Condition;
+
+    static serviceExists(id: string): Condition;
 }
