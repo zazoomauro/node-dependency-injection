@@ -42,6 +42,25 @@ Managing dependencies manually leads to tightly coupled, hard-to-test code. **No
 
 ---
 
+## 📊 Feature Comparison (NDI vs InversifyJS vs tsyringe vs Awilix)
+
+| Feature | node-dependency-injection | InversifyJS | tsyringe | Awilix |
+|---|---|---|---|---|
+| Config files (YAML / JSON / JS) | ✅ Native | ⚠️ Programmatic-first | ⚠️ Programmatic-first | ⚠️ Programmatic-first |
+| TypeScript autowire without decorators | ✅ Native | ❌ | ❌ | ❌ |
+| Keyed services (named strategy groups) | ✅ Native | ⚠️ Via custom patterns | ⚠️ Via tokens/patterns | ⚠️ Via aliases/patterns |
+| Conditional service registration | ✅ Native | ⚠️ Manual logic | ⚠️ Manual logic | ⚠️ Manual logic |
+| Compiler passes / compile-time transforms | ✅ Native | ❌ | ❌ | ❌ |
+| Service tags and tagged lookup | ✅ Native | ⚠️ Manual metadata patterns | ⚠️ Manual token patterns | ⚠️ Naming/registration patterns |
+| Private services | ✅ Native | ⚠️ Container conventions | ⚠️ Container conventions | ⚠️ Container conventions |
+| CLI container inspection / validation | ✅ Native (`ndi`) | ❌ | ❌ | ❌ |
+| Parent / abstract definitions | ✅ Native | ⚠️ Composition-based | ⚠️ Composition-based | ⚠️ Composition-based |
+| Lazy services | ✅ Native | ✅ | ⚠️ Partial patterns | ⚠️ Partial patterns |
+
+> Legend: ✅ built-in, ⚠️ possible with custom conventions or extra setup, ❌ not available as a first-class feature.
+
+---
+
 ## 🚀 Installation
 
 ```sh
