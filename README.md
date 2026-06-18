@@ -37,6 +37,7 @@ Managing dependencies manually leads to tightly coupled, hard-to-test code. **No
 | 🌳 **Parent / Abstract services** — share config via inheritance | 🧩 **Non-shared services** — new instance per call |
 | 🌿 **Environment parameters** — `%env(VAR)%` support | 🗑️ **Deprecation warnings** — mark services as deprecated |
 | 📦 **Express middleware** — first-class web framework support | 🖥️ **CLI** — inspect &amp; validate your container |
+| 🔀 **Conditional services** — register services based on env or other services | |
 
 ---
 
@@ -130,6 +131,66 @@ const mailer = container.get('service.mailer')
 
 ---
 
+## 🔀 Conditional Services
+
+Register services only when specific conditions are met — evaluated at `compile()` time.
+
+```js
+import { ContainerBuilder, Condition } from 'node-dependency-injection'
+
+const container = new ContainerBuilder()
+
+// Register only when an environment variable is set
+container.register('cache.redis', RedisCache)
+  .setCondition(Condition.envExists('REDIS_URL'))
+
+// Fallback: register only when another service was NOT registered (TryAdd)
+container.register('cache.memory', InMemoryCache)
+  .whenMissing('cache.redis')
+
+// Register only when a sibling service IS registered
+container.register('metrics', Prometheus)
+  .whenServiceExists('http.server')
+
+// Combine conditions
+container.register('feature.x', FeatureX)
+  .setCondition(Condition.all(
+    Condition.envEquals('NODE_ENV', 'production'),
+    Condition.envExists('FEATURE_X_ENABLED')
+  ))
+
+await container.compile()
+```
+
+The same conditions are available declaratively in YAML:
+
+```yaml
+services:
+  cache.redis:
+    class: 'services/cache/RedisCache'
+    when:
+      env_exists: REDIS_URL
+
+  cache.memory:
+    class: 'services/cache/InMemoryCache'
+    when:
+      missing: cache.redis
+
+  metrics.prometheus:
+    class: 'services/metrics/Prometheus'
+    when:
+      service_exists: http.server
+
+  logger.verbose:
+    class: 'services/logger/VerboseLogger'
+    when:
+      env_equals: { var: LOG_LEVEL, value: debug }
+```
+
+> See the [Conditional Services wiki page](https://github.com/zazoomauro/node-dependency-injection/wiki/ConditionalServices) for the full API reference and advanced usage.
+
+---
+
 ## 📦 Ecosystem
 
 ### Express Middleware
@@ -172,6 +233,7 @@ The full documentation lives in the [**project wiki**](https://github.com/zazoom
 - [Autowire](https://github.com/zazoomauro/node-dependency-injection/wiki/Autowire)
 - [Configuration Files](https://github.com/zazoomauro/node-dependency-injection/wiki/ConfigurationFiles)
 - [Compiler Passes](https://github.com/zazoomauro/node-dependency-injection/wiki/CompilerPass)
+- [Conditional Services](https://github.com/zazoomauro/node-dependency-injection/wiki/ConditionalServices)
 - [Tagging Services](https://github.com/zazoomauro/node-dependency-injection/wiki/Tagging)
 - [Factory](https://github.com/zazoomauro/node-dependency-injection/wiki/Factory)
 - [Lazy Services](https://github.com/zazoomauro/node-dependency-injection/wiki/LazyService)
