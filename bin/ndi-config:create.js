@@ -6,10 +6,11 @@ import program from 'commander'
 import YamlAdapter from './Services/File/YamlAdapter'
 import JsAdapter from './Services/File/JsAdapter'
 import JsonAdapter from './Services/File/JsonAdapter'
+import XmlAdapter from './Services/File/XmlAdapter'
 import { ContainerBuilder, YamlFileLoader } from '../lib/'
 
 const regex = new RegExp(
-  `(${YamlAdapter.FORMAT}|${JsonAdapter.FORMAT}|${JsAdapter.FORMAT})`)
+  `(${YamlAdapter.FORMAT}|${JsonAdapter.FORMAT}|${JsAdapter.FORMAT}|${XmlAdapter.FORMAT})`)
 const format = YamlAdapter.FORMAT
 
 program

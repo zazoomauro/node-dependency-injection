@@ -1,5 +1,7 @@
 // Only for typings exports
 
+export type AutowireIdStrategy = 'legacy' | 'readable';
+
 export type PassConfigHook = 'beforeOptimization' | 'optimize' | 'beforeRemoving' | 'remove' | 'afterRemoving';
 
 export type Parameter = string | boolean | object | any[];
@@ -28,6 +30,47 @@ export interface ValidationIssue {
 export interface CompileOptions {
   validate?: boolean;
   throwOnError?: boolean;
+}
+
+export type GraphFormat = 'mermaid' | 'dot' | 'json';
+
+export interface ExportGraphOptions {
+  filter?: RegExp | string | ((serviceId: string) => boolean);
+  tag?: string;
+  root?: string;
+  depth?: number;
+  excludePrivate?: boolean;
+}
+
+export interface GraphNode {
+  id: string;
+  class: string | null;
+  scope: 'singleton' | 'prototype';
+  lazy: boolean;
+  keyed?: {
+    group: string;
+    key: string;
+    default: boolean;
+  };
+}
+
+export interface GraphEdge {
+  from: string;
+  to: string;
+  type: 'constructor' | 'lazy' | 'method';
+}
+
+export interface GraphGroup {
+  name: string;
+  type: 'keyed';
+  services: string[];
+  default: string | null;
+}
+
+export interface ExportedGraphJson {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+  groups: GraphGroup[];
 }
 
 export interface Extension {
@@ -94,11 +137,16 @@ export class ContainerBuilder {
     compile(options: CompileOptions & { validate: true }): Promise<ValidationResult>;
     compile(options?: CompileOptions): Promise<ValidationResult | undefined>;
 
+    exportGraph(format: 'json', options?: ExportGraphOptions): ExportedGraphJson;
+    exportGraph(format?: Exclude<GraphFormat, 'json'>, options?: ExportGraphOptions): string;
+    exportGraph(format: GraphFormat, options?: ExportGraphOptions): string | ExportedGraphJson;
+
     findDefinition(key: string): Promise<Definition>;
 
     findTaggedServiceIds(name: string): Iterable<{id: string, definition: Definition}>;
 
-    get<T = any>(id: string|any): T;
+    get<T = any>(id: string): T;
+    get(id: any): any;
 
     getDefinition(key: string): Definition;
 
@@ -259,6 +307,12 @@ export class Autowire {
     set serviceFile(serviceFile: ServiceFile);
 
     get serviceFile(): ServiceFile;
+
+    get idStrategy(): AutowireIdStrategy;
+
+    makeIdReadable(): void;
+
+    makeIdLegacy(): void;
 }
 
 export class ServiceFile {
