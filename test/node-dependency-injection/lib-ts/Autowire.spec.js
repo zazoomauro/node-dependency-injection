@@ -624,7 +624,7 @@ describe('AutowireTS', () => {
     })
 
     describe('readable ID strategy', () => {
-        it('should default to legacy ID strategy', () => {
+        it('should default to readable ID strategy', () => {
             // Arrange.
             const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
             const container = new ContainerBuilder(false, dir)
@@ -633,7 +633,7 @@ describe('AutowireTS', () => {
             const autowire = new Autowire(container)
 
             // Assert.
-            assert.strictEqual(autowire.idStrategy, 'legacy')
+            assert.strictEqual(autowire.idStrategy, 'readable')
         })
 
         it('should allow switching to readable ID strategy via makeIdReadable()', () => {

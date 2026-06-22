@@ -121,6 +121,34 @@ if (process.env.NODE_ENV === 'development') {
 await container.compile()
 ```
 
+The generated `services.yaml` uses **human-readable service IDs** derived from the file path relative to your source root (e.g. `Service/Mailer`), making it easy to review, audit, and debug your application's service graph:
+
+```yaml
+# services.yaml (human-readable — default since v4.0)
+services:
+  Service/Mailer:
+    class: /Service/Mailer
+    arguments:
+      - '@Service/Transport'
+  Service/Transport:
+    class: /Service/Transport
+    arguments: []
+```
+
+### Service ID strategy
+
+| Strategy | Default | Service ID example | Description |
+|---|---|---|---|
+| `readable` | ✅ v4.0+ | `Service/Mailer` | Path relative to `defaultDir`, extension stripped |
+| `legacy` | v3.x | `U2VydmljZS9NYWlsZXI=` | Base64-encoded absolute path |
+
+To opt back in to the legacy strategy (e.g. for gradual migration):
+
+```ts
+const autowire = new Autowire(container)
+autowire.makeIdLegacy() // switch back to base64-encoded IDs
+```
+
 ---
 
 ## 🗝️ Keyed Services
