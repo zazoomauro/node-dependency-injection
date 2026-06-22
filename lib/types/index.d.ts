@@ -1,5 +1,7 @@
 // Only for typings exports
 
+export type AutowireIdStrategy = 'legacy' | 'readable';
+
 export type PassConfigHook = 'beforeOptimization' | 'optimize' | 'beforeRemoving' | 'remove' | 'afterRemoving';
 
 export type Parameter = string | boolean | object | any[];
@@ -259,6 +261,8 @@ export class Autowire {
     set serviceFile(serviceFile: ServiceFile);
 
     get serviceFile(): ServiceFile;
+
+    idStrategy: AutowireIdStrategy;
 }
 
 export class ServiceFile {
