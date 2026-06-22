@@ -1007,6 +1007,33 @@ describe('ContainerBuilder', () => {
       assert.isTrue(extensionLoaded)
     })
 
+    it('should await async extensions before continuing compilation', async () => {
+      // Arrange.
+      const order = []
+
+      class AsyncExtension {
+        async load () {
+          await new Promise(resolve => setTimeout(resolve, 10))
+          order.push('extension')
+        }
+      }
+
+      class TrackingPass {
+        process () {
+          order.push('pass')
+        }
+      }
+
+      container.registerExtension(new AsyncExtension())
+      container.addCompilerPass(new TrackingPass(), PassConfig.TYPE_OPTIMIZE)
+
+      // Act.
+      await container.compile()
+
+      // Assert: extension must complete before compiler passes run
+      assert.deepEqual(order, ['extension', 'pass'])
+    })
+
     it(
       'should register an empty compiler pass with a optimize type will not freeze the container',
       async () => {
