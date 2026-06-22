@@ -622,6 +622,153 @@ describe('AutowireTS', () => {
         const value = await container.get(FooBarPath).callBarProcessMethod()
         assert.strictEqual(value, 10)
     })
+
+    describe('readable ID strategy', () => {
+        it('should default to legacy ID strategy', () => {
+            // Arrange.
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
+            const container = new ContainerBuilder(false, dir)
+
+            // Act.
+            const autowire = new Autowire(container)
+
+            // Assert.
+            assert.strictEqual(autowire.idStrategy, 'legacy')
+        })
+
+        it('should allow switching to readable ID strategy via makeIdReadable()', () => {
+            // Arrange.
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
+            const container = new ContainerBuilder(false, dir)
+            const autowire = new Autowire(container)
+
+            // Act.
+            autowire.makeIdReadable()
+
+            // Assert.
+            assert.strictEqual(autowire.idStrategy, 'readable')
+        })
+
+        it('should allow switching back to legacy ID strategy via makeIdLegacy()', () => {
+            // Arrange.
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
+            const container = new ContainerBuilder(false, dir)
+            const autowire = new Autowire(container)
+            autowire.makeIdReadable()
+
+            // Act.
+            autowire.makeIdLegacy()
+
+            // Assert.
+            assert.strictEqual(autowire.idStrategy, 'legacy')
+        })
+
+        it('should register services with human-readable IDs relative to defaultDir', async () => {
+            // Arrange.
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
+            const container = new ContainerBuilder(false, dir)
+            const autowire = new Autowire(container)
+            autowire.makeIdReadable()
+
+            // Act.
+            await autowire.process()
+            await container.compile()
+
+            // Assert: service definitions are stored with readable IDs
+            assert.isTrue(container.hasDefinition('FooBar'))
+            assert.isTrue(container.hasDefinition('Service/Bar'))
+            assert.isTrue(container.hasDefinition('Service/Foo'))
+        })
+
+        it('should resolve services by class with readable strategy', async () => {
+            // Arrange.
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
+            const container = new ContainerBuilder(false, dir)
+            const autowire = new Autowire(container)
+            autowire.makeIdReadable()
+
+            // Act.
+            await autowire.process()
+            await container.compile()
+
+            // Assert.
+            assert.instanceOf(container.get(FooBar), FooBar)
+            assert.instanceOf(container.get(Foo), Foo)
+            assert.instanceOf(container.get(Bar), Bar)
+            assert.instanceOf(container.get(FooBar).multiple, ImplementsOne)
+            assert.notInstanceOf(container.get(FooBar).multiple, ImplementsTwo)
+            const value = await container.get(FooBar).callBarProcessMethod()
+            assert.strictEqual(value, 10)
+        })
+
+        it('should also register legacy aliases for backward compatibility', async () => {
+            // Arrange.
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
+            const container = new ContainerBuilder(false, dir)
+            const autowire = new Autowire(container)
+            autowire.makeIdReadable()
+
+            // Act.
+            await autowire.process()
+            await container.compile()
+
+            // Assert: a legacy alias resolves to the same service instance
+            const byClass = container.get(Bar)
+            const byReadableId = container.get('Service/Bar')
+            assert.instanceOf(byClass, Bar)
+            assert.instanceOf(byReadableId, Bar)
+        })
+
+        it('should generate a working services file in yaml with readable strategy', async () => {
+            // Arrange.
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
+            const container = new ContainerBuilder(false, dir)
+            const autowire = new Autowire(container)
+            autowire.makeIdReadable()
+            const dumpPath = `${dumpServicesPath}-readable.yaml`
+            autowire.serviceFile = new ServiceFile(dumpPath)
+            await autowire.process()
+            const containerDump = new ContainerBuilder(false, dir)
+            const loader = new YamlFileLoader(containerDump)
+
+            // Act.
+            await container.compile()
+            await loader.load(dumpPath)
+
+            // Assert.
+            assert.instanceOf(containerDump.get(FooBar), FooBar)
+            assert.instanceOf(containerDump.get(Foo), Foo)
+            assert.instanceOf(containerDump.get(Bar), Bar)
+            assert.instanceOf(containerDump.get(FooBar).multiple, ImplementsOne)
+            assert.notInstanceOf(containerDump.get(FooBar).multiple, ImplementsTwo)
+            const value = await containerDump.get(FooBar).callBarProcessMethod()
+            assert.strictEqual(value, 10)
+        })
+
+        it('should generate a working services file in yaml with readable strategy and absolute path', async () => {
+            // Arrange.
+            const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
+            const container = new ContainerBuilder(false, dir)
+            const autowire = new Autowire(container)
+            autowire.makeIdReadable()
+            const dumpPath = `${dumpServicesPath}-readable-abs.yaml`
+            autowire.serviceFile = new ServiceFile(dumpPath, true)
+            await autowire.process()
+            const containerDump = new ContainerBuilder(false)
+            const loader = new YamlFileLoader(containerDump)
+
+            // Act.
+            await container.compile()
+            await loader.load(dumpPath)
+
+            // Assert.
+            assert.instanceOf(containerDump.get(FooBar), FooBar)
+            assert.instanceOf(containerDump.get(Foo), Foo)
+            assert.instanceOf(containerDump.get(Bar), Bar)
+            const value = await containerDump.get(FooBar).callBarProcessMethod()
+            assert.strictEqual(value, 10)
+        })
+    })
 })
 import BindService from '../../Resources-ts/Autowire/src/Service/BindService'
 
