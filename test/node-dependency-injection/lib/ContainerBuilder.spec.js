@@ -840,6 +840,124 @@ describe('ContainerBuilder', () => {
     })
   })
 
+  describe('exportGraph', () => {
+    it('should export JSON graph with nodes, edges and keyed groups', () => {
+      class CheckoutService {}
+      class StripePayment {}
+      class PaypalPayment {}
+      class OrderRepository {}
+      class Logger {}
+      class Secret {}
+
+      container.register('checkout', CheckoutService)
+        .addArgument(new Reference('payment.default'))
+        .addArgument(new Reference('order.repository'))
+        .addMethodCall('setLogger', [new Reference('logger')])
+
+      const stripe = container.registerKeyed('payment', 'stripe', StripePayment)
+      stripe.setDefault(true).addArgument(new Reference('logger'))
+      const paypal = container.registerKeyed('payment', 'paypal', PaypalPayment)
+      paypal.addTag('event_listener')
+
+      const orderRepository = container.register('order.repository', OrderRepository)
+      orderRepository.shared = false
+      container.register('logger', Logger).lazy = true
+      container.register('internal.secret', Secret).public = false
+      container.setAlias('payment.default', 'payment.stripe')
+
+      const graph = container.exportGraph('json')
+
+      assert.strictEqual(graph.nodes.length, 6)
+      assert.deepInclude(graph.edges, {
+        from: 'checkout',
+        to: 'payment.stripe',
+        type: 'constructor'
+      })
+      assert.deepInclude(graph.edges, {
+        from: 'payment.stripe',
+        to: 'logger',
+        type: 'lazy'
+      })
+      assert.deepInclude(graph.edges, {
+        from: 'checkout',
+        to: 'logger',
+        type: 'method'
+      })
+      assert.deepInclude(graph.groups, {
+        name: 'payment',
+        type: 'keyed',
+        services: ['payment.paypal', 'payment.stripe'],
+        default: 'payment.stripe'
+      })
+
+      const repositoryNode = graph.nodes.find((node) => node.id === 'order.repository')
+      assert.strictEqual(repositoryNode.scope, 'prototype')
+      const stripeNode = graph.nodes.find((node) => node.id === 'payment.stripe')
+      assert.strictEqual(stripeNode.keyed.default, true)
+    })
+
+    it('should filter graph output by options', () => {
+      class CheckoutService {}
+      class StripePayment {}
+      class PaypalPayment {}
+      class OrderRepository {}
+      class Logger {}
+      class Secret {}
+
+      container.register('checkout', CheckoutService)
+        .addArgument(new Reference('payment.stripe'))
+        .addArgument(new Reference('order.repository'))
+      container.registerKeyed('payment', 'stripe', StripePayment)
+        .setDefault(true)
+        .addArgument(new Reference('logger'))
+      container.registerKeyed('payment', 'paypal', PaypalPayment)
+        .addTag('event_listener')
+      container.register('order.repository', OrderRepository)
+      container.register('logger', Logger).lazy = true
+      container.register('internal.secret', Secret).public = false
+
+      const filtered = container.exportGraph('json', {
+        filter: /^payment\./,
+        excludePrivate: true
+      })
+      assert.deepEqual(filtered.nodes.map((node) => node.id), ['payment.paypal', 'payment.stripe'])
+
+      const tagged = container.exportGraph('json', { tag: 'event_listener' })
+      assert.deepEqual(tagged.nodes.map((node) => node.id), ['payment.paypal'])
+
+      const rooted = container.exportGraph('json', { root: 'checkout', depth: 1 })
+      assert.deepEqual(rooted.nodes.map((node) => node.id), [
+        'checkout',
+        'order.repository',
+        'payment.stripe'
+      ])
+    })
+
+    it('should export mermaid and dot formats', () => {
+      class CheckoutService {}
+      class StripePayment {}
+      class Logger {}
+
+      container.register('checkout', CheckoutService)
+        .addArgument(new Reference('payment.stripe'))
+      container.registerKeyed('payment', 'stripe', StripePayment)
+        .setDefault(true)
+        .addArgument(new Reference('logger'))
+      container.register('logger', Logger).lazy = true
+
+      const mermaid = container.exportGraph('mermaid')
+      const dot = container.exportGraph('dot')
+
+      assert.include(mermaid, 'graph TD')
+      assert.include(mermaid, 'subgraph payment [Keyed Group: payment]')
+      assert.include(mermaid, '-.->')
+
+      assert.include(dot, 'digraph DependencyGraph')
+      assert.include(dot, '"payment.stripe" -> "logger" [style=dashed];')
+      assert.include(dot, 'subgraph cluster_payment')
+    })
+  })
+
   describe('compile', () => {
     it('should not instance an abstract definition on compile', async () => {
       // Arrange.
