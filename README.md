@@ -105,6 +105,9 @@ await container.compile()
 // Retrieve by class — no string IDs needed
 import SomeService from '@src/service/SomeService'
 const service = container.get(SomeService)
+
+// Or retrieve by ID with an explicit type
+const typedService = container.get<SomeService>('service.some')
 ```
 
 > **Production tip:** dump the autowired config to a YAML file and load it directly in prod — no TypeScript scanning overhead.

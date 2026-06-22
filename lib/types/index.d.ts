@@ -100,7 +100,8 @@ export class ContainerBuilder {
 
     findTaggedServiceIds(name: string): Iterable<{id: string, definition: Definition}>;
 
-    get<T = any>(id: string|any): T;
+    get<T = any>(id: string): T;
+    get(id: any): any;
 
     getDefinition(key: string): Definition;
 
