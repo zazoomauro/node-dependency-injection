@@ -636,30 +636,31 @@ describe('AutowireTS', () => {
             assert.strictEqual(autowire.idStrategy, 'legacy')
         })
 
-        it('should allow setting idStrategy to readable', () => {
+        it('should allow switching to readable ID strategy via makeIdReadable()', () => {
             // Arrange.
             const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
             const container = new ContainerBuilder(false, dir)
             const autowire = new Autowire(container)
 
             // Act.
-            autowire.idStrategy = 'readable'
+            autowire.makeIdReadable()
 
             // Assert.
             assert.strictEqual(autowire.idStrategy, 'readable')
         })
 
-        it('should throw on invalid idStrategy', () => {
+        it('should allow switching back to legacy ID strategy via makeIdLegacy()', () => {
             // Arrange.
             const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
             const container = new ContainerBuilder(false, dir)
             const autowire = new Autowire(container)
+            autowire.makeIdReadable()
 
             // Act.
-            const actual = () => { autowire.idStrategy = 'invalid' }
+            autowire.makeIdLegacy()
 
             // Assert.
-            assert.throws(actual, Error, 'Invalid autowire ID strategy')
+            assert.strictEqual(autowire.idStrategy, 'legacy')
         })
 
         it('should register services with human-readable IDs relative to defaultDir', async () => {
@@ -667,7 +668,7 @@ describe('AutowireTS', () => {
             const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
             const container = new ContainerBuilder(false, dir)
             const autowire = new Autowire(container)
-            autowire.idStrategy = 'readable'
+            autowire.makeIdReadable()
 
             // Act.
             await autowire.process()
@@ -684,7 +685,7 @@ describe('AutowireTS', () => {
             const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
             const container = new ContainerBuilder(false, dir)
             const autowire = new Autowire(container)
-            autowire.idStrategy = 'readable'
+            autowire.makeIdReadable()
 
             // Act.
             await autowire.process()
@@ -705,7 +706,7 @@ describe('AutowireTS', () => {
             const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
             const container = new ContainerBuilder(false, dir)
             const autowire = new Autowire(container)
-            autowire.idStrategy = 'readable'
+            autowire.makeIdReadable()
 
             // Act.
             await autowire.process()
@@ -723,7 +724,7 @@ describe('AutowireTS', () => {
             const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
             const container = new ContainerBuilder(false, dir)
             const autowire = new Autowire(container)
-            autowire.idStrategy = 'readable'
+            autowire.makeIdReadable()
             const dumpPath = `${dumpServicesPath}-readable.yaml`
             autowire.serviceFile = new ServiceFile(dumpPath)
             await autowire.process()
@@ -749,7 +750,7 @@ describe('AutowireTS', () => {
             const dir = path.join(__dirname, '..', '..', resourcesTsFolder, 'Autowire', 'src')
             const container = new ContainerBuilder(false, dir)
             const autowire = new Autowire(container)
-            autowire.idStrategy = 'readable'
+            autowire.makeIdReadable()
             const dumpPath = `${dumpServicesPath}-readable-abs.yaml`
             autowire.serviceFile = new ServiceFile(dumpPath, true)
             await autowire.process()

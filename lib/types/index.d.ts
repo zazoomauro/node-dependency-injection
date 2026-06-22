@@ -262,7 +262,11 @@ export class Autowire {
 
     get serviceFile(): ServiceFile;
 
-    idStrategy: AutowireIdStrategy;
+    get idStrategy(): AutowireIdStrategy;
+
+    makeIdReadable(): void;
+
+    makeIdLegacy(): void;
 }
 
 export class ServiceFile {
