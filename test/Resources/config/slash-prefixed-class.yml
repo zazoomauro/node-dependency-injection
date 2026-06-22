@@ -1,0 +1,4 @@
+services:
+    kernel:
+        class: /Kernel
+        arguments: []
