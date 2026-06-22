@@ -3,9 +3,10 @@
 import chalk from 'chalk'
 import path from 'path'
 import program from 'commander'
-import { ContainerBuilder, YamlFileLoader } from '../lib/'
+import { ContainerBuilder, YamlFileLoader, XmlFileLoader } from '../lib/'
 import JsAdapter from './Services/File/JsAdapter'
 import JsonAdapter from './Services/File/JsonAdapter'
+import XmlAdapter from './Services/File/XmlAdapter'
 import JsFileLoader from '../lib/Loader/JsFileLoader'
 import JsonFileLoader from '../lib/Loader/JsonFileLoader'
 
@@ -24,6 +25,9 @@ program
         break
       case JsonAdapter.FORMAT:
         loader = new JsonFileLoader(container)
+        break
+      case XmlAdapter.FORMAT:
+        loader = new XmlFileLoader(container)
         break
       default:
         loader = new YamlFileLoader(container)

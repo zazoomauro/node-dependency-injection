@@ -9,6 +9,9 @@ services:
   ndi.file.json_adapter:
     class: ./../Services/File/JsonAdapter
 
+  ndi.file.xml_adapter:
+    class: ./../Services/File/XmlAdapter
+
   ndi.file.file_manager.yaml:
     class: ./../Services/File/FileManager
     arguments: ['@ndi.file.yaml_adapter', '%fs', '%path']
@@ -20,3 +23,7 @@ services:
   ndi.file.file_manager.json:
     class: ./../Services/File/FileManager
     arguments: ['@ndi.file.json_adapter', '%fs', '%path']
+
+  ndi.file.file_manager.xml:
+    class: ./../Services/File/FileManager
+    arguments: ['@ndi.file.xml_adapter', '%fs', '%path']
