@@ -13,6 +13,7 @@ import path from 'path'
 import RepositoryManager from '../../../Resources/RepositoryManager'
 import RepositoryFoo from '../../../Resources/RepositoryFoo'
 import RepositoryBar from '../../../Resources/RepositoryBar'
+import FooEsm from '../../../Resources/foo-esm.mjs'
 
 const assert = chai.assert
 
@@ -74,6 +75,17 @@ describe('JsFileLoader', () => {
       assert.strictEqual(service.property, stringPropertyExpected)
 
       return assert.lengthOf(arrayActualParameter, 2)
+    })
+
+    it('should load an esm config file', async () => {
+      // Act.
+      await loader.load(
+        path.join(__dirname, '/../../../Resources/config/fake-services-esm.mjs')
+      )
+      const service = container.get('foo-esm')
+
+      // Assert.
+      assert.instanceOf(service, FooEsm)
     })
   })
 
