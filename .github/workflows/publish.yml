@@ -2,7 +2,7 @@ name: Publish
 
 on:
   release:
-    types: [ created ]
+    types: [created]
 
 permissions:
   contents: read
@@ -27,7 +27,15 @@ jobs:
 
       # Set package.json version from the release tag (e.g. v3.2.7 → 3.2.7)
       - name: Set version from tag
-        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version --ignore-scripts
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "GITHUB_REF_NAME=${GITHUB_REF_NAME}"
+          echo "VERSION=${VERSION}"
+          if [ -z "${VERSION}" ]; then
+            echo "Error: could not determine version from GITHUB_REF_NAME='${GITHUB_REF_NAME}'"
+            exit 1
+          fi
+          npm version "${VERSION}" --no-git-tag-version --ignore-scripts
 
       - run: npm run build
 
