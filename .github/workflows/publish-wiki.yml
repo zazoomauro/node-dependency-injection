@@ -1,0 +1,40 @@
+name: Publish Wiki
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'docs/wiki/**'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish wiki pages
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name  "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          WIKI_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.wiki.git"
+          WIKI_DIR=$(mktemp -d)
+
+          git clone "$WIKI_URL" "$WIKI_DIR"
+
+          cp docs/wiki/*.md "$WIKI_DIR/"
+
+          cd "$WIKI_DIR"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No wiki changes to publish."
+          else
+            git commit -m "docs: sync wiki from docs/wiki [skip ci]"
+            git push
+          fi
