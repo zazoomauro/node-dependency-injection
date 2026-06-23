@@ -246,6 +246,20 @@ describe('YamlFileLoader', () => {
       return assert.instanceOf(syntheticService, SyntheticService)
     })
 
+    it('should load a service with a legacy slash-prefixed class reference', async () => {
+      // Arrange.
+      const serviceName = 'kernel'
+
+      // Act.
+      await loader.load(
+        path.join(__dirname, '/../../../Resources/config/slash-prefixed-class.yml'))
+      await container.compile()
+      const actual = container.get(serviceName)
+
+      // Assert.
+      return assert.isObject(actual)
+    })
+
     it('should load properly service without default export', async () => {
       // Arrange.
       const serviceName = 'named'
