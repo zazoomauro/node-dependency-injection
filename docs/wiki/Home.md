@@ -17,6 +17,7 @@ The Node Dependency Injection component allows you to standardize and centralize
 7. [Conditional Services](ConditionalServices)
 8. [Compiling the Container](CompilingContainer)
 9. [Container Validation](ContainerValidation)
+10. [Graph Exporter](GraphExporter)
 
 ## Basic usage
 
