@@ -5,8 +5,10 @@
 <h1 align="center">Node Dependency Injection</h1>
 
 <p align="center">
-  <strong>Standardize and centralize the way objects are constructed in your application.</strong><br/>
-  Inspired by the battle-tested <a href="http://symfony.com">Symfony</a> DI container, built for Node.js &amp; TypeScript.
+  <strong>Modern TypeScript DI without decorators and without reflect-metadata.</strong><br/>
+  Autowiring, validation, and container compilation for maintainable Node.js services.<br/>
+  Inspired by the battle-tested <a href="http://symfony.com">Symfony</a> DI container.<br/>
+  <a href="https://node-di.dev/">node-di.dev</a>
 </p>
 
 <p align="center">
@@ -23,6 +25,8 @@
 ## Why Node Dependency Injection?
 
 Managing dependencies manually leads to tightly coupled, hard-to-test code. **Node Dependency Injection** gives you a powerful, flexible IoC container that wires your application together — keeping your classes clean, your tests simple, and your architecture solid.
+
+If you are comparing options in 2026, the core value is simple: **TypeScript autowiring by class, without decorators, without runtime metadata hacks, with compile-time style validation workflows.**
 
 ---
 
@@ -42,7 +46,9 @@ Managing dependencies manually leads to tightly coupled, hard-to-test code. **No
 
 ---
 
-## 📊 Feature Comparison (NDI vs InversifyJS vs tsyringe vs Awilix)
+## 📊 Why choose NDI over Awilix, InversifyJS or tsyringe?
+
+The goal is not to attack alternatives. This table explains the concrete trade-offs and where NDI is opinionated.
 
 | Feature | node-dependency-injection | InversifyJS | tsyringe | Awilix |
 |---|---|---|---|---|
@@ -63,6 +69,8 @@ Managing dependencies manually leads to tightly coupled, hard-to-test code. **No
 
 ## 🚀 Installation
 
+Website: [node-di.dev](https://node-di.dev/)
+
 ```sh
 npm install --save node-dependency-injection
 ```
@@ -71,7 +79,24 @@ npm install --save node-dependency-injection
 
 ## 🏁 Quick Start
 
-Register services and wire them together in seconds:
+Start with class-based autowiring (the default recommendation):
+
+```ts
+import { Autowire, ContainerBuilder } from 'node-dependency-injection'
+import UserService from '@src/service/UserService'
+
+const container = new ContainerBuilder(false, '/path/to/src')
+const autowire = new Autowire(container)
+
+await autowire.process()
+await container.compile()
+
+const userService = container.get(UserService)
+```
+
+No decorators. No tokens. No `reflect-metadata`.
+
+Prefer explicit IDs and programmatic registration? You can still do that:
 
 ```js
 import { ContainerBuilder } from 'node-dependency-injection'
