@@ -822,6 +822,58 @@ describe('AutowireTS - Bind', () => {
         assert.strictEqual(container.binds.get('someParam'), 'someValue')
     })
 })
+
+describe('AutowireTS - dumpFile', () => {
+    const resourcesTsFolder = 'Resources-ts'
+    const autowireFolder = 'Autowire'
+    const dir = path.join(__dirname, '..', '..', resourcesTsFolder, autowireFolder, 'src')
+    const dumpFilePath = '/tmp/services-dump-file-test.yaml'
+
+    it('should generate a dump file when dumpFile is set in YAML _defaults', async () => {
+        // Arrange.
+        const configFile = path.join(
+            __dirname, '..', '..', resourcesTsFolder, autowireFolder, 'config', 'services-dump-file.yaml'
+        )
+        const container = new ContainerBuilder(false, dir)
+        const loader = new YamlFileLoader(container)
+
+        // Act.
+        await loader.load(configFile)
+        await container.compile()
+
+        // Assert: load the dumped file in a new container and verify services work
+        const containerDump = new ContainerBuilder(false, dir)
+        const dumpLoader = new YamlFileLoader(containerDump)
+        await dumpLoader.load(dumpFilePath)
+
+        assert.instanceOf(containerDump.get(FooBar), FooBar)
+        assert.instanceOf(containerDump.get(Foo), Foo)
+        assert.instanceOf(containerDump.get(Bar), Bar)
+    })
+
+    it('should generate a dump file when dumpFile is a relative path in YAML _defaults', async () => {
+        // Arrange.
+        const relativeDumpFilePath = '/tmp/services-dump-file-relative-test.yaml'
+        const configFile = path.join(
+            __dirname, '..', '..', resourcesTsFolder, autowireFolder, 'config', 'services-dump-file-relative.yaml'
+        )
+        const container = new ContainerBuilder(false, dir)
+        const loader = new YamlFileLoader(container)
+
+        // Act.
+        await loader.load(configFile)
+        await container.compile()
+
+        // Assert: load the dumped file in a new container and verify services work
+        const containerDump = new ContainerBuilder(false, dir)
+        const dumpLoader = new YamlFileLoader(containerDump)
+        await dumpLoader.load(relativeDumpFilePath)
+
+        assert.instanceOf(containerDump.get(FooBar), FooBar)
+        assert.instanceOf(containerDump.get(Foo), Foo)
+        assert.instanceOf(containerDump.get(Bar), Bar)
+    })
+})
 import KeyedCheckoutService from '../../Resources-ts/Autowire-Keyed/src/Service/KeyedCheckoutService'
 import KeyedPaymentRouterService from '../../Resources-ts/Autowire-Keyed/src/Service/KeyedPaymentRouterService'
 import StripePaymentService from '../../Resources-ts/Autowire-Keyed/src/Service/StripePaymentService'
