@@ -25,14 +25,24 @@ jobs:
 
       - run: npm ci
 
-      # Set package.json version from the release tag (e.g. v3.2.7 → 3.2.7)
+      # Set package.json version from the release tag (e.g. v3.2.7 -> 3.2.7)
       - name: Set version from tag
+        env:
+          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          TAG_NAME="${RELEASE_TAG_NAME:-${GITHUB_REF_NAME}}"
+          if [ -z "${TAG_NAME}" ] && [ -n "${GITHUB_REF}" ]; then
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
+          fi
+
+          VERSION="${TAG_NAME#v}"
+          echo "RELEASE_TAG_NAME=${RELEASE_TAG_NAME}"
           echo "GITHUB_REF_NAME=${GITHUB_REF_NAME}"
+          echo "GITHUB_REF=${GITHUB_REF}"
+          echo "TAG_NAME=${TAG_NAME}"
           echo "VERSION=${VERSION}"
           if [ -z "${VERSION}" ]; then
-            echo "Error: could not determine version from GITHUB_REF_NAME='${GITHUB_REF_NAME}'"
+            echo "Error: could not determine version from release tag/ref"
             exit 1
           fi
           npm version "${VERSION}" --no-git-tag-version --ignore-scripts
