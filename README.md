@@ -179,6 +179,71 @@ autowire.makeIdLegacy() // switch back to base64-encoded IDs
 
 ---
 
+## 🏷️ Tagged Services
+
+Tags classify services into reusable plural collections. Tag attributes remain application-owned metadata until a consumer explicitly gives an attribute meaning.
+
+NDI supports two tagged injection forms. The existing `!tagged` form remains unchanged for compatibility, while `@tagged(...)` adds Symfony-style collection projection with priority ordering and optional indexing.
+
+```yaml
+services:
+  handler.fast:
+    class: './handlers/FastHandler'
+    tags:
+      - name: app.handler
+        attributes:
+          priority: 20
+          key: fast
+
+  handler.fallback:
+    class: './handlers/FallbackHandler'
+    tags:
+      - name: app.handler
+        attributes:
+          priority: 0
+          key: fallback
+
+  handler.runner:
+    class: './HandlerRunner'
+    arguments:
+      - '@tagged(app.handler)'
+```
+
+| Form | Result | Ordering | Attribute semantics |
+|---|---|---|---|
+| `!tagged app.handler` | `Array` | Definition order | Attributes are ignored |
+| `@tagged(app.handler)` | `Array` | Integer `priority` descending; definition order breaks ties | `priority` controls ordering |
+| `@tagged(app.handler, key)` | `Map` | Same priority ordering | `key` supplies each map key; service id is the fallback |
+
+The indexed form can use any tag attribute name, not only `key`:
+
+```yaml
+arguments:
+  - '@tagged(app.handler, name)'
+```
+
+If a service declares the same tag more than once, unindexed projection includes that service once and uses the first tag occurrence for priority. Indexed projection can expose separate entries for repeated tag occurrences when they provide different indexes, matching Symfony tagged-iterator behavior.
+
+Programmatic registration uses the same metadata:
+
+```js
+import { ContainerBuilder, TaggedReference } from 'node-dependency-injection'
+
+const container = new ContainerBuilder()
+container.register('handler.fast', FastHandler)
+  .addTag('app.handler', new Map([
+    ['priority', 20],
+    ['key', 'fast']
+  ]))
+
+container.register('runner', HandlerRunner)
+  .addArgument(new TaggedReference('app.handler', 'key'))
+```
+
+Use `!tagged` when you need the historical definition-order behavior. Use `@tagged(...)` when the collection itself needs ordering or keyed projection.
+
+---
+
 ## 🗝️ Keyed Services
 
 Keyed services let you register multiple implementations of the same interface under a named group, then retrieve a specific one by key or inject the entire group as a `Map`.
