@@ -1,12 +1,13 @@
 // Only for typings exports
 
 export type AutowireIdStrategy = 'legacy' | 'readable';
+export type AutowireAliasResolution = 'first' | 'first-or-unique' | 'unique' | 'unique-or-fail' | 'none';
 
 export type PassConfigHook = 'beforeOptimization' | 'optimize' | 'beforeRemoving' | 'remove' | 'afterRemoving';
 
 export type Parameter = string | boolean | object | any[];
 
-export type Argument = TagReference | Reference | KeyedReference | KeyedGroupReference | PackageReference | ParameterReference | any;
+export type Argument = TagReference | TaggedReference | Reference | KeyedReference | KeyedGroupReference | PackageReference | ParameterReference | any;
 
 export type ValidationSeverity = 'ERROR' | 'WARN' | 'INFO';
 
@@ -17,7 +18,8 @@ export type ValidationIssueType =
   | 'unused_nullable_fallback'
   | 'deprecated_service_in_use'
   | 'orphan_tagged_service'
-  | 'keyed_group_no_default';
+  | 'keyed_group_multiple_defaults'
+  | 'invalid_alias';
 
 export interface ValidationIssue {
   severity: ValidationSeverity;
@@ -248,10 +250,19 @@ export class Reference {
     constructor(id: string, nullable?: boolean);
 }
 
+/** Legacy !tagged reference preserving definition order. */
 export class TagReference {
     readonly name: string;
 
     constructor(name: string);
+}
+
+/** Symfony-style tagged collection reference with priority and optional indexing. */
+export class TaggedReference {
+    readonly tag: string;
+    readonly indexAttribute: string | null;
+
+    constructor(tag: string, indexAttribute?: string | null);
 }
 
 export class KeyedReference {
@@ -300,6 +311,8 @@ export class Autowire {
 
     get container (): ContainerBuilder;
 
+    autowireAliasResolution: AutowireAliasResolution;
+
     process (): Promise<void>;
 
     addExclude(excludedPath: string): void;
@@ -343,6 +356,19 @@ export class ContainerValidationError extends Error {
     readonly result: ValidationResult;
 
     constructor(result: ValidationResult);
+}
+
+export class AmbiguousAutowireException extends Error {
+    constructor(
+      interfaceName: string,
+      interfaceId: string,
+      serviceIds: string[],
+      consumers?: Array<{service: string, argument: string}>
+    );
+}
+
+export class KeyedGroupMultipleDefaultsException extends Error {
+    constructor(group: string, serviceIds: string[]);
 }
 
 export class ContainerValidator {
