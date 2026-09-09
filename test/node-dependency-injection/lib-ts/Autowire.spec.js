@@ -275,8 +275,8 @@ describe('AutowireTS', () => {
         // Assert.
         assert.instanceOf(containerDump, ContainerBuilder)
         assert.instanceOf(containerDump.get(FooBar), FooBar)
-        assert.instanceOf(containerDump.get(Foo), Foo)
         assert.notInstanceOf(containerDump.get(Foo), NotUsedFoo)
+        assert.instanceOf(containerDump.get(Foo), Foo)
         assert.instanceOf(containerDump.get(Bar), Bar)
         assert.instanceOf(containerDump.get(FooBar).multiple, ImplementsOne)
         assert.notInstanceOf(containerDump.get(FooBar).multiple, ImplementsTwo)
@@ -925,6 +925,7 @@ describe('AutowireTS - Keyed Services', () => {
         const container = new ContainerBuilder(false, dir)
         container.registerKeyed('payment', 'stripe', StripePaymentService)
         container.registerKeyed('payment', 'paypal', PaypalPaymentService)
+        container.addBind('payment', new KeyedReference('payment', 'stripe'))
         container.addBind('payments', new KeyedGroupReference('payment'))
         const autowire = new Autowire(container)
 

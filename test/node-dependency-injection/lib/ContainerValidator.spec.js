@@ -4,6 +4,7 @@ import ContainerBuilder from '../../../lib/ContainerBuilder'
 import Definition from '../../../lib/Definition'
 import Reference from '../../../lib/Reference'
 import TagReference from '../../../lib/TagReference'
+import TaggedReference from '../../../lib/TaggedReference'
 import ParameterReference from '../../../lib/ParameterReference'
 import ContainerValidator from '../../../lib/ContainerValidator'
 import ContainerValidationError from '../../../lib/Exception/ContainerValidationError'
@@ -310,31 +311,71 @@ describe('ContainerValidator', () => {
       const infos = result.info.filter(i => i.type === 'orphan_tagged_service')
       assert.strictEqual(infos.length, 0)
     })
-  })
 
-  // ─── Check 7: Keyed group with no default ─────────────────────────────────
-
-  describe('keyed_group_no_default', () => {
-    it('reports INFO when multiple services share a tag with no default', () => {
+    it('does not report INFO when a TaggedReference consumes the tag', () => {
       const container = new ContainerBuilder()
 
-      const paypal = new Definition()
-      paypal.addTag('payment.gateway')
-      container.setDefinition('payment.paypal', paypal)
+      const listener = new Definition()
+      listener.addTag('kernel.listener')
+      container.setDefinition('my.listener', listener)
 
-      const stripe = new Definition()
-      stripe.addTag('payment.gateway')
-      container.setDefinition('payment.stripe', stripe)
+      const dispatcher = new Definition()
+      dispatcher.args = [new TaggedReference('kernel.listener')]
+      container.setDefinition('event.dispatcher', dispatcher)
 
       const validator = new ContainerValidator(container)
       const result = validator.validate()
 
-      const infos = result.info.filter(i => i.type === 'keyed_group_no_default')
-      assert.strictEqual(infos.length, 1)
-      assert.include(infos[0].detail, 'payment.gateway')
+      const infos = result.info.filter(i => i.type === 'orphan_tagged_service')
+      assert.strictEqual(infos.length, 0)
+    })
+  })
+
+  // ─── Check 7: Ambiguous keyed defaults ────────────────────────────────────
+
+  describe('keyed_group_multiple_defaults', () => {
+    it('does not report an issue when a keyed group has no default', () => {
+      const container = new ContainerBuilder()
+
+      container.registerKeyed('payment', 'paypal', class Paypal {})
+      container.registerKeyed('payment', 'stripe', class Stripe {})
+
+      const validator = new ContainerValidator(container)
+      const result = validator.validate()
+
+      const issues = result.errors.filter(i => i.type === 'keyed_group_multiple_defaults')
+      assert.strictEqual(issues.length, 0)
     })
 
-    it('does not report INFO when one service in the group has default: true', () => {
+    it('does not report an issue when a keyed group has one default', () => {
+      const container = new ContainerBuilder()
+
+      container.registerKeyed('payment', 'paypal', class Paypal {}).setDefault(true)
+      container.registerKeyed('payment', 'stripe', class Stripe {})
+
+      const validator = new ContainerValidator(container)
+      const result = validator.validate()
+
+      const issues = result.errors.filter(i => i.type === 'keyed_group_multiple_defaults')
+      assert.strictEqual(issues.length, 0)
+    })
+
+    it('reports ERROR when a keyed group declares multiple defaults', () => {
+      const container = new ContainerBuilder()
+
+      container.registerKeyed('payment', 'paypal', class Paypal {}).setDefault(true)
+      container.registerKeyed('payment', 'stripe', class Stripe {}).setDefault(true)
+
+      const validator = new ContainerValidator(container)
+      const result = validator.validate()
+
+      const errors = result.errors.filter(i => i.type === 'keyed_group_multiple_defaults')
+      assert.strictEqual(errors.length, 1)
+      assert.include(errors[0].detail, 'payment')
+      assert.isFalse(result.isValid)
+    })
+
+    it('does not infer keyed semantics from ordinary tag attributes', () => {
       const container = new ContainerBuilder()
 
       const paypal = new Definition()
@@ -342,28 +383,14 @@ describe('ContainerValidator', () => {
       container.setDefinition('payment.paypal', paypal)
 
       const stripe = new Definition()
-      stripe.addTag('payment.gateway')
+      stripe.addTag('payment.gateway', new Map([['default', true]]))
       container.setDefinition('payment.stripe', stripe)
 
       const validator = new ContainerValidator(container)
       const result = validator.validate()
 
-      const infos = result.info.filter(i => i.type === 'keyed_group_no_default')
-      assert.strictEqual(infos.length, 0)
-    })
-
-    it('does not report INFO when only one service has the tag', () => {
-      const container = new ContainerBuilder()
-
-      const paypal = new Definition()
-      paypal.addTag('payment.gateway')
-      container.setDefinition('payment.paypal', paypal)
-
-      const validator = new ContainerValidator(container)
-      const result = validator.validate()
-
-      const infos = result.info.filter(i => i.type === 'keyed_group_no_default')
-      assert.strictEqual(infos.length, 0)
+      const errors = result.errors.filter(i => i.type === 'keyed_group_multiple_defaults')
+      assert.strictEqual(errors.length, 0)
     })
   })
 
